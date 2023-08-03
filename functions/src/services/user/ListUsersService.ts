@@ -10,7 +10,7 @@ import QueryUsersInfos from "./utilities/QueryUsersInfos"
 
 /**
  * Queries specific information about all users.
- * Aproved 31/07.
+ * Aproved 02/08.
  * @param req requiredInfos = {Part of User object}
  * @param res 
  * @param db 
@@ -26,6 +26,9 @@ export default async function ListUsersService
     const action = "Listagem de usuários."
     try
     {
+        if (req.method != "GET")
+            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+
         const userRequiredInfos = CheckBody(req.body)
 
         await Promise.resolve(QueryUsersInfos(db, userRequiredInfos))

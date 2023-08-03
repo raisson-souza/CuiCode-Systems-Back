@@ -14,14 +14,20 @@ type sendFunction = (
 ) => void
 
 type SendFunctions = {
-    Ok :          sendFunction,
-    Created:      sendFunction,
-    Error:        sendFunction,
-    NotFound:     sendFunction,
-    Invalid:      sendFunction,
-    Unauthorized: sendFunction,
+    Ok :              sendFunction,
+    Created:          sendFunction,
+    Error:            sendFunction,
+    NotFound:         sendFunction,
+    Invalid:          sendFunction,
+    Unauthorized:     sendFunction,
+    MethodNotAllowed: sendFunction,
 }
 
+/**
+ * res => Response
+ * responseMessage => Resposta ao cliente
+ * logMessage => Ação realizada para registro no log
+ */
 const Send : SendFunctions = {
     Ok: Ok,
     Created: Created,
@@ -29,6 +35,7 @@ const Send : SendFunctions = {
     NotFound: NotFound,
     Invalid: Invalid,
     Unauthorized: Unauthorized,
+    MethodNotAllowed: MethodNotAllowed,
 }
 
 function Ok(res: Response, responseMessage: any, logMessage: string) : void
@@ -65,6 +72,12 @@ function Unauthorized(res: Response, responseMessage: any, logMessage: string) :
 {
     logger.warn(`Ação (UNAUTHORIZED): ${ logMessage } resultou em erro em ${ GetDate() }`)
     res.status(HttpStatus.UNAUTHORIZED).send(responseMessage)
+}
+
+function MethodNotAllowed(res: Response, responseMessage: any, logMessage: string) : void
+{
+    logger.warn(`Ação (METHOD NOT ALLOWED): ${ logMessage } resultou em erro em ${ GetDate() }`)
+    res.status(HttpStatus.METHOD_NOT_ALLOWED).send(responseMessage)
 }
 
 export default Send

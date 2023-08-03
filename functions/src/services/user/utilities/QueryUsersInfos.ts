@@ -33,6 +33,6 @@ export default async function QueryUsersInfos
     }
     catch (ex)
     {
-        throw new Error(`Houve um problema ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`);
+        throw new Error((ex as Error).message);
     }
 }

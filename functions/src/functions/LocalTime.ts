@@ -1,7 +1,6 @@
-// EERRADO
 export default function GetDate() : string
 {
-    const date = new Date().setUTCDate(-3)
+    const date = new Date()
 
-    return new Date(date).toString()
+    return date.toLocaleString('pt-BR', { timeZone: "America/Sao_Paulo" })
 }

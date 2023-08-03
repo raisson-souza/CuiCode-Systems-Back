@@ -19,16 +19,17 @@ export default async function ValidateUser
 {
     try
     {
-        // username
-        // phone
-
         const usersValidationInfo : {
+            usersUsernames : Array<string>,
             usersEmails : Array<string>,
             usersRecoveryEmails : Array<string>,
+            usersPhones : Array<string>,
             rootUserPresence : boolean
         } = {
+            usersUsernames: [],
             usersEmails: [],
             usersRecoveryEmails: [],
+            usersPhones: [],
             rootUserPresence: false
         }
 
@@ -36,8 +37,11 @@ export default async function ValidateUser
             .once("value")
                 .then((snapshot: Object[]) => {
                     snapshot.forEach((data: any) => {
+                        usersValidationInfo.usersUsernames.push(data.val().Username)
                         usersValidationInfo.usersEmails.push(data.val().Email)
                         usersValidationInfo.usersRecoveryEmails.push(data.val().RecoveryEmail)
+                        usersValidationInfo.usersPhones.push(data.val().Phone)
+
                         if (data.val().Level.Value == PermissionLevel.Root)
                             usersValidationInfo.rootUserPresence = true
                     })
@@ -54,6 +58,11 @@ export default async function ValidateUser
                     if (userId >= totalUsers && !isCreation)
                         throw new Error("Id de usuário não existente.")
 
+                    usersValidationInfo.usersUsernames.forEach((username, i) => {
+                        if (user.Id != i && username == user.Username)
+                            throw new Error(`Username "${ user.Username }" já em uso.`)
+                    })
+
                     usersValidationInfo.usersEmails.forEach((email, i) => {
                         if (user.Id != i && email == user.Email)
                             throw new Error(`Email "${ user.Email }" já em uso.`)
@@ -62,6 +71,11 @@ export default async function ValidateUser
                     usersValidationInfo.usersRecoveryEmails.forEach((recoveryEmail, i) => {
                         if (user.Id != i && recoveryEmail == user.RecoveryEmail)
                             throw new Error(`Email de recuperação "${ user.RecoveryEmail }" já em uso.`)
+                    })
+
+                    usersValidationInfo.usersPhones.forEach((phones, i) => {
+                        if (user.Id != i && phones == user.Phone)
+                            throw new Error(`Número "${ user.Phone }" já em uso.`)
                     })
                 })
                 .catch((ex: string | undefined) => {

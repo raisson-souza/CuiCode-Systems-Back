@@ -12,7 +12,7 @@ import SetUser from "./utilities/SetUser"
 
 /**
  * Sets active param of a user.
- * Aproved 31/07.
+ * Aproved 02/08.
  * @param req User ID and isActive
  * @param res 
  * @param db 
@@ -31,6 +31,9 @@ export default async function SetActiveUserService
 
     try
     {
+        if (req.method != "PUT")
+            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+
         const bodyChecked = CheckBody(req.body)
         const {
             userId,

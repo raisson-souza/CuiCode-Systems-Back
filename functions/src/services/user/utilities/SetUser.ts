@@ -34,6 +34,7 @@ export default async function SetUser
             .ref(`/database/users/${ user.Id }`)
             .set({
                 Id: user.Id,
+                Username: user.Username,
                 Active: user.Active,
                 CreatedDate: user.CreatedDate,
                 Deleted: user.Deleted,
@@ -50,6 +51,6 @@ export default async function SetUser
     }
     catch (ex)
     {
-        throw new Error(`Houve um erro ao editar o usuário ${ user.Name } #${ user.Id }. Erro: ${ (ex as Error).message }`);
+        throw new Error((ex as Error).message);
     }
 }

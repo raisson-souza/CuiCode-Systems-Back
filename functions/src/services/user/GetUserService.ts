@@ -10,7 +10,7 @@ import Send from "../../functions/Responses"
 
 /**
  * Queries a user.
- * Aproved 31/07.
+ * Aproved 02/08.
  * @param req User ID
  * @param res 
  * @param db 
@@ -26,6 +26,9 @@ export default async function GetUserService
     const action = "Consulta de usuário."
     try
     {
+        if (req.method != "GET")
+            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+
         const userId = CheckBody(req.body)
 
         await Promise.resolve(QueryUser(db, userId))

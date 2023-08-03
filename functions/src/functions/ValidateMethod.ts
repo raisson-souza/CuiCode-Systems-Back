@@ -1,14 +1,28 @@
 import { Request, Response } from "firebase-functions"
 import HttpStatus from "../enums/HttpStatus"
+import Send from "./Responses"
 
+/**
+ * Validates a enpoint request methods.
+ * Returns true if successful, false otherwise.
+ * @param res Response
+ * @param req Request
+ * @param methods Methods expected
+ * @returns 
+ */
 export default function ValidateMethod
 (
     res : Response,
     req : Request,
     methods : Array<string>
 )
-: void
+: boolean
 {
     if (!methods.includes(req.method))
-        res.status(HttpStatus.METHOD_NOT_ALLOWED).send("Method Not Allowed")
+    {
+        Send.MethodNotAllowed(res, "Método não autorizado.", "Validação de Método")
+        return false
+    }
+
+    return true
 }

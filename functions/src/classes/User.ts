@@ -1,12 +1,14 @@
 import BodyChecker from "../functions/BodyChecker"
+
 import Sex from "../enums/Sex"
 import PermissionLevel from "../enums/PermissionLevel"
+
 import Label from "./Label"
 
 class User
 {
-    // username ex: @raisson (validação)
-    Id: any // pq any?
+    Id: number
+    Username: string
     Active: boolean
     CreatedDate: Date
     Deleted: boolean
@@ -19,30 +21,31 @@ class User
     Password: string
     PasswordHint: string
     Level: Label
-    Labels: string[] = [
-        "Active",
-        "CreatedDate",
-        "Deleted",
-        "Name",
-        "BirthDate",
-        "Sex",
-        "Email",
-        "RecoveryEmail",
-        "Phone",
-        "Password",
-        "PasswordHint",
-        "Level",
-    ]
 
     constructor(
         body : any,
     ) {
         try
         {
-            BodyChecker(body, this.Labels)
-            // passar os labels por aqui sem ser parte da classe
+            const Labels = [
+                "Active",
+                "CreatedDate",
+                "Deleted",
+                "Name",
+                "BirthDate",
+                "Sex",
+                "Email",
+                "RecoveryEmail",
+                "Phone",
+                "Password",
+                "PasswordHint",
+                "Level",
+            ]
+
+            BodyChecker(body, Labels)
 
             this.Id = body["Id"]
+            this.Username = body["Username"]
             this.Active = body["Active"]
             this.CreatedDate = body["CreatedDate"]
             this.Deleted = body["Deleted"]
@@ -58,8 +61,39 @@ class User
         }
         catch (ex)
         {
-            throw new Error(`Houve um erro ao processar o Usuário. Erro: ${(ex as Error).message}`)
+            throw new Error((ex as Error).message)
         }
+    }
+
+    /**
+     * Validates the rightness of a username user
+     * @param username 
+     */
+    static ValidateUsername(username: string) : void
+    {
+        if (username.length > 20)
+            throw new Error("Username além do limite.")
+        
+        if (username.charAt(0) != "@")
+            throw new Error("Username inválido.")
+
+        let newUsername = username.replace("@", "").split("")
+
+        if (newUsername.includes("@"))
+            throw new Error("Username inválido.")
+
+        const UnwantedCharacters = ["!", "?", "#", "$", "%", "¨", "&", "*", "(", ")", "-", "_", "=", "+", "°", '"', "'", "´", "`", "[", "]", "{", "}", ",", "."]
+
+        UnwantedCharacters.forEach(character => {
+            if (username.includes(character))
+                throw new Error("Username inválido.")
+        })
+    }
+
+    FormatUsername()
+    {
+        let newUsername = this.Username.toLowerCase()
+        this.Username = newUsername.trim()
     }
 }
 

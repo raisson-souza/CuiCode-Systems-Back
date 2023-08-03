@@ -7,6 +7,7 @@ import GetUserService from "./services/user/GetUserService"
 import UpdateUserService from "./services/user/UpdateUserService"
 import SetDeleteUserService from "./services/user/SetDeleteUserService"
 import SetActiveUserService from "./services/user/SetActiveUserService"
+import TraceAccessService from "./services/features/TraceAccessService"
 
 // admin
 const admin = require("firebase-admin");
@@ -41,15 +42,58 @@ export const SetDeleteUser = onRequest((req, res) => {
     SetDeleteUserService(req, res, db_user, admin)
 })
 
+// FEATURES
+
+export const TraceAccess = onRequest((req, res) => {
+    TraceAccessService(req, res)
+})
+
 /*
 # MAJOR FIXINGS
 
-validação dos métodos aceitáveis dos endpoints
-username no USER (validar)
 CORS
+AUTHORIZATION
 
 # MINOR FIXINGS
 
-refatorar mensagens de erro
-validar phone
+# FEATURES
+
+endpoint com método TRACE para rastreio de info do usuario conectado ao ERP
+    enviar email a cada acesso com info dos usuários
+
+# INOVAÇÃO
+
+usar query params na requests tambem
+*/
+
+/*
+PRÓXIMOS COMMITS
+
+validação especial para convidados
+
+separar bancos
+    /database/production/
+    /database/staging/
+    /database/testing/
+
+mudar organização das pastas
+    services
+    - realiza validação de método e requisição
+    operation
+    - realiza a operação
+
+    services/operations/utilities/
+
+    explicar erros na service e só retornar após o fluxo da mesma
+
+services dos próximos módulos: (diferenciar pelo método da requisição)
+    GET
+        Para listar um usuário:
+            { Id: x }
+        Para listar informações de vários usuários:
+            { requiredInfos: ["x", "y"] }
+    CREATE
+        { ...User }
+    UPDATE
+        { UserId: x, ...User }
 */

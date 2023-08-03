@@ -12,7 +12,7 @@ import Send from "../../functions/Responses"
 
 /**
  * Creates a user.
- * Aproved 31/07
+ * Aproved 02/08.
  * @param req User Object
  * @param res 
  * @param db 
@@ -31,7 +31,13 @@ export default async function CreateUserService
 
     try
     {
+        if (req.method != "POST")
+            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+
         const user = CheckBody(req.body)
+
+        User.ValidateUsername(user.Username)
+        user.FormatUsername()
 
         await Promise.resolve(ValidateUser(db, user))
             .then(async () => {

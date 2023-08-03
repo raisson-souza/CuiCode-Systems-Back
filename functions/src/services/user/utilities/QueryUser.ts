@@ -28,6 +28,7 @@ export default async function QueryUser
                     {
                         userObject = {
                             Id: userId,
+                            Username: data.val().Username,
                             Active: data.val().Active,
                             CreatedDate: data.val().CreatedDate,
                             Deleted: data.val().Deleted,
@@ -54,6 +55,6 @@ export default async function QueryUser
     }
     catch (ex)
     {
-        throw new Error(`Houve um problema ao buscar o usuário de ID ${ userId }. Erro: ${ (ex as Error).message }`);
+        throw new Error((ex as Error).message);
     }
 }
