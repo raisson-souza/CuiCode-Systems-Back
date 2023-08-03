@@ -28,7 +28,7 @@ export default async function GetUserService
         if (req.method != "GET")
             return Send.MethodNotAllowed(res, "Método não autorizado.", action)
 
-        const userId = CheckBody(req.body)
+        const userId = CheckQuery(req.query)
 
         await Promise.resolve(QueryUser(db, userId))
             .then(user => {
@@ -44,13 +44,13 @@ export default async function GetUserService
     }
 }
 
-function CheckBody(body : any) : number
+function CheckQuery(query : any) : number
 {
-    if (IsUndNull(body.Id))
-        throw new Error("Id de usuário não encontrado no corpo da requisição.");
+    if (IsUndNull(query.UserId))
+        throw new Error("Id de usuário não encontrado na URL.");
 
-    if (body.Id < 0)
+    if (query.UserId < 0)
         throw new Error("Id de usuário inválido.");
 
-    return body.Id
+    return Number.parseInt(query.UserId)
 }
