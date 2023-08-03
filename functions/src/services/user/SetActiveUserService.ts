@@ -24,6 +24,7 @@ export default async function SetActiveUserService
     res : Response,
     db : any,
     admin : any,
+    dbRef : string,
 )
 : Promise<void>
 {
@@ -47,7 +48,7 @@ export default async function SetActiveUserService
             .then(async (user) => {
                 user.Active = isActive
                 
-                await Promise.resolve(SetUser(admin, user, db))
+                await Promise.resolve(SetUser(admin, user, db, dbRef))
                     .then(() => {
                         Send.Ok(res, `Usuário de ID ${ userId } ${ renderVerbalAction } com sucesso.`, action)
                     })

@@ -14,32 +14,33 @@ const admin = require("firebase-admin");
 admin.initializeApp()
 
 // databases
-const db_user = admin.database().ref("/database/users/")
+const DATABASE = "testing"
+const db_user = admin.database().ref(`/database/${ DATABASE }/users/`)
 
 // USER SERVICES
 
-export const CreateUser = onRequest((req, res) => {
-    CreateUserService(req, res, db_user, admin)
+export const GetUser = onRequest((req, res) => {
+    GetUserService(req, res, db_user)
 })
 
 export const ListUsers = onRequest((req, res) => {
     ListUsersService(req, res, db_user)
 })
 
-export const GetUser = onRequest((req, res) => {
-    GetUserService(req, res, db_user)
+export const CreateUser = onRequest((req, res) => {
+    CreateUserService(req, res, db_user, admin, DATABASE)
 })
 
 export const UpdateUser = onRequest((req, res) => {
-    UpdateUserService(req, res, db_user, admin)
+    UpdateUserService(req, res, db_user, admin, DATABASE)
 })
 
 export const SetActiveUser = onRequest((req, res) => {
-    SetActiveUserService(req, res, db_user, admin)
+    SetActiveUserService(req, res, db_user, admin, DATABASE)
 })
 
 export const SetDeleteUser = onRequest((req, res) => {
-    SetDeleteUserService(req, res, db_user, admin)
+    SetDeleteUserService(req, res, db_user, admin, DATABASE)
 })
 
 // FEATURES
@@ -52,7 +53,13 @@ export const TraceAccess = onRequest((req, res) => {
 # MAJOR FIXINGS
 
 CORS
+    testar com front
 AUTHORIZATION
+    usar senha para uso com
+        postman
+        sites de api
+        integrações
+combinar essas seguranças para nao se anularem
 
 # MINOR FIXINGS
 
@@ -70,11 +77,6 @@ usar query params na requests tambem
 PRÓXIMOS COMMITS
 
 validação especial para convidados
-
-separar bancos
-    /database/production/
-    /database/staging/
-    /database/testing/
 
 mudar organização das pastas
     services

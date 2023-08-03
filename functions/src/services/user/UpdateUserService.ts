@@ -35,6 +35,7 @@ export default async function UpdateUserService
     res : Response,
     db : any,
     admin : any,
+    dbRef : string,
 )
 : Promise<void>
 {
@@ -49,7 +50,7 @@ export default async function UpdateUserService
 
         await Promise.resolve(ValidateUser(db, user, false))
             .then(async () => {
-                await Promise.resolve(SetUser(admin, user))
+                await Promise.resolve(SetUser(admin, user, db, dbRef))
                     .then(() => {
                         Send.Ok(res, `Usuário ${ userKey } editado com sucesso.`, action)
                     })

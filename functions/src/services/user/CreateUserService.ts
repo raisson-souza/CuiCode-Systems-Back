@@ -24,6 +24,7 @@ export default async function CreateUserService
     res : Response,
     db : any,
     admin : any,
+    dbRef : string,
 )
 : Promise<void>
 {
@@ -42,7 +43,7 @@ export default async function CreateUserService
         await Promise.resolve(ValidateUser(db, user))
             .then(async () => {
                 await Promise.resolve(
-                    SetUser(admin, user, db)
+                    SetUser(admin, user, db, dbRef)
                 )
                 .then(() => {
                     Send.Created(res, "Usuário criado com sucesso.", action)

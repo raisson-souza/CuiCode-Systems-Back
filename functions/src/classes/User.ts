@@ -82,7 +82,7 @@ class User
         if (newUsername.includes("@"))
             throw new Error("Username inválido.")
 
-        const UnwantedCharacters = ["!", "?", "#", "$", "%", "¨", "&", "*", "(", ")", "-", "_", "=", "+", "°", '"', "'", "´", "`", "[", "]", "{", "}", ",", "."]
+        const UnwantedCharacters = ["!", "?", "#", "$", "%", "¨", "&", "*", "(", ")", "-", "=", "+", "°", '"', "'", "´", "`", "[", "]", "{", "}", ",", "."]
 
         UnwantedCharacters.forEach(character => {
             if (username.includes(character))

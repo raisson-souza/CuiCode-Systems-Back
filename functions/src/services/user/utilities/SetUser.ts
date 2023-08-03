@@ -14,7 +14,8 @@ export default async function SetUser
 (
     admin : any,
     user : User,
-    db : any = null
+    db : any = null,
+    dbRef : string,
 )
 : Promise<void>
 {
@@ -31,7 +32,7 @@ export default async function SetUser
         }
 
         admin.database()
-            .ref(`/database/users/${ user.Id }`)
+            .ref(`/database/${ dbRef }/users/${ user.Id }`)
             .set({
                 Id: user.Id,
                 Username: user.Username,
