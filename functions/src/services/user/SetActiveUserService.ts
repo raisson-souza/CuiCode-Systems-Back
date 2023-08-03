@@ -12,7 +12,6 @@ import SetUser from "./utilities/SetUser"
 
 /**
  * Sets active param of a user.
- * Aproved 02/08.
  * @param req User ID and isActive
  * @param res 
  * @param db 

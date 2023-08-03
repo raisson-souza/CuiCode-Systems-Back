@@ -10,7 +10,6 @@ import QueryUsersInfos from "./utilities/QueryUsersInfos"
 
 /**
  * Queries specific information about all users.
- * Aproved 02/08.
  * @param req requiredInfos = {Part of User object}
  * @param res 
  * @param db 

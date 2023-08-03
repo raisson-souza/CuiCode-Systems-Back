@@ -19,26 +19,32 @@ const db_user = admin.database().ref(`/database/${ DATABASE }/users/`)
 
 // USER SERVICES
 
+// Aproved 02/08.
 export const GetUser = onRequest((req, res) => {
     GetUserService(req, res, db_user)
 })
 
+// Aproved 02/08.
 export const ListUsers = onRequest((req, res) => {
     ListUsersService(req, res, db_user)
 })
 
+// Aproved 03/08.
 export const CreateUser = onRequest((req, res) => {
     CreateUserService(req, res, db_user, admin, DATABASE)
 })
 
+// Aproved 03/08.
 export const UpdateUser = onRequest((req, res) => {
     UpdateUserService(req, res, db_user, admin, DATABASE)
 })
 
+// Aproved 03/08.
 export const SetActiveUser = onRequest((req, res) => {
     SetActiveUserService(req, res, db_user, admin, DATABASE)
 })
 
+// Aproved 03/08.
 export const SetDeleteUser = onRequest((req, res) => {
     SetDeleteUserService(req, res, db_user, admin, DATABASE)
 })
@@ -65,9 +71,6 @@ combinar essas seguranças para nao se anularem
 
 # FEATURES
 
-endpoint com método TRACE para rastreio de info do usuario conectado ao ERP
-    enviar email a cada acesso com info dos usuários
-
 # INOVAÇÃO
 
 usar query params na requests tambem
@@ -88,14 +91,6 @@ mudar organização das pastas
 
     explicar erros na service e só retornar após o fluxo da mesma
 
-services dos próximos módulos: (diferenciar pelo método da requisição)
-    GET
-        Para listar um usuário:
-            { Id: x }
-        Para listar informações de vários usuários:
-            { requiredInfos: ["x", "y"] }
-    CREATE
-        { ...User }
-    UPDATE
-        { UserId: x, ...User }
+endpoints a preparar
+    listagem de todos os usuarios e por nivel de acesso
 */

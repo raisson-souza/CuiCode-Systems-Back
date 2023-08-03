@@ -10,7 +10,6 @@ import Send from "../../functions/Responses"
 
 /**
  * Queries a user.
- * Aproved 02/08.
  * @param req User ID
  * @param res 
  * @param db 

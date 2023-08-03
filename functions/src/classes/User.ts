@@ -4,6 +4,8 @@ import Sex from "../enums/Sex"
 import PermissionLevel from "../enums/PermissionLevel"
 
 import Label from "./Label"
+import IsUndNull from "../functions/IsUndNull"
+import FormatIdNumber from "../functions/FormatIdNumber"
 
 class User
 {
@@ -14,16 +16,17 @@ class User
     Deleted: boolean
     Name : string
     BirthDate: Date
-    Sex: Label
+    Sex: Label | null
     Email: string
     RecoveryEmail: string
     Phone: string
     Password: string
     PasswordHint: string
-    Level: Label
+    Level: Label | null
 
     constructor(
         body : any,
+        isModel = false
     ) {
         try
         {
@@ -42,7 +45,8 @@ class User
                 "Level",
             ]
 
-            BodyChecker(body, Labels)
+            if (!isModel)
+                BodyChecker(body, Labels)
 
             this.Id = body["Id"]
             this.Username = body["Username"]
@@ -51,13 +55,13 @@ class User
             this.Deleted = body["Deleted"]
             this.Name = body["Name"]
             this.BirthDate = body["BirthDate"]
-            this.Sex = new Label(Sex, body["Sex"], "Sex")
+            this.Sex = this.ConvertSexEnum(body, isModel)
             this.Email = body["Email"]
             this.RecoveryEmail = body["RecoveryEmail"]
             this.Phone = body["Phone"]
             this.Password = body["Password"]
             this.PasswordHint = body["PasswordHint"]
-            this.Level = new Label(PermissionLevel, body["Level"], "PermissionLevel")
+            this.Level = this.ConvertLevelEnum(body, isModel)
         }
         catch (ex)
         {
@@ -94,6 +98,31 @@ class User
     {
         let newUsername = this.Username.toLowerCase()
         this.Username = newUsername.trim()
+    }
+
+    GenerateUserKey()
+    {
+        if (!IsUndNull(this.Username) && !IsUndNull(this.Id))
+            return `${ this.Username }#${ FormatIdNumber(this.Id) }`
+
+        if (!IsUndNull(this.Id))
+            return `#${FormatIdNumber(this.Id)}`
+
+        return undefined
+    }
+
+    private ConvertSexEnum(body : any, isModel: boolean)
+    {
+        return isModel && IsUndNull(body["Sex"])
+            ? null
+            : new Label(Sex, body["Sex"], "Sex")
+    }
+
+    private ConvertLevelEnum(body : any, isModel: boolean)
+    {
+        return isModel && IsUndNull(body["Level"])
+            ? null
+            : new Label(PermissionLevel, body["Level"], "PermissionLevel")
     }
 }
 

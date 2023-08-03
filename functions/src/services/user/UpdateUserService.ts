@@ -9,21 +9,10 @@ import ValidateUser from "./utilities/ValidateUser"
 import SetUser from "./utilities/SetUser"
 
 import Send from "../../functions/Responses"
-import FormatIdNumber from "../../functions/FormatIdNumber"
-
-// FIXING
-// Receber o ID do user e os parametros a serem editados apenas
-
-/*
-UserId : number,
-UserInfoUpdate: {
-    ...User
-}
-*/
+import IsUndNull from "../../functions/IsUndNull"
 
 /**
  * Updates a user.
- * Aproved 02/08.
  * @param req User object
  * @param res 
  * @param db 
@@ -37,7 +26,7 @@ export default async function UpdateUserService
     admin : any,
     dbRef : string,
 )
-: Promise<void>
+: Promise<void> 
 {
     const action = "Edição de usuário"
     try
@@ -46,10 +35,11 @@ export default async function UpdateUserService
             return Send.MethodNotAllowed(res, "Método não autorizado.", action)
 
         const user = CheckBody(req.body)
-        const userKey = `${ user.Username }#${ FormatIdNumber(user.Id) }`
+        const userKey = user.GenerateUserKey()
 
         await Promise.resolve(ValidateUser(db, user, false))
             .then(async () => {
+
                 await Promise.resolve(SetUser(admin, user, db, dbRef))
                     .then(() => {
                         Send.Ok(res, `Usuário ${ userKey } editado com sucesso.`, action)
@@ -68,7 +58,15 @@ export default async function UpdateUserService
     }
 }
 
-function CheckBody(body : Object) : User
+function CheckBody(body : any) : User
 {
-    return new User(body)
+    if (IsUndNull(body))
+        throw new Error("Corpo da requisição inválido.");
+
+    const user = new User(body, true);
+
+    if (IsUndNull(user.Id))
+        throw new Error("Id de usuário a ser atualizado não encontrado.");
+
+    return user
 }

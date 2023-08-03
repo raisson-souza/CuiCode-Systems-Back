@@ -12,7 +12,6 @@ import SetUser from "./utilities/SetUser"
 
 /**
  * Sets deleted param of a user;
- * Aproved 02/08.
  * @param req User ID and isDeleted
  * @param res 
  * @param db 

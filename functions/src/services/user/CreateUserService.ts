@@ -12,7 +12,6 @@ import Send from "../../functions/Responses"
 
 /**
  * Creates a user.
- * Aproved 02/08.
  * @param req User Object
  * @param res 
  * @param db 

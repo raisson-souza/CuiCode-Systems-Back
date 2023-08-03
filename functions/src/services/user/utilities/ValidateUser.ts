@@ -1,6 +1,7 @@
 import User from "../../../classes/User"
 
 import PermissionLevel from "../../../enums/PermissionLevel"
+import IsUndNull from "../../../functions/IsUndNull"
 
 /**
  * Validates a user
@@ -46,11 +47,16 @@ export default async function ValidateUser
                             usersValidationInfo.rootUserPresence = true
                     })
 
-                    if (usersValidationInfo.rootUserPresence && user.Level.Value == PermissionLevel.Root)
-                        throw new Error("Já existe um usuário root.")
+                    if (!IsUndNull(user.Level))
+                    {
+                        if (usersValidationInfo.rootUserPresence && user.Level!.Value == PermissionLevel.Root)
+                            throw new Error("Já existe um usuário root.")
+                    }
 
                     const totalUsers = usersValidationInfo.usersEmails.length
-                    const userId = user.Id + 1
+                    const userId = isCreation
+                        ? user.Id + 1
+                        : user.Id
 
                     if (userId <= totalUsers && isCreation)
                         throw new Error("Id de usuário já existente.")

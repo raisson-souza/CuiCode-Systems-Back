@@ -31,24 +31,17 @@ export default async function SetUser
             })
         }
 
+        const newUser : any = {}
+        const userObject : any = { ...user }
+
+        Object.keys(user).forEach((userInfoKey) => {
+            if (!IsUndNull(userObject[userInfoKey]))
+                newUser[userInfoKey] = userObject[userInfoKey]
+        })
+
         admin.database()
             .ref(`/database/${ dbRef }/users/${ user.Id }`)
-            .set({
-                Id: user.Id,
-                Username: user.Username,
-                Active: user.Active,
-                CreatedDate: user.CreatedDate,
-                Deleted: user.Deleted,
-                Name : user.Name,
-                BirthDate: user.BirthDate,
-                Sex: user.Sex,
-                Email: user.Email,
-                RecoveryEmail: user.RecoveryEmail,
-                Phone: user.Phone,
-                Password: user.Password,
-                PasswordHint: user.PasswordHint,
-                Level: user.Level,
-            });
+            .update({ ...newUser });
     }
     catch (ex)
     {
