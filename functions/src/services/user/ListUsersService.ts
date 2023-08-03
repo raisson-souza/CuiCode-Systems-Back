@@ -28,7 +28,7 @@ export default async function ListUsersService
         if (req.method != "GET")
             return Send.MethodNotAllowed(res, "Método não autorizado.", action)
 
-        const userRequiredInfos = CheckBody(req.body)
+        const userRequiredInfos = CheckQuery(req.query)
 
         await Promise.resolve(QueryUsersInfos(db, userRequiredInfos))
             .then(userInfos => {
@@ -44,10 +44,14 @@ export default async function ListUsersService
     }
 }
 
-function CheckBody(body : any) : Array<string>
+function CheckQuery(query : any) : Array<string>
 {
-    if (IsUndNull(body.requiredInfos))
-        throw new Error("Informações requeridas dos usuários não encontradas no corpo da requisição.")
+    if (IsUndNull(query.RequiredInfos))
+        throw new Error("Informações requeridas dos usuários não encontradas na URL.")
 
-    return body.requiredInfos
+    const JsonConvertedQuery = JSON.parse(query.RequiredInfos)
+
+    const RequiredInfosArray = new Array(JsonConvertedQuery)
+
+    return RequiredInfosArray[0]
 }

@@ -19,12 +19,12 @@ const db_user = admin.database().ref(`/database/${ DATABASE }/users/`)
 
 // USER SERVICES
 
-// Aproved 02/08.
+// Aproved 03/08.
 export const GetUser = onRequest((req, res) => {
     GetUserService(req, res, db_user)
 })
 
-// Aproved 02/08.
+// Aproved 03/08.
 export const ListUsers = onRequest((req, res) => {
     ListUsersService(req, res, db_user)
 })
