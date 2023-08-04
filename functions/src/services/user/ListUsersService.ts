@@ -46,6 +46,7 @@ export default async function ListUsersService
 
 function CheckQuery(query : any) : Array<string>
 {
+    // arrumar para RequiredInfo
     if (IsUndNull(query.RequiredInfos))
         throw new Error("Informações requeridas dos usuários não encontradas na URL.")
 

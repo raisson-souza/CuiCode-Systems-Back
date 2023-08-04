@@ -9,6 +9,10 @@ import SetDeleteUserService from "./services/user/SetDeleteUserService"
 import SetActiveUserService from "./services/user/SetActiveUserService"
 import TraceAccessService from "./services/features/TraceAccessService"
 
+// FUNCTIONS
+import Send from "./functions/Responses"
+import ValidateCorsAsync from "./functions/ValidateCorsAsync"
+
 // admin
 const admin = require("firebase-admin");
 admin.initializeApp()
@@ -19,34 +23,40 @@ const db_user = admin.database().ref(`/database/${ DATABASE }/users/`)
 
 // USER SERVICES
 
-// Aproved 03/08.
 export const GetUser = onRequest((req, res) => {
-    GetUserService(req, res, db_user)
+    Promise.resolve(ValidateCorsAsync(req, res))
+        .then(() => { GetUserService(req, res, db_user) })
+        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 
-// Aproved 03/08.
 export const ListUsers = onRequest((req, res) => {
-    ListUsersService(req, res, db_user)
+    Promise.resolve(ValidateCorsAsync(req, res))
+        .then(() => { ListUsersService(req, res, db_user) })
+        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 
-// Aproved 03/08.
 export const CreateUser = onRequest((req, res) => {
-    CreateUserService(req, res, db_user, admin, DATABASE)
+    Promise.resolve(ValidateCorsAsync(req, res))
+        .then(() => { CreateUserService(req, res, db_user, admin, DATABASE) })
+        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 
-// Aproved 03/08.
 export const UpdateUser = onRequest((req, res) => {
-    UpdateUserService(req, res, db_user, admin, DATABASE)
+    Promise.resolve(ValidateCorsAsync(req, res))
+        .then(() => { UpdateUserService(req, res, db_user, admin, DATABASE) })
+        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 
-// Aproved 03/08.
 export const SetActiveUser = onRequest((req, res) => {
-    SetActiveUserService(req, res, db_user, admin, DATABASE)
+    Promise.resolve(ValidateCorsAsync(req, res))
+        .then(() => { SetActiveUserService(req, res, db_user, admin, DATABASE) })
+        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 
-// Aproved 03/08.
 export const SetDeleteUser = onRequest((req, res) => {
-    SetDeleteUserService(req, res, db_user, admin, DATABASE)
+    Promise.resolve(ValidateCorsAsync(req, res))
+        .then(() => { SetDeleteUserService(req, res, db_user, admin, DATABASE) })
+        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 
 // FEATURES
@@ -58,28 +68,8 @@ export const TraceAccess = onRequest((req, res) => {
 /*
 # MAJOR FIXINGS
 
-CORS
-    testar com front
-AUTHORIZATION
-    usar senha para uso com
-        postman
-        sites de api
-        integrações
-combinar essas seguranças para nao se anularem
-
-# MINOR FIXINGS
-
-# FEATURES
-
-# INOVAÇÃO
-
-usar query params na requests tambem
-*/
-
-/*
-PRÓXIMOS COMMITS
-
-validação especial para convidados
+criar uma classe com res, req,admin,db,databas como params e alguns como possivel nulos e passar como param
+para a classe e usar o param! dentro para nao ter problemas
 
 mudar organização das pastas
     services
@@ -91,6 +81,30 @@ mudar organização das pastas
 
     explicar erros na service e só retornar após o fluxo da mesma
 
+# MINOR FIXINGS
+
+# FEATURES
+
+# INOVAÇÃO
+
+*/
+
+/*
+PRÓXIMOS COMMITS
+
 endpoints a preparar
     listagem de todos os usuarios e por nivel de acesso
+
+LOGIN
+    login
+    cadastro
+        user normal
+        convidado
+            validação especial
+    trace
+    mudança
+        senha
+        email
+        email rec
+        username
 */

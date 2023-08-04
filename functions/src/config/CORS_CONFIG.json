@@ -1,0 +1,9 @@
+{
+    "ALLOWED_ORIGINS": [
+        "http://localhost:3000/",
+        "http://localhost:3000",
+        "http://127.0.0.1:5000/",
+        "http://127.0.0.1:5000"
+    ],
+    "API_TEST_TOKEN": "Bearer Y3VpY29kZXN5c3RlbXMtYmVhcmVyLXRva2Vu"
+}
