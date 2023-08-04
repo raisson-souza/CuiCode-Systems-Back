@@ -2,7 +2,7 @@ import User from "../../../classes/User"
 
 import IsUndNull from "../../../functions/IsUndNull";
 
-import QueryUsersInfos from "./QueryUsersInfos";
+import QueryUsersInfos from "./QueryUsersInfo";
 
 /**
  * Creates or Updates a user.

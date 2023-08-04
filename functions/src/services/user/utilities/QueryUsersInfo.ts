@@ -1,13 +1,13 @@
 /**
  * Queries specific information about all users.
  * @param db 
- * @param requiredInfos 
+ * @param requiredInfo
  * @returns 
  */
-export default async function QueryUsersInfos
+export default async function QueryUsersInfo
 (
     db : any,
-    requiredInfos : Array<string>
+    requiredInfo : Array<string>
 )
 : Promise<Array<object>>
 {
@@ -21,7 +21,7 @@ export default async function QueryUsersInfos
                 snapshot.forEach((data: any) => {
                     const userObject : any = {}
 
-                    requiredInfos.forEach(info => {
+                    requiredInfo.forEach(info => {
                         userObject[info] = data.val()[info]
                     })
 

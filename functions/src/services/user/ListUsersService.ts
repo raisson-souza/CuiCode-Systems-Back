@@ -6,11 +6,11 @@ import {
 import IsUndNull from "../../functions/IsUndNull"
 import Send from "../../functions/Responses"
 
-import QueryUsersInfos from "./utilities/QueryUsersInfos"
+import QueryUsersInfo from "./utilities/QueryUsersInfo"
 
 /**
  * Queries specific information about all users.
- * @param req requiredInfos = {Part of User object}
+ * @param req requiredInfo = {Part of User object}
  * @param res 
  * @param db 
  */
@@ -28,9 +28,9 @@ export default async function ListUsersService
         if (req.method != "GET")
             return Send.MethodNotAllowed(res, "Método não autorizado.", action)
 
-        const userRequiredInfos = CheckQuery(req.query)
+        const userRequiredInfo = CheckQuery(req.query)
 
-        await Promise.resolve(QueryUsersInfos(db, userRequiredInfos))
+        await Promise.resolve(QueryUsersInfo(db, userRequiredInfo))
             .then(userInfos => {
                 Send.Ok(res, userInfos, action)
             })
@@ -46,13 +46,12 @@ export default async function ListUsersService
 
 function CheckQuery(query : any) : Array<string>
 {
-    // arrumar para RequiredInfo
-    if (IsUndNull(query.RequiredInfos))
+    if (IsUndNull(query.RequiredInfo))
         throw new Error("Informações requeridas dos usuários não encontradas na URL.")
 
-    const JsonConvertedQuery = JSON.parse(query.RequiredInfos)
+    const JsonConvertedQuery = JSON.parse(query.RequiredInfo)
 
-    const RequiredInfosArray = new Array(JsonConvertedQuery)
+    const RequiredInfoArray = new Array(JsonConvertedQuery)
 
-    return RequiredInfosArray[0]
+    return RequiredInfoArray[0]
 }
