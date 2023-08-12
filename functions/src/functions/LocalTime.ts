@@ -1,3 +1,6 @@
+/**
+ * Gets local time.
+ */
 export default function GetDate() : string
 {
     const date = new Date()

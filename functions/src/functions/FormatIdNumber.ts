@@ -1,3 +1,7 @@
+/**
+ * Formats a number to client-friendly.
+ * @param id 
+ */
 export default function FormatIdNumber(id: number) : string
 {
     const stringId = id.toString()

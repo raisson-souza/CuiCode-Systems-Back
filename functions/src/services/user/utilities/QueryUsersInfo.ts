@@ -1,34 +1,48 @@
+import { Client } from "pg"
+
 /**
  * Queries specific information about all users.
- * @param db 
- * @param requiredInfo
+ * @param db_connection 
+ * @param db_stage
+ * @param requiredInfo 
  * @returns 
  */
 export default async function QueryUsersInfo
 (
-    db : any,
+    db_connection : Client,
+    db_stage : string,
     requiredInfo : Array<string>
 )
 : Promise<Array<object>>
 {
     try
     {
-        const usersInfo : Array<object> = []
+        if (requiredInfo.length == 0)
+            throw new Error("Nenhuma informação requerida.")
 
-        return db.orderByValue()
-            .once("value")
-            .then((snapshot: Object[]) => {
-                snapshot.forEach((data: any) => {
-                    const userObject : any = {}
+        let query = "SELECT"
 
-                    requiredInfo.forEach(info => {
-                        userObject[info] = data.val()[info]
+        requiredInfo.forEach((info, i) => {
+            if (i != requiredInfo.length - 1)
+                query += ` ${ info },`
+            else
+                query += ` ${ info } `
+        })
+
+        query += ` FROM ${ db_stage }.users`
+
+        return db_connection.connect()
+            .then(async () => {
+                return db_connection.query(query)
+                    .then(result => {
+                        return result.rows
                     })
-
-                    usersInfo.push(userObject)
-                })
-
-                return usersInfo
+                    .catch(ex => {
+                        throw new Error(ex.message)
+                    })
+            })
+            .catch(ex => {
+                throw new Error(ex.message)
             })
     }
     catch (ex)

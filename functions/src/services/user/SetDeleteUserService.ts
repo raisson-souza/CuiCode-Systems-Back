@@ -1,29 +1,17 @@
-import {
-    Request,
-    Response,
-} from "firebase-functions"
-
 import IsUndNull from "../../functions/IsUndNull"
 import IsBoolean from "../../functions/IsBoolean"
 import Send from "../../functions/Responses"
 
 import QueryUser from "./utilities/QueryUser"
-import SetUser from "./utilities/SetUser"
+// import SetUser from "./utilities/SetUser"
+import Service from "../../classes/Service"
 
 /**
  * Sets deleted param of a user;
- * @param req User ID and isDeleted
- * @param res 
- * @param db 
- * @param admin 
  */
 export default async function SetDeleteUserService
 (
-    req : Request,
-    res : Response,
-    db : any,
-    admin : any,
-    dbRef : string,
+    service : Service
 )
 : Promise<void>
 {
@@ -31,10 +19,17 @@ export default async function SetDeleteUserService
 
     try
     {
-        if (req.method != "DELETE")
-            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+        const {
+            REQ,
+            RES,
+            DB_connection,
+            DB_stage
+        } = service
 
-        const bodyChecked = CheckBody(req.body)
+        if (REQ.method != "DELETE")
+            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
+
+        const bodyChecked = CheckBody(REQ.body)
         const {
             userId,
             isDelete
@@ -43,25 +38,11 @@ export default async function SetDeleteUserService
         const renderAction = isDelete ? "deletar" : "restaurar"
         const renderVerbalAction = isDelete ? "deletado" : "restaurado"
 
-        await Promise.resolve(QueryUser(db, userId))
-            .then(async (user) => {
-                user.Deleted = isDelete
-                
-                await Promise.resolve(SetUser(admin, user, db, dbRef))
-                    .then(() => {
-                        Send.Ok(res, `Usuário de ID ${ userId } ${ renderVerbalAction } com sucesso.`, action)
-                    })
-                    .catch(ex => {
-                        Send.Error(res, `Houve um erro ao ${ renderAction } o usuário: ${ ex.message }`, action)
-                    })
-            })
-            .catch(ex => {
-                Send.Error(res, `Houve um erro ao ${ renderAction } o usuário: ${ ex.message }`, action)
-            })
+        // CORRIGIR
     }
     catch (ex)
     {
-        Send.Error(res, `Houve um erro ao deletar ou restaurar o usuário: ${ (ex as Error).message }`, action)
+        Send.Error(service.RES, `Houve um erro ao deletar ou restaurar o usuário: ${ (ex as Error).message }`, action)
     }
 }
 

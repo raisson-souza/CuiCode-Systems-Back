@@ -2,6 +2,7 @@ import {
     Request,
     Response,
 } from "firebase-functions"
+import { Client } from "pg"
 
 import User from "./User"
 
@@ -9,69 +10,48 @@ import QueryUser from "../services/user/utilities/QueryUser"
 
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevel from "../enums/PermissionLevel"
+import DatabaseStage from "../enums/DatabaseStage"
+
+import DATABASE from "../config/DATABASE.json"
 
 /**
  * Contains all necessary params for all endpoints
  * @param REQ Request
  * @param RES Response
- * @param DB_ref Database reference
- * @param DB_stage Database stage
- * @param ADMIN Admin
+ * @param DB_stage Database reference
  * @param USER_req User Requester
- * @param DB_users User database
  */
 export default class Service
 {
     REQ : Request
     RES : Response
-    DB_ref : any
-    DB_stage : string | null
-    ADMIN : any | null
-    DB_users : any | null
-    // OPCIONAL / PÓS-INSTANCIAÇÃO
+    DB_stage : string
+    DB_connection : Client
     USER_req : User | null
-
-    /*  Params necessity for actions
-        REQ       ALL
-        RES       ALL
-        DB_ref    ALL
-        DB_stage  SET ACTIONS
-        ADMIN     SET ACTIONS
-        DB_users  ALL
-        USER_req  ?
-    */
 
     constructor
     (
         req : Request,
         res : Response,
-        db_ref : any,
-        db_stage : string | null = null,
-        admin : any | null = null,
-        db_users : any | null = null
+        db_stage : DatabaseStage,
     )
     {
         this.REQ = req
         this.RES = res
-        this.DB_ref = db_ref
-        this.DB_stage = db_stage
-        this.ADMIN = admin
-        this.DB_users = db_users
-        this.GetReqUserAsync()
+        this.DB_stage = `cui_code_systems_${ DatabaseStage[db_stage] }`
+        this.DB_connection = new Client(DATABASE.DatabaseConfig)
+        this.SetReqUserAsync()
     }
 
     /**
      * Queries all UserReq info
      */
-    private async GetReqUserAsync()
+    private async SetReqUserAsync()
     {
-        if (IsUndNull(this.DB_users))
-            this.USER_req = null
-
         const userReqId = this.CheckUserIdExistance()
 
-        await Promise.resolve(
-            QueryUser(this.DB_users, userReqId))
+        return Promise.resolve(
+            QueryUser(this.DB_connection, this.DB_stage, userReqId))
                 .then((user) => { this.USER_req = user })
                 .catch(() => { this.USER_req = null })
     }
@@ -124,9 +104,6 @@ export default class Service
      */
     GetReqUserLevel()
     {
-        if (IsUndNull(this.USER_req))
-            this.GetReqUserAsync()
-
         return !IsUndNull(this.USER_req)
             ? PermissionLevel[this.USER_req?.Level?.Value!]
             : null

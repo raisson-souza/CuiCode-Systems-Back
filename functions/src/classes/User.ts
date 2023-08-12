@@ -7,6 +7,21 @@ import Label from "./Label"
 import IsUndNull from "../functions/IsUndNull"
 import FormatIdNumber from "../functions/FormatIdNumber"
 
+const Labels = [
+    "Active",
+    "CreatedDate",
+    "Deleted",
+    "Name",
+    "BirthDate",
+    "Sex",
+    "Email",
+    "RecoveryEmail",
+    "Phone",
+    "Password",
+    "PasswordHint",
+    "Level",
+]
+
 export default class User
 {
     Id: number
@@ -30,21 +45,6 @@ export default class User
     ) {
         try
         {
-            const Labels = [
-                "Active",
-                "CreatedDate",
-                "Deleted",
-                "Name",
-                "BirthDate",
-                "Sex",
-                "Email",
-                "RecoveryEmail",
-                "Phone",
-                "Password",
-                "PasswordHint",
-                "Level",
-            ]
-
             if (!isModel)
                 BodyChecker(body, Labels)
 
@@ -123,5 +123,56 @@ export default class User
         return isModel && IsUndNull(body["Level"])
             ? null
             : new Label(PermissionLevel, body["Level"], "PermissionLevel")
+    }
+
+    static ConvertUserPropsToSQL(userProps : string[]) : string[]
+    {
+        const convertedProps : string[] = []
+
+        userProps.forEach(prop => {
+            switch(prop)
+            {
+                case "Active":
+                    convertedProps.push("active")
+                    break
+                case "CreatedDate":
+                    convertedProps.push("created_date")
+                    break
+                case "Deleted":
+                    convertedProps.push("deleted")
+                    break
+                case "Name":
+                    convertedProps.push("name")
+                    break
+                case "BirthDate":
+                    convertedProps.push("birthdate")
+                    break
+                case "Sex":
+                    convertedProps.push("sex")
+                    break
+                case "Email":
+                    convertedProps.push("email")
+                    break
+                case "RecoveryEmail":
+                    convertedProps.push("recovery_email")
+                    break
+                case "Phone":
+                    convertedProps.push("phone")
+                    break
+                case "Password":
+                    convertedProps.push("password")
+                    break
+                case "PasswordHint":
+                    convertedProps.push("password_hint")
+                    break
+                case "Level":
+                    convertedProps.push("permission_level")
+                    break
+                default:
+                    break
+            }
+        })
+
+        return convertedProps
     }
 }

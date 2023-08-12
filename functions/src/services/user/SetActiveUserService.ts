@@ -1,29 +1,17 @@
-import {
-    Request,
-    Response,
-} from "firebase-functions"
-
 import IsUndNull from "../../functions/IsUndNull"
 import IsBoolean from "../../functions/IsBoolean"
 import Send from "../../functions/Responses"
 
 import QueryUser from "./utilities/QueryUser"
-import SetUser from "./utilities/SetUser"
+// import SetUser from "./utilities/SetUser"
+import Service from "../../classes/Service"
 
 /**
  * Sets active param of a user.
- * @param req User ID and isActive
- * @param res 
- * @param db 
- * @param admin 
  */
 export default async function SetActiveUserService
 (
-    req : Request,
-    res : Response,
-    db : any,
-    admin : any,
-    dbRef : string,
+    service : Service
 )
 : Promise<void>
 {
@@ -31,10 +19,18 @@ export default async function SetActiveUserService
 
     try
     {
-        if (req.method != "PUT")
-            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+        const {
+            REQ,
+            RES,
+            DB_connection,
+            DB_stage
+        } = service
 
-        const bodyChecked = CheckBody(req.body)
+        if (REQ.method != "PUT")
+            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
+
+        const bodyChecked = CheckBody(REQ.body)
+
         const {
             userId,
             isActive
@@ -43,25 +39,11 @@ export default async function SetActiveUserService
         const renderAction = isActive ? "desativar" : "ativar"
         const renderVerbalAction = isActive ? "desativado" : "ativado"
 
-        await Promise.resolve(QueryUser(db, userId))
-            .then(async (user) => {
-                user.Active = isActive
-                
-                await Promise.resolve(SetUser(admin, user, db, dbRef))
-                    .then(() => {
-                        Send.Ok(res, `Usuário de ID ${ userId } ${ renderVerbalAction } com sucesso.`, action)
-                    })
-                    .catch(ex => {
-                        Send.Error(res, `Houve um erro ao ${ renderAction } o usuário: ${ ex.message }`, action)
-                    })
-            })
-            .catch(ex => {
-                Send.Error(res, `Houve um erro ao ${ renderAction } o usuário: ${ ex.message }`, action)
-            })
+        // CORRIGIR
     }
     catch (ex)
     {
-        Send.Error(res, `Houve um erro ao desativar ou ativar o usuário: ${ (ex as Error).message }`, action)
+        Send.Error(service.RES, `Houve um erro ao desativar ou ativar o usuário: ${ (ex as Error).message }`, action)
     }
 }
 

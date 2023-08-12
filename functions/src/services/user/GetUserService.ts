@@ -1,46 +1,39 @@
-import {
-    Request,
-    Response,
-} from "firebase-functions"
-
 import QueryUser from "./utilities/QueryUser"
 
 import IsUndNull from "../../functions/IsUndNull"
 import Send from "../../functions/Responses"
+import Service from "../../classes/Service"
 
 /**
  * Queries a user.
- * @param req User ID
- * @param res 
- * @param db 
  */
 export default async function GetUserService
 (
-    req : Request,
-    res : Response,
-    db : any
+    service : Service
 )
 : Promise<void>
 {
     const action = "Consulta de usuário."
+
     try
     {
-        if (req.method != "GET")
-            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+        const {
+            REQ,
+            RES,
+            DB_connection,
+            DB_stage
+        } = service
 
-        const userId = CheckQuery(req.query)
+        if (REQ.method != "GET")
+            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
 
-        await Promise.resolve(QueryUser(db, userId))
-            .then(user => {
-                Send.Ok(res, user, action)
-            })
-            .catch(ex => {
-                Send.Error(res, `Houve um erro ao consultar o usuário de ID ${ userId }. Erro: ${ ex.message }`, action)
-            })
+        const userId = CheckQuery(REQ.query)
+
+        // CORRIGIR
     }
     catch (ex)
     {
-        Send.Error(res, `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`, action)
+        Send.Error(service.RES, `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`, action)
     }
 }
 

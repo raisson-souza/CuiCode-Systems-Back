@@ -7,6 +7,7 @@ import IsUndNull from "../../functions/IsUndNull"
 import Send from "../../functions/Responses"
 
 import QueryUsersInfo from "./utilities/QueryUsersInfo"
+import Service from "../../classes/Service"
 
 /**
  * Queries specific information about all users.
@@ -16,31 +17,36 @@ import QueryUsersInfo from "./utilities/QueryUsersInfo"
  */
 export default async function ListUsersService
 (
-    req : Request,
-    res : Response,
-    db : any,
+    service : Service
 )
 : Promise<void>
 {
     const action = "Listagem de usuários."
     try
     {
-        if (req.method != "GET")
-            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+        const {
+            REQ,
+            RES,
+            DB_connection,
+            DB_stage
+        } = service
 
-        const userRequiredInfo = CheckQuery(req.query)
+        if (REQ.method != "GET")
+            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
 
-        await Promise.resolve(QueryUsersInfo(db, userRequiredInfo))
+        const userRequiredInfo = CheckQuery(REQ.query)
+
+        await Promise.resolve(QueryUsersInfo(DB_connection, DB_stage, userRequiredInfo))
             .then(userInfos => {
-                Send.Ok(res, userInfos, action)
+                Send.Ok(RES, userInfos, action)
             })
             .catch(ex => {
-                Send.Error(res, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ ex.message }`, action)
+                Send.Error(RES, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ ex.message }`, action)
             })
     }
     catch (ex)
     {
-        Send.Error(res, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`, action)
+        Send.Error(service.RES, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`, action)
     }
 }
 

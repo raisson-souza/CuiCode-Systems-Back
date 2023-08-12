@@ -1,29 +1,17 @@
-import {
-    Request,
-    Response,
-} from "firebase-functions"
-
 import User from "../../classes/User"
 
-import ValidateUser from "./utilities/ValidateUser"
-import SetUser from "./utilities/SetUser"
+// import ValidateUser from "./utilities/ValidateUser"
+// import SetUser from "./utilities/SetUser"
 
 import Send from "../../functions/Responses"
+import Service from "../../classes/Service"
 
 /**
  * Creates a user.
- * @param req User Object
- * @param res 
- * @param db 
- * @param admin 
  */
 export default async function CreateUserService
 (
-    req : Request,
-    res : Response,
-    db : any,
-    admin : any,
-    dbRef : string,
+    service : Service
 )
 : Promise<void>
 {
@@ -31,33 +19,23 @@ export default async function CreateUserService
 
     try
     {
-        if (req.method != "POST")
-            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+        const {
+            REQ,
+            RES,
+            DB_connection,
+            DB_stage
+        } = service
 
-        const user = CheckBody(req.body)
+        if (REQ.method != "POST")
+            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
 
-        User.ValidateUsername(user.Username)
-        user.FormatUsername()
+        const user = CheckBody(REQ.body)
 
-        await Promise.resolve(ValidateUser(db, user))
-            .then(async () => {
-                await Promise.resolve(
-                    SetUser(admin, user, db, dbRef)
-                )
-                .then(() => {
-                    Send.Created(res, "Usuário criado com sucesso.", action)
-                })
-                .catch(ex => {
-                    Send.Error(res, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)
-                })
-            })
-            .catch(ex => {
-                Send.Error(res, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)
-            })
+        // CORRIGIR!
     }
     catch (ex)
     {
-        Send.Error(res, `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`, action)
+        Send.Error(service.RES, `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`, action)
     }
 }
 

@@ -1,15 +1,11 @@
-import {
-    Request,
-    Response,
-} from "firebase-functions"
-
 import User from "../../classes/User"
 
 import ValidateUser from "./utilities/ValidateUser"
-import SetUser from "./utilities/SetUser"
+// import SetUser from "./utilities/SetUser"
 
 import Send from "../../functions/Responses"
 import IsUndNull from "../../functions/IsUndNull"
+import Service from "../../classes/Service"
 
 /**
  * Updates a user.
@@ -20,41 +16,32 @@ import IsUndNull from "../../functions/IsUndNull"
  */
 export default async function UpdateUserService
 (
-    req : Request,
-    res : Response,
-    db : any,
-    admin : any,
-    dbRef : string,
+    service : Service
 )
 : Promise<void> 
 {
     const action = "Edição de usuário"
+
     try
     {
-        if (req.method != "PUT")
-            return Send.MethodNotAllowed(res, "Método não autorizado.", action)
+        const {
+            REQ,
+            RES,
+            DB_connection,
+            DB_stage
+        } = service
 
-        const user = CheckBody(req.body)
+        if (REQ.method != "PUT")
+            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
+
+        const user = CheckBody(REQ.body)
         const userKey = user.GenerateUserKey()
 
-        await Promise.resolve(ValidateUser(db, user, false))
-            .then(async () => {
-
-                await Promise.resolve(SetUser(admin, user, db, dbRef))
-                    .then(() => {
-                        Send.Ok(res, `Usuário ${ userKey } editado com sucesso.`, action)
-                    })
-                    .catch(ex => {
-                        Send.Error(res, `Houve um erro ao editar o usuário ${ userKey }. Erro: ${ ex.message }`, action)
-                    })
-            })
-            .catch(ex => {
-                Send.Error(res, `Houve um erro ao editar o usuário ${ userKey }. Erro: ${ ex.message }`, action)
-            })
+        // CORRIGIR
     }
     catch (ex)
     {
-        Send.Error(res, `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`, action)
+        Send.Error(service.RES, `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`, action)
     }
 }
 
