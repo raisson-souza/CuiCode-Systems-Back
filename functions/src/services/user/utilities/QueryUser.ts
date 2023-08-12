@@ -11,12 +11,15 @@ import IsUndNull from "../../../functions/IsUndNull"
 export default async function QueryUser
 (
     db : any,
-    userId : number,
+    userId : number | null,
 )
 : Promise<User>
 {
     let c = 0
     let userObject : any = null
+
+    if (IsUndNull(userId))
+        throw new Error("Id de usuário deve ser informado.");
 
     try
     {

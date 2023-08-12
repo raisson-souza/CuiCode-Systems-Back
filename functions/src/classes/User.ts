@@ -7,7 +7,7 @@ import Label from "./Label"
 import IsUndNull from "../functions/IsUndNull"
 import FormatIdNumber from "../functions/FormatIdNumber"
 
-class User
+export default class User
 {
     Id: number
     Username: string
@@ -125,5 +125,3 @@ class User
             : new Label(PermissionLevel, body["Level"], "PermissionLevel")
     }
 }
-
-export default User
