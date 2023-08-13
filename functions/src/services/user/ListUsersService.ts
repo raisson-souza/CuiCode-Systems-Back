@@ -48,7 +48,6 @@ export default async function ListUsersService
     }
     finally
     {
-        // fazer isso em todas as services
         service.DB_connection.end()
     }
 }

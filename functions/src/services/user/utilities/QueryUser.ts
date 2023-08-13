@@ -24,12 +24,17 @@ export default async function QueryUser
         if (IsUndNull(userId))
             throw new Error("Id de usuário deve ser informado.");
 
-        // testar sql injection
-        const query = `SELECT * FROM ${ db_stage }.users where id = ${ userId }`;
+            const query = `SELECT * FROM ${ db_stage }.users WHERE id = ${ userId }`;
 
         return db_connection.query(query)
             .then(result => {
-                const user = new User(result.rows)
+                if (result.rowCount > 1)
+                    throw new Error("Mais de um usuário foi encontrado na consulta indivídual.") // ERRO CRÍTICO
+
+                if (result.rowCount == 0)
+                    throw new Error("Nenhum usuário encontrado.")
+
+                const user = new User(result.rows[0], true, true)
                 return user
             })
             .catch(ex => {

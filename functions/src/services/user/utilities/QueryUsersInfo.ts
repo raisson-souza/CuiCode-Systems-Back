@@ -13,7 +13,7 @@ export default async function QueryUsersInfo
     db_stage : string,
     requiredInfo : Array<string>
 )
-: Promise<Array<object>>
+: Promise<Array<object> | null>
 {
     try
     {
@@ -33,6 +33,9 @@ export default async function QueryUsersInfo
 
         return db_connection.query(query)
             .then(result => {
+                if (result.rowCount == 0)
+                    return null
+
                 return result.rows
             })
             .catch(ex => {

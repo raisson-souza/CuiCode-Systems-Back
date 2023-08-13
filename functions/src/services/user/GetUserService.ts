@@ -29,11 +29,21 @@ export default async function GetUserService
 
         const userId = CheckQuery(REQ.query)
 
-        // CORRIGIR
+        await Promise.resolve(QueryUser(DB_connection, DB_stage, userId))
+            .then(user => {
+                Send.Ok(RES, user, action)
+            })
+            .catch(ex => {
+                Send.Error(RES, `Houve um erro ao consultar o usuário. Erro: ${ ex.message }`, action)
+            })
     }
     catch (ex)
     {
         Send.Error(service.RES, `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`, action)
+    }
+    finally
+    {
+        service.DB_connection.end()
     }
 }
 
