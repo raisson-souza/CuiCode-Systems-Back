@@ -27,16 +27,10 @@ export default async function QueryUser
         // testar sql injection
         const query = `SELECT * FROM ${ db_stage }.users where id = ${ userId }`;
 
-        return db_connection.connect()
-            .then(async () => {
-                return db_connection.query(query)
-                    .then(result => {
-                        const user = new User(result.rows)
-                        return user
-                    })
-                    .catch(ex => {
-                        throw new Error(ex.message);
-                    })
+        return db_connection.query(query)
+            .then(result => {
+                const user = new User(result.rows)
+                return user
             })
             .catch(ex => {
                 throw new Error(ex.message);

@@ -1,12 +1,8 @@
-import {
-    Request,
-    Response,
-} from "firebase-functions"
-
 import IsUndNull from "../../functions/IsUndNull"
 import Send from "../../functions/Responses"
 
 import QueryUsersInfo from "./utilities/QueryUsersInfo"
+
 import Service from "../../classes/Service"
 
 /**
@@ -22,6 +18,7 @@ export default async function ListUsersService
 : Promise<void>
 {
     const action = "Listagem de usuários."
+
     try
     {
         const {
@@ -34,6 +31,7 @@ export default async function ListUsersService
         if (REQ.method != "GET")
             return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
 
+        // O FRONT-END DEVE ENVIAR AS INFORMAÇÕES JÁ CONVERTIDAS PARA OS MESMOS CAMPOS DO BANCO
         const userRequiredInfo = CheckQuery(REQ.query)
 
         await Promise.resolve(QueryUsersInfo(DB_connection, DB_stage, userRequiredInfo))
@@ -47,6 +45,11 @@ export default async function ListUsersService
     catch (ex)
     {
         Send.Error(service.RES, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`, action)
+    }
+    finally
+    {
+        // fazer isso em todas as services
+        service.DB_connection.end()
     }
 }
 

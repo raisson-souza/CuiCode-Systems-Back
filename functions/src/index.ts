@@ -21,7 +21,7 @@ const DATABASE = DatabaseStage.testing
 // USER SERVICES
 
 export const GetUser = onRequest((req, res) => {
-    const service = new Service(req, res, DATABASE)
+    const service = new Service(req, res, DATABASE, false)
 
     Promise.resolve(ValidateCorsAsync(req, res))
         .then(() => { GetUserService(service) })
@@ -29,7 +29,7 @@ export const GetUser = onRequest((req, res) => {
 })
 
 export const ListUsers = onRequest((req, res) => {
-    const service = new Service(req, res, DATABASE)
+    const service = new Service(req, res, DATABASE, false)
     
     Promise.resolve(ValidateCorsAsync(req, res))
         .then(() => { ListUsersService(service) })

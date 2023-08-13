@@ -13,6 +13,7 @@ import PermissionLevel from "../enums/PermissionLevel"
 import DatabaseStage from "../enums/DatabaseStage"
 
 import DATABASE from "../config/DATABASE.json"
+import Send from "../functions/Responses"
 
 /**
  * Contains all necessary params for all endpoints
@@ -34,13 +35,17 @@ export default class Service
         req : Request,
         res : Response,
         db_stage : DatabaseStage,
+        req_user_query = true,
     )
     {
         this.REQ = req
         this.RES = res
-        this.DB_stage = `cui_code_systems_${ DatabaseStage[db_stage] }`
+        this.DB_stage = DatabaseStage[db_stage]
         this.DB_connection = new Client(DATABASE.DatabaseConfig)
-        this.SetReqUserAsync()
+        this.PerformConnection()
+
+        if (req_user_query)
+            this.SetReqUserAsync()
     }
 
     /**
@@ -97,6 +102,18 @@ export default class Service
             return null
 
         return userReqId
+    }
+
+    private PerformConnection() : void
+    {
+        // verificar erros nesse caso
+        // testar com exception
+        this.DB_connection.connect()
+            .then(() => {})
+            .catch(ex => {
+                Send.Error(this.RES, `Houve um erro ao conectar no banco. Erro: ${ ex.message }`, "Conexão no banco")
+                throw new Error()
+            })
     }
 
     /**
