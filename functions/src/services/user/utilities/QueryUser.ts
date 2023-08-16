@@ -24,13 +24,14 @@ export default async function QueryUser
         if (IsUndNull(userId))
             throw new Error("Id de usuário deve ser informado.");
 
-            const query = `SELECT * FROM ${ db_stage }.users WHERE id = ${ userId }`;
+        const query = `SELECT * FROM ${ db_stage }.users WHERE id = ${ userId }`;
 
-        return db_connection.query(query)
+        return await db_connection.query(query)
             .then(result => {
                 if (result.rowCount > 1)
                     throw new Error("Mais de um usuário foi encontrado na consulta indivídual.") // ERRO CRÍTICO
 
+                // EM CASO DE BUSCA DE USUÁRIO REQUERIDOR, RETORNAR ERRO DIFERENTE
                 if (result.rowCount == 0)
                     throw new Error("Nenhum usuário encontrado.")
 

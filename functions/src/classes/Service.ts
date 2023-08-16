@@ -8,18 +8,20 @@ import User from "./User"
 
 import QueryUser from "../services/user/utilities/QueryUser"
 
-import IsUndNull from "../functions/IsUndNull"
-import PermissionLevel from "../enums/PermissionLevel"
 import DatabaseStage from "../enums/DatabaseStage"
+import PermissionLevel from "../enums/PermissionLevel"
+
+import IsUndNull from "../functions/IsUndNull"
+import Send from "../functions/Responses"
 
 import DATABASE from "../config/DATABASE.json"
-import Send from "../functions/Responses"
 
 /**
  * Contains all necessary params for all endpoints
  * @param REQ Request
  * @param RES Response
  * @param DB_stage Database reference
+ * @param DB_connection Database connection
  * @param USER_req User Requester
  */
 export default class Service
@@ -28,6 +30,8 @@ export default class Service
     RES : Response
     DB_stage : string
     DB_connection : Client
+    // Necessário chamar SetReqUserAsync() na service requerida.
+    // Caso UserReqId não exista, estoura erro.
     USER_req : User | null
 
     constructor
@@ -35,7 +39,6 @@ export default class Service
         req : Request,
         res : Response,
         db_stage : DatabaseStage,
-        req_user_query = true,
     )
     {
         this.REQ = req
@@ -43,22 +46,28 @@ export default class Service
         this.DB_stage = DatabaseStage[db_stage]
         this.DB_connection = new Client(DATABASE.DatabaseConfig)
         this.PerformConnection()
-
-        if (req_user_query)
-            this.SetReqUserAsync()
     }
 
     /**
      * Queries all UserReq info
      */
-    private async SetReqUserAsync()
+    async SetReqUserAsync()
     {
         const userReqId = this.CheckUserIdExistance()
 
-        return Promise.resolve(
+        if (IsUndNull(userReqId))
+            throw new Error()
+
+        const user = await Promise.resolve(
             QueryUser(this.DB_connection, this.DB_stage, userReqId))
-                .then((user) => { this.USER_req = user })
-                .catch(() => { this.USER_req = null })
+                .then(user => {
+                    return user
+                })
+                .catch(ex => {
+                    throw new Error(ex.message)
+                })
+
+        this.USER_req = user
     }
 
     private CheckUserIdExistance() : number | null
@@ -79,7 +88,7 @@ export default class Service
      */
     private CheckUserReqInQuery() : number | null
     {
-        const userReqQuery = this.REQ.query.userReq
+        const userReqQuery = this.REQ.query.UserReqId
 
         if (IsUndNull(userReqQuery))
             return null
@@ -96,7 +105,7 @@ export default class Service
      */
     private CheckUserReqInBody() : number | null
     {
-        const userReqId = this.REQ.body.userReq
+        const userReqId = this.REQ.body.UserReqId
 
         if (IsUndNull(userReqId))
             return null
@@ -104,11 +113,10 @@ export default class Service
         return userReqId
     }
 
-    private PerformConnection() : void
+    private async PerformConnection()
     {
-        // verificar erros nesse caso
-        // testar com exception
-        this.DB_connection.connect()
+        // VALIDAR ERRO EM CASO DE BANCO DESCONECTADO
+        await this.DB_connection.connect()
             .then(() => {})
             .catch(ex => {
                 Send.Error(this.RES, `Houve um erro ao conectar no banco. Erro: ${ ex.message }`, "Conexão no banco")

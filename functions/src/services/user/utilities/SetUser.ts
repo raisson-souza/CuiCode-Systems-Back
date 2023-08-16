@@ -1,19 +1,21 @@
-import User from "../../../classes/User"
+// import User from "../../../classes/User"
 
-import IsUndNull from "../../../functions/IsUndNull";
+// import IsUndNull from "../../../functions/IsUndNull";
 
-import QueryUsersInfos from "./QueryUsersInfo";
+// import QueryUsersInfos from "./QueryUsersInfo";
 
 /**
- * Creates or Updates a user.
+ * Updates a user.
  */
-export default async function SetUser
+export default async function UpdateUser
 (
 )
 : Promise<void>
 {
     try
     {
+        // validar existencia do ID
+        // aguardando
     }
     catch (ex)
     {

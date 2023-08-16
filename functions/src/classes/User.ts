@@ -1,11 +1,12 @@
-import BodyChecker from "../functions/BodyChecker"
-
-import Sex from "../enums/Sex"
-import PermissionLevel from "../enums/PermissionLevel"
-
 import Label from "./Label"
-import IsUndNull from "../functions/IsUndNull"
+
+import PermissionLevel from "../enums/PermissionLevel"
+import Sex from "../enums/Sex"
+
+import BodyChecker from "../functions/BodyChecker"
 import FormatIdNumber from "../functions/FormatIdNumber"
+import IsUndNull from "../functions/IsUndNull"
+import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
 
 const Labels = [
     "Active",
@@ -119,6 +120,9 @@ export default class User
         if (!IsUndNull(this.Id))
             return `#${FormatIdNumber(this.Id)}`
 
+        if (!IsUndNull(this.Username))
+            return this.Username
+
         return undefined
     }
 
@@ -138,5 +142,20 @@ export default class User
         return isModel && IsUndNull(body[bodyProp])
             ? null
             : new Label(PermissionLevel, body[bodyProp], "PermissionLevel")
+    }
+
+    /**
+     * Checks user's permission level to perform an action.
+     * @param levelRequired
+     */
+    CheckUserPermission(levelRequired : PermissionLevel)
+    {
+        if (IsUndNull(this.Level?.Value))
+            throw new Error("Nível de permissão de usuário não encontrado.")
+
+        const userLevel = PermissionLevelToNumber(PermissionLevel[this.Level?.Value!])
+
+        if (userLevel > levelRequired)
+            throw new Error("Nível de permissão não alto o suficiente para realizar esta ação.")
     }
 }

@@ -31,7 +31,7 @@ export default async function QueryUsersInfo
 
         query += `FROM ${ db_stage }.users`
 
-        return db_connection.query(query)
+        return await db_connection.query(query)
             .then(result => {
                 if (result.rowCount == 0)
                     return null

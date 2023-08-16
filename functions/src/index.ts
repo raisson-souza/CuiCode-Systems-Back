@@ -2,13 +2,13 @@ import { onRequest } from "firebase-functions/v2/https"
 import Service from "./classes/Service"
 
 // USER
-import ListUsersService from "./services/user/ListUsersService"
 import CreateUserService from "./services/user/CreateUserService"
 import GetUserService from "./services/user/GetUserService"
-import UpdateUserService from "./services/user/UpdateUserService"
-import SetDeleteUserService from "./services/user/SetDeleteUserService"
+import ListUsersService from "./services/user/ListUsersService"
 import SetActiveUserService from "./services/user/SetActiveUserService"
+import SetDeleteUserService from "./services/user/SetDeleteUserService"
 import TraceAccessService from "./services/features/TraceAccessService"
+import UpdateUserService from "./services/user/UpdateUserService"
 
 // FUNCTIONS
 import Send from "./functions/Responses"
@@ -21,7 +21,7 @@ const DATABASE = DatabaseStage.testing
 // USER SERVICES
 
 export const GetUser = onRequest((req, res) => {
-    const service = new Service(req, res, DATABASE, false)
+    const service = new Service(req, res, DATABASE)
 
     Promise.resolve(ValidateCorsAsync(req, res))
         .then(() => { GetUserService(service) })
@@ -29,7 +29,7 @@ export const GetUser = onRequest((req, res) => {
 })
 
 export const ListUsers = onRequest((req, res) => {
-    const service = new Service(req, res, DATABASE, false)
+    const service = new Service(req, res, DATABASE)
     
     Promise.resolve(ValidateCorsAsync(req, res))
         .then(() => { ListUsersService(service) })

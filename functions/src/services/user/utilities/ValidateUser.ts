@@ -1,5 +1,8 @@
 import { Client } from "pg"
+
 import User from "../../../classes/User"
+
+import PermissionLevel from "../../../enums/PermissionLevel"
 
 /**
  * Validates a user
@@ -18,7 +21,7 @@ export default async function ValidateUser
     {
         const query = `SELECT * FROM ${ db_stage }.users`
 
-        db_connection.query(query)
+        await db_connection.query(query)
             .then(result => {
                 result.rows.forEach(userQuery => {
                     if (user.Id == userQuery["id"] && !isCreation)
@@ -31,12 +34,15 @@ export default async function ValidateUser
                         throw new Error(`Email ${ user.Email } já está em uso.`)
 
                     if (user.RecoveryEmail == userQuery["recovery_email"])
-                        throw new Error(`Recovery email ${ user.RecoveryEmail } já está em uso.`)
+                        throw new Error(`Email de recuperação ${ user.RecoveryEmail } já está em uso.`)
 
                     if (user.Phone == userQuery["phone"])
-                        throw new Error(`Phone ${ user.Phone } já está em uso.`)
+                        throw new Error(`Telefone ${ user.Phone } já está em uso.`)
 
-                    if (user.Level?.Value == userQuery["permission_level"])
+                    if (
+                        userQuery["permission_level"] == PermissionLevel.Root &&
+                        user.Level?.Value == PermissionLevel.Root
+                    )
                         throw new Error("Já existe um usuário com permissão ROOT.")
                 })
             })

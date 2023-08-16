@@ -1,10 +1,10 @@
+import Service from "../../classes/Service"
 import User from "../../classes/User"
 
-// import ValidateUser from "./utilities/ValidateUser"
-// import SetUser from "./utilities/SetUser"
+import CreateUser from "./utilities/CreateUser"
+import ValidateUser from "./utilities/ValidateUser"
 
 import Send from "../../functions/Responses"
-import Service from "../../classes/Service"
 
 /**
  * Creates a user.
@@ -23,7 +23,7 @@ export default async function CreateUserService
             REQ,
             RES,
             DB_connection,
-            DB_stage
+            DB_stage,
         } = service
 
         if (REQ.method != "POST")
@@ -31,13 +31,34 @@ export default async function CreateUserService
 
         const user = CheckBody(REQ.body)
 
-        // CORRIGIR!
+        await Promise.resolve(ValidateUser(DB_connection, DB_stage, user))
+            .then(async () => {
+                // VALIDAR DATA PARA FUSO BR
+                user.CreatedDate = new Date()
+
+                await Promise.resolve(CreateUser(DB_connection, DB_stage, user))
+                    .then(() => {
+                        Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, action)
+                    })
+                    .catch(ex => {
+                        Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)
+                    })
+            })
+            .catch(ex => {
+                Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)
+            })
     }
     catch (ex)
     {
         Send.Error(service.RES, `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`, action)
     }
+    finally
+    {
+        service.DB_connection.end()
+    }
 }
+
+// A criação de usuário não necessita de um usuário requeridor.
 
 function CheckBody(body : any) : User
 {
