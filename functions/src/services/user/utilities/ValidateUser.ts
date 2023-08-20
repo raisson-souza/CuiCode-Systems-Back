@@ -41,7 +41,7 @@ export default async function ValidateUser
 
                     if (
                         userQuery["permission_level"] == PermissionLevel.Root &&
-                        user.Level?.Value == PermissionLevel.Root
+                        user.PermissionLevel?.Value == PermissionLevel.Root
                     )
                         throw new Error("Já existe um usuário com permissão ROOT.")
                 })

@@ -8,37 +8,50 @@ import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
 
+// Nomes de campo obrigatórios para qualquer operação
 const Labels = [
-    "Active",
-    "CreatedDate",
-    "Deleted",
+    "Username",
     "Name",
     "BirthDate",
-    "Sex",
     "Email",
     "RecoveryEmail",
     "Phone",
     "Password",
     "PasswordHint",
-    "Level",
+    "PhotoBase64",
+    "PermissionLevel",
+    "Sex",
+    "EmailAproved",
+    "AcceptedBy",
+    "Active",
+    "CreatedDate",
+    "Deleted",
 ]
 
 export default class User
 {
+    // Identificação
     Id: number
     Username: string
-    Active: boolean
-    CreatedDate: Date
-    Deleted: boolean
     Name : string
+
+    // Dados pessoais
     BirthDate: Date
-    Sex: Label | null
     Email: string
     RecoveryEmail: string
     Phone: string
     Password: string
     PasswordHint: string
-    Level: Label | null
+    PhotoBase64 : string
+
+    // Informações de usuário
+    PermissionLevel: Label | null
+    Sex: Label | null
+    EmailAproved : boolean
+    AcceptedBy : number
+    Active: boolean
+    CreatedDate: Date
+    Deleted: boolean
 
     constructor(
         body : any,
@@ -67,18 +80,21 @@ export default class User
     {
         this.Id = body[!isSQL ? "Id" : "id"]
         this.Username = body[!isSQL ? "Username" : "username"]
-        this.Active = body[!isSQL ? "Active" : "active"]
-        this.CreatedDate = body[!isSQL ? "CreatedDate" : "created_date"]
-        this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
         this.Name = body[!isSQL ? "Name" : "name"]
         this.BirthDate = body[!isSQL ? "BirthDate" : "birthdate"]
-        this.Sex = this.ConvertSexEnum(body, isModel, isSQL)
         this.Email = body[!isSQL ? "Email" : "email"]
         this.RecoveryEmail = body[!isSQL ? "RecoveryEmail" : "recovery_email"]
         this.Phone = body[!isSQL ? "Phone" : "phone"]
         this.Password = body[!isSQL ? "Password" : "password"]
         this.PasswordHint = body[!isSQL ? "PasswordHint" : "password_hint"]
-        this.Level = this.ConvertLevelEnum(body, isModel, isSQL)
+        this.PhotoBase64 = body[!isSQL ? "PhotoBase64" : "photo_base_64"]
+        this.PermissionLevel = this.ConvertLevelEnum(body, isModel, isSQL)
+        this.Sex = this.ConvertSexEnum(body, isModel, isSQL)
+        this.EmailAproved = body[!isSQL ? "EmailAproved" : "email_aproved"]
+        this.AcceptedBy = body[!isSQL ? "AcceptedBy" : "accepted_by"]
+        this.Active = body[!isSQL ? "Active" : "active"]
+        this.CreatedDate = body[!isSQL ? "CreatedDate" : "created_date"]
+        this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
     }
 
     /**
@@ -137,7 +153,7 @@ export default class User
 
     private ConvertLevelEnum(body : any, isModel: boolean, isBodySQL : boolean)
     {
-        const bodyProp = !isBodySQL ? "Level" : "permission_level"
+        const bodyProp = !isBodySQL ? "PermissionLevel" : "permission_level"
 
         return isModel && IsUndNull(body[bodyProp])
             ? null
@@ -150,10 +166,10 @@ export default class User
      */
     CheckUserPermission(levelRequired : PermissionLevel)
     {
-        if (IsUndNull(this.Level?.Value))
+        if (IsUndNull(this.PermissionLevel?.Value))
             throw new Error("Nível de permissão de usuário não encontrado.")
 
-        const userLevel = PermissionLevelToNumber(PermissionLevel[this.Level?.Value!])
+        const userLevel = PermissionLevelToNumber(PermissionLevel[this.PermissionLevel?.Value!])
 
         if (userLevel > levelRequired)
             throw new Error("Nível de permissão não alto o suficiente para realizar esta ação.")

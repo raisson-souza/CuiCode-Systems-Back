@@ -1,12 +1,8 @@
 import { Client } from "pg";
 
-const { format } = require("date-fns")
-
 import User from "../../../classes/User"
-
-import IsUndNull from "../../../functions/IsUndNull";
-
-import QueryUsersInfos from "./QueryUsersInfo";
+import ToSqlDate from "../../../functions/SQL/ToSqlDate"
+import ToSqlTimestamp from "../../../functions/SQL/ToSqlTimestamp"
 
 /**
  * Creates a user.
@@ -21,26 +17,30 @@ export default async function CreateUser
 {
     try
     {
-        // criar func para envio de data ao db
         let query =
         `
             INSERT INTO ${ db_stage }.users (${ GenerateUserFields() }) VALUES 
             (
                 '${ user.Username }',
                 '${ user.Name }',
-                to_date('${ new Date(user.BirthDate).toLocaleDateString() }', 'dd MM yyyy'),
-                ${ user.Sex?.Value },
+                ${ ToSqlDate(user.BirthDate) },
                 '${ user.Email }',
                 '${ user.RecoveryEmail }',
                 '${ user.Phone }',
                 '${ user.Password }',
                 '${ user.PasswordHint }',
-                ${ user.Level?.Value },
-                to_date('${ new Date(user.CreatedDate).toLocaleDateString() }', 'dd MM yyyy'),
+                '${ user.PhotoBase64 }',
+                ${ user.PermissionLevel?.Value },
+                ${ user.Sex?.Value },
+                '${ user.EmailAproved }',
+                ${ user.AcceptedBy },
                 ${ user.Active },
+                ${ ToSqlTimestamp(user.CreatedDate) },
                 ${ user.Deleted }
             )
         `
+
+        query.trim()
 
         await db_connection.query(query)
             .then(() => {})
@@ -57,30 +57,22 @@ export default async function CreateUser
 // USAR FUNÇÃO PARA APENAS RETORNAR A STRING JA FORMATADA
 function GenerateUserFields() : string
 {
-    const userSQLFields = [
+    return `
         "username",
         "name",
         "birthdate",
-        "sex",
         "email",
         "recovery_email",
         "phone",
         "password",
         "password_hint",
+        "photo_base_64",
         "permission_level",
-        "created_date",
+        "sex",
+        "email_approved",
+        "accepted_by",
         "active",
+        "created_date",
         "deleted"
-    ]
-
-    let query = ""
-
-    userSQLFields.forEach((field, i) => {
-        if (i + 1 == userSQLFields.length)
-            query += ` ${ field }`
-        else
-            query += `${ field }, `
-    })
-
-    return query
+    `
 }

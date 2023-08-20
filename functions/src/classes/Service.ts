@@ -130,7 +130,7 @@ export default class Service
     GetReqUserLevel()
     {
         return !IsUndNull(this.USER_req)
-            ? PermissionLevel[this.USER_req?.Level?.Value!]
+            ? PermissionLevel[this.USER_req?.PermissionLevel?.Value!]
             : null
     }
 
@@ -143,7 +143,7 @@ export default class Service
             ? {
                 Id: this.USER_req?.Id,
                 Username: this.USER_req?.Username,
-                Level: this.USER_req?.Level?.Value,
+                PermissionLevel: this.USER_req?.PermissionLevel?.Value,
                 Name: this.USER_req?.Name
             }
             : null
