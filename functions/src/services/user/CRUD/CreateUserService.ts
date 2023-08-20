@@ -1,10 +1,10 @@
-import Service from "../../classes/Service"
-import User from "../../classes/User"
+import Service from "../../../classes/Service"
+import User from "../../../classes/User"
 
-import CreateUser from "./utilities/CreateUser"
-import ValidateUser from "./utilities/ValidateUser"
+import CreateUser from "../utilities/CreateUser"
+import ValidateUser from "../utilities/ValidateUser"
 
-import Send from "../../functions/Responses"
+import Send from "../../../functions/Responses"
 
 /**
  * Creates a user.

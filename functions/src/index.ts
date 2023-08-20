@@ -2,13 +2,13 @@ import { onRequest } from "firebase-functions/v2/https"
 import Service from "./classes/Service"
 
 // USER
-import CreateUserService from "./services/user/CreateUserService"
-import GetUserService from "./services/user/GetUserService"
-import ListUsersService from "./services/user/ListUsersService"
-import SetActiveUserService from "./services/user/SetActiveUserService"
-import SetDeleteUserService from "./services/user/SetDeleteUserService"
+import CreateUserService from "./services/user/CRUD/CreateUserService"
+import GetUserService from "./services/user/CRUD/GetUserService"
+import ListUsersService from "./services/user/operational/ListUsersService"
+import SetActiveUserService from "./services/user/operational/SetActiveUserService"
+import SetDeleteUserService from "./services/user/CRUD/SetDeleteUserService"
 import TraceAccessService from "./services/features/TraceAccessService"
-import UpdateUserService from "./services/user/UpdateUserService"
+import UpdateUserService from "./services/user/CRUD/UpdateUserService"
 
 // FUNCTIONS
 import Send from "./functions/Responses"

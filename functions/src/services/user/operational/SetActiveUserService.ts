@@ -1,10 +1,10 @@
-import IsUndNull from "../../functions/IsUndNull"
-import IsBoolean from "../../functions/IsBoolean"
-import Send from "../../functions/Responses"
+import IsUndNull from "../../../functions/IsUndNull"
+import IsBoolean from "../../../functions/IsBoolean"
+import Send from "../../../functions/Responses"
 
-import QueryUser from "./utilities/QueryUser"
+import QueryUser from "../utilities/QueryUser"
 // import SetUser from "./utilities/SetUser"
-import Service from "../../classes/Service"
+import Service from "../../../classes/Service"
 
 /**
  * Sets active param of a user.

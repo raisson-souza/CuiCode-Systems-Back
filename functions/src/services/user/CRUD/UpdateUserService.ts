@@ -1,11 +1,11 @@
-import User from "../../classes/User"
+import User from "../../../classes/User"
 
-import ValidateUser from "./utilities/ValidateUser"
+import ValidateUser from "../utilities/ValidateUser"
 // import SetUser from "./utilities/SetUser"
 
-import Send from "../../functions/Responses"
-import IsUndNull from "../../functions/IsUndNull"
-import Service from "../../classes/Service"
+import Send from "../../../functions/Responses"
+import IsUndNull from "../../../functions/IsUndNull"
+import Service from "../../../classes/Service"
 
 /**
  * Updates a user.
