@@ -5,7 +5,7 @@ import {
 
 import HttpStatus from "../enums/HttpStatus"
 
-import GetDate from "./LocalTime"
+import GetDate from "./GetDate"
 
 type sendFunction = (
     res: Response,
