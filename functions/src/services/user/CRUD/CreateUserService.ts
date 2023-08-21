@@ -5,6 +5,9 @@ import CreateUser from "../utilities/CreateUser"
 import ValidateUser from "../utilities/ValidateUser"
 
 import Send from "../../../functions/Responses"
+import HERMES from "../../functions/HERMES"
+
+import HermesTitle from "../../../enums/HermesTitle"
 
 /**
  * Creates a user.
@@ -33,12 +36,10 @@ export default async function CreateUserService
 
         await Promise.resolve(ValidateUser(DB_connection, DB_stage, user))
             .then(async () => {
-                // VALIDAR DATA PARA FUSO BR
-                user.CreatedDate = new Date()
-
                 await Promise.resolve(CreateUser(DB_connection, DB_stage, user))
                     .then(() => {
                         Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, action)
+                        new HERMES().SendInternalEmail(HermesTitle.NEW_USER)
                     })
                     .catch(ex => {
                         Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)
