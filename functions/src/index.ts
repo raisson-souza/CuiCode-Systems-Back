@@ -4,8 +4,8 @@ import Service from "./classes/Service"
 // USER
 import CreateUserService from "./services/user/CRUD/CreateUserService"
 import GetUserService from "./services/user/CRUD/GetUserService"
-import ListUsersService from "./services/user/operational/ListUsersService"
-import SetActiveUserService from "./services/user/operational/SetActiveUserService"
+import ListUsersService from "./services/user/operational/CRUD/ListUsersService"
+import SetActiveUserService from "./services/user/operational/CRUD/SetActiveUserService"
 import SetDeleteUserService from "./services/user/CRUD/SetDeleteUserService"
 import TraceAccessService from "./services/features/TraceAccessService"
 import UpdateUserService from "./services/user/CRUD/UpdateUserService"
@@ -16,6 +16,8 @@ import ValidateCorsAsync from "./functions/ValidateCorsAsync"
 
 // Database schema stage
 import DatabaseStage from "./enums/DatabaseStage"
+import ApproveUserEmailOperation from "./services/user/operational/email/ApproveUserEmailService"
+import SendManualEmailApprovalService from "./services/user/operational/email/SendManualEmailApprovalService"
 const DATABASE = DatabaseStage.testing
 
 // USER SERVICES
@@ -65,6 +67,23 @@ export const SetDeleteUser = onRequest((req, res) => {
 
     Promise.resolve(ValidateCorsAsync(req, res))
         .then(() => { SetDeleteUserService(service) })
+        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
+})
+
+export const ApproveUserEmail = onRequest((req, res) => {
+    const service = new Service(req, res, DATABASE)
+
+    // enviar link do ERP para acessar
+    // CORS não é necessário pois o acesso é externo
+
+    ApproveUserEmailOperation(service)
+})
+
+export const SendManualEmailApproval = onRequest((req, res) => {
+    const service = new Service(req, res, DATABASE)
+
+    Promise.resolve(ValidateCorsAsync(req, res))
+        .then(() => { SendManualEmailApprovalService(service) })
         .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 

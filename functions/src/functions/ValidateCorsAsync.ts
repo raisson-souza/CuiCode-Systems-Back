@@ -30,6 +30,7 @@ export default async function ValidateCorsAsync
     )
         if (req.header("authorization") != API_TEST_TOKEN)
             throw new Error()
+
     cors(req, res, () => {
         res.set("Access-Control-Allow-Origin", req.get("Origin"));
     })

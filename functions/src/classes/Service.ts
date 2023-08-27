@@ -56,7 +56,7 @@ export default class Service
         const userReqId = this.CheckUserIdExistance()
 
         if (IsUndNull(userReqId))
-            throw new Error()
+            throw new Error("Usuário requeridor não encontrado na requisição.")
 
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, this.DB_stage, userReqId))
@@ -93,11 +93,9 @@ export default class Service
         if (IsUndNull(userReqQuery))
             return null
 
-        const userReqJson = JSON.parse(userReqQuery as string)
+        const userReqId = Number.parseInt(userReqQuery as string)
 
-        const userReqId = new Array(userReqJson)
-
-        return userReqId[0]
+        return userReqId
     }
 
     /**
