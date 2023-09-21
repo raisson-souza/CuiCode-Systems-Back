@@ -3,30 +3,9 @@ import Label from "./Label"
 import PermissionLevel from "../enums/PermissionLevel"
 import Sex from "../enums/Sex"
 
-import BodyChecker from "../functions/BodyChecker"
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
-
-// Nomes de campo obrigatórios para qualquer operação
-const Labels = [
-    "Username",
-    "Name",
-    "BirthDate",
-    "Email",
-    "RecoveryEmail",
-    "Phone",
-    "Password",
-    "PasswordHint",
-    "PhotoBase64",
-    "PermissionLevel",
-    "Sex",
-    "EmailAproved",
-    "AcceptedBy",
-    "Active",
-    "CreatedDate",
-    "Deleted",
-]
 
 export default class User
 {
@@ -48,22 +27,17 @@ export default class User
     PermissionLevel: Label | null
     Sex: Label | null
     EmailAproved : boolean
-    AcceptedBy : number
     Active: boolean
     CreatedDate: Date
     Deleted: boolean
 
     constructor(
         body : any,
-        isModel = false,
         isBodySQL = false,
     ) {
         try
         {
-            if (!isModel)
-                BodyChecker(body, Labels)
-
-            this.ConvertBody(body, isModel, isBodySQL)
+            this.ConvertBody(body, isBodySQL)
         }
         catch (ex)
         {
@@ -74,8 +48,7 @@ export default class User
     private ConvertBody
     (
         body : any,
-        isModel = false,
-        isSQL = false,
+        isSQL = false
     )
     {
         this.Id = body[!isSQL ? "Id" : "id"]
@@ -88,10 +61,9 @@ export default class User
         this.Password = body[!isSQL ? "Password" : "password"]
         this.PasswordHint = body[!isSQL ? "PasswordHint" : "password_hint"]
         this.PhotoBase64 = body[!isSQL ? "PhotoBase64" : "photo_base_64"]
-        this.PermissionLevel = this.ConvertLevelEnum(body, isModel, isSQL)
-        this.Sex = this.ConvertSexEnum(body, isModel, isSQL)
+        this.PermissionLevel = this.ConvertLevelEnum(body, isSQL)
+        this.Sex = this.ConvertSexEnum(body, isSQL)
         this.EmailAproved = body[!isSQL ? "EmailAproved" : "email_aproved"]
-        this.AcceptedBy = body[!isSQL ? "AcceptedBy" : "accepted_by"]
         this.Active = body[!isSQL ? "Active" : "active"]
         this.CreatedDate = body[!isSQL ? "CreatedDate" : "created_date"]
         this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
@@ -142,20 +114,20 @@ export default class User
         return undefined
     }
 
-    private ConvertSexEnum(body : any, isModel: boolean, isBodySQL : boolean)
+    private ConvertSexEnum(body : any, isBodySQL : boolean)
     {
         const bodyProp = !isBodySQL ? "Sex" : "sex"
 
-        return isModel && IsUndNull(body[bodyProp])
+        return IsUndNull(body[bodyProp])
             ? null
             : new Label(Sex, body[bodyProp], "Sex")
     }
 
-    private ConvertLevelEnum(body : any, isModel: boolean, isBodySQL : boolean)
+    private ConvertLevelEnum(body : any, isBodySQL : boolean)
     {
         const bodyProp = !isBodySQL ? "PermissionLevel" : "permission_level"
 
-        return isModel && IsUndNull(body[bodyProp])
+        return IsUndNull(body[bodyProp])
             ? null
             : new Label(PermissionLevel, body[bodyProp], "PermissionLevel")
     }

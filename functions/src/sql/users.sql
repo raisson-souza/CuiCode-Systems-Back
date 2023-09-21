@@ -9,16 +9,15 @@ CREATE TABLE IF NOT EXISTS testing."users"(
 	phone varchar(20) UNIQUE,
 	"password" varchar(100) NOT NULL,
 	password_hint varchar(100) NOT NULL,
-	accepted_by int DEFAULT NULL,
 	email_approved bool DEFAULT FALSE,
 	photo_base_64 TEXT DEFAULT NULL,
-	permission_level int NOT NULL,
-	created_date timestamp NOT NULL,
-	active boolean NOT NULL,
-	deleted boolean NOT NULL,
+	permission_level int NOT NULL DEFAULT 3,
+	created_date timestamp NOT NULL DEFAULT now(),
+	active boolean NOT NULL DEFAULT TRUE,
+	deleted boolean NOT NULL DEFAULT FALSE,
 	PRIMARY KEY (id),
-	FOREIGN KEY (sex) REFERENCES sexs (id),
-	FOREIGN KEY (permission_level) REFERENCES permission_levels (id)
+	FOREIGN KEY (sex) REFERENCES testing.sexs (id),
+	FOREIGN KEY (permission_level) REFERENCES testing.permission_levels (id)
 )
 
 CREATE TABLE IF NOT EXISTS testing.permission_levels(

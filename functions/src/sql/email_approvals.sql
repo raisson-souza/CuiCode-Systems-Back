@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS testing.email_approvals(
     user_id int NOT NULL,
     email varchar NOT NULL,
     approved bool NOT NULL,
-    created timestamp DEFAULT now()::timestamp,
+    created timestamp DEFAULT now(),
     FOREIGN KEY (user_id) REFERENCES testing.users (id),
     FOREIGN KEY (email) REFERENCES testing.users (email)
 );
@@ -14,7 +14,9 @@ $$
 BEGIN 
 	IF db_stage = 'testing' THEN 
 		UPDATE testing.email_approvals em
-		SET approved = TRUE 
+		SET 
+			approved = TRUE,
+			approved_date = now()
 		WHERE user_id = $2;
 
 		UPDATE testing.users
@@ -23,7 +25,9 @@ BEGIN
 	
 	ELSEIF db_stage = 'staging' THEN 
 		UPDATE staging.email_approvals
-		SET approved = TRUE 
+		SET 
+			approved = TRUE,
+			approved_date = now() 
 		WHERE user_id = $2;
 
 		UPDATE staging.users
@@ -32,7 +36,9 @@ BEGIN
 
 	ELSEIF db_stage = 'production' THEN 
 		UPDATE production.email_approvals
-		SET approved = TRUE 
+		SET
+			approved = TRUE,
+			approved_date = now() 
 		WHERE user_id = $2;
 
 		UPDATE production.users

@@ -1,8 +1,8 @@
 import { Client } from "pg";
 
 import User from "../../../classes/User"
+
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
-import ToSqlTimestamp from "../../../functions/SQL/ToSqlTimestamp"
 
 /**
  * Creates a user.
@@ -30,13 +30,7 @@ export default async function CreateUser
                 '${ user.Password }',
                 '${ user.PasswordHint }',
                 '${ user.PhotoBase64 }',
-                ${ user.PermissionLevel?.Value },
-                ${ user.Sex?.Value },
-                '${ user.EmailAproved }',
-                ${ user.AcceptedBy },
-                ${ user.Active },
-                ${ ToSqlTimestamp(user.CreatedDate) },
-                ${ user.Deleted }
+                ${ user.Sex?.Value }
             )
         `
 
@@ -54,7 +48,6 @@ export default async function CreateUser
     }
 }
 
-// USAR FUNÇÃO PARA APENAS RETORNAR A STRING JA FORMATADA
 function GenerateUserFields() : string
 {
     return `
@@ -67,12 +60,6 @@ function GenerateUserFields() : string
         "password",
         "password_hint",
         "photo_base_64",
-        "permission_level",
-        "sex",
-        "email_approved",
-        "accepted_by",
-        "active",
-        "created_date",
-        "deleted"
+        "sex"
     `
 }
