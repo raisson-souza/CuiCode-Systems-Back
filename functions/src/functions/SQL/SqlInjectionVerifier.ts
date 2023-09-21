@@ -1,5 +1,5 @@
-import HermesTitle from "../../enums/HermesTitle"
-import HERMES from "../../services/functions/HERMES"
+import EmailTitles from "../../enums/EmailTitles"
+import EmailSender from "../../services/functions/EmailSender"
 
 /**
  * Validates SQL injection risk in a query parameter.
@@ -9,7 +9,7 @@ export default function SqlInjectionVerifier(param : string)
 {
     if (param.toUpperCase().includes("OR"))
     {
-        new HERMES().SendInternalEmail(HermesTitle.SYSTEM_RISK, `Risco de SQL injection detectado, SQL: ${ param }`)
+        new EmailSender().Internal(EmailTitles.SYSTEM_RISK, `Risco de SQL injection detectado, SQL: ${ param }`)
         throw new Error("Injeção de SQL verificada, operação interrompida.")
     }
 }

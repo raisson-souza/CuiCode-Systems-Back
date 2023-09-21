@@ -1,4 +1,4 @@
-enum HermesTitle
+enum EmailTitles
 {
     // SISTEMA
     CRITICAL_ERROR =  "ERRO CRÍTICO",
@@ -22,4 +22,4 @@ enum HermesTitle
     EMAIL_APPROVAL_REQUEST = "APROVAÇÃO DE EMAIL",
 }
 
-export default HermesTitle
+export default EmailTitles

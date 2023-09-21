@@ -1,10 +1,9 @@
 import nodemailer from "nodemailer"
 
-import HermesTitle from "../../enums/HermesTitle"
-
 import CaseUndNull from "../../functions/CaseUndNull"
+import EmailTitles from "../../enums/EmailTitles"
 
-export default class HERMES
+export default class EmailSender
 {
     Transporter = nodemailer.createTransport(
         {
@@ -16,9 +15,9 @@ export default class HERMES
         }
     )
 
-    SendInternalEmail
+    Internal
     (
-        title : HermesTitle,
+        title : EmailTitles,
         emailBody : string | null = null
     )
     {
@@ -30,9 +29,9 @@ export default class HERMES
         )
     }
 
-    SendExternalEmail
+    External
     (
-        title : HermesTitle,
+        title : EmailTitles,
         emailBody : string | null = null,
         receiverEmail : string | null = null
     )
@@ -48,7 +47,7 @@ export default class HERMES
 
     private BuildEmailTransporter
     (
-        title : HermesTitle,
+        title : EmailTitles,
         emailBody : string | null = null,
         receiverEmail : string | null = null,
     )

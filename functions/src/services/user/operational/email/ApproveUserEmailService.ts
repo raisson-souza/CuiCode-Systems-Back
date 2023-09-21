@@ -4,9 +4,9 @@ import Service from "../../../../classes/Service"
 import IsUndNull from "../../../../functions/IsUndNull"
 import Send from "../../../../functions/Responses"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
-import HERMES from "../../../functions/HERMES"
+import EmailSender from "../../../functions/EmailSender"
 
-import HermesTitle from "../../../../enums/HermesTitle"
+import EmailTitles from "../../../../enums/EmailTitles"
 
 export default async function ApproveUserEmailService
 (
@@ -50,7 +50,7 @@ export default async function ApproveUserEmailService
 
                 if (result.rowCount > 1)
                 {
-                    new HERMES().SendInternalEmail(HermesTitle.MULTIPLE_SAME_EMAIL_APPROVALS, "Mais de uma aprovação para o mesmo email.")
+                    new EmailSender().Internal(EmailTitles.MULTIPLE_SAME_EMAIL_APPROVALS, "Mais de uma aprovação para o mesmo email.")
                     throw new Error("Houve um erro crítico ao aprovar o email.")
                 }
 
@@ -61,7 +61,7 @@ export default async function ApproveUserEmailService
 
                 if (service.USER_req?.Id != emailApproval.UserId)
                 {
-                    new HERMES().SendInternalEmail(HermesTitle.DIFFERENT_USER_ON_EMAIL_APPROVAL, `Usuário ${ service.USER_req?.GenerateUserKey() } tentou aprovar o email ${ emailApproval.Email } pertencente ao usuário ${ emailApproval.Id }.`)
+                    new EmailSender().Internal(EmailTitles.DIFFERENT_USER_ON_EMAIL_APPROVAL, `Usuário ${ service.USER_req?.GenerateUserKey() } tentou aprovar o email ${ emailApproval.Email } pertencente ao usuário ${ emailApproval.Id }.`)
                     throw new Error("Você não pode realizar essa aprovação.")
                 }
 
