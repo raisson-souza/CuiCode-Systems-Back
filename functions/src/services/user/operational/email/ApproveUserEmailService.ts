@@ -40,19 +40,14 @@ export default async function ApproveUserEmailService
             FROM ${ DB_stage }.email_approvals
             WHERE
                 email = '${ toApproveEmail }' AND
-                user_id = ${ service.USER_req?.Id }
+                user_id = ${ service.USER_req?.Id } AND
+                created = (SELECT max(created) FROM ${ DB_stage }.email_approvals)
         `
 
         const emailApproval = await DB_connection.query(selectEmailQuery)
             .then(result => {
                 if (result.rowCount == 0)
                     throw new Error("Nenhum pedido de aprovação para esse email foi encontrado.")
-
-                if (result.rowCount > 1)
-                {
-                    new EmailSender().Internal(EmailTitles.MULTIPLE_SAME_EMAIL_APPROVALS, "Mais de uma aprovação para o mesmo email.")
-                    throw new Error("Houve um erro crítico ao aprovar o email.")
-                }
 
                 const emailApproval = new EmailApprovalSql(result.rows[0])
 
@@ -71,7 +66,7 @@ export default async function ApproveUserEmailService
 
         // A partir daqui é garantido que o usuário requeridor é quem está tentando aprovar o email.
 
-        const approveEmailQuery = `CALL approve_user_email('${ DB_stage }', ${ emailApproval.UserId })`
+        const approveEmailQuery = `CALL ${ DB_stage }.approve_user_email('${ DB_stage }', ${ emailApproval.UserId }, ${ emailApproval.Id })`
 
         await DB_connection.query(approveEmailQuery)
             .then(() => {})

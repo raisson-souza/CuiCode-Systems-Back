@@ -24,7 +24,7 @@ export default async function ValidateUser
         await db_connection.query(query)
             .then(result => {
                 result.rows.forEach(userQuery => {
-                    if (user.Id == userQuery["id"] && !isCreation)
+                    if (user.Id == userQuery["id"] && isCreation)
                         throw new Error(`Id ${ user.Id } já está em uso.`)
 
                     if (user.Username == userQuery["username"])

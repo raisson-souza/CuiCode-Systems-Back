@@ -1,11 +1,12 @@
 import User from "../../../classes/User"
 
 import ValidateUser from "../utilities/ValidateUser"
-// import SetUser from "./utilities/SetUser"
 
 import Send from "../../../functions/Responses"
 import IsUndNull from "../../../functions/IsUndNull"
 import Service from "../../../classes/Service"
+import UpdateUser from "../utilities/UpdateUser"
+import SendApprovalEmailOperation from "../operational/email/SendApprovalUserEmailOperation"
 
 /**
  * Updates a user.
@@ -35,13 +36,27 @@ export default async function UpdateUserService
             return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
 
         const user = CheckBody(REQ.body)
-        const userKey = user.GenerateUserKey()
 
-        // CORRIGIR
+        await ValidateUser(DB_connection, DB_stage, user, false)
+
+        await Promise.resolve(UpdateUser(DB_connection, DB_stage, user))
+            .then(() => {
+                Send.Ok(RES, `Usuário editado com sucesso.`, action)
+            })
+            .catch(ex => {
+                throw new Error((ex as Error).message)
+            })
+
+        if (!IsUndNull(user.EmailAproved) && !user.EmailAproved)
+            await SendApprovalEmailOperation(user, DB_stage, DB_connection)
     }
     catch (ex)
     {
         Send.Error(service.RES, `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`, action)
+    }
+    finally
+    {
+        service.DB_connection.end()
     }
 }
 
@@ -50,7 +65,7 @@ function CheckBody(body : any) : User
     if (IsUndNull(body))
         throw new Error("Corpo da requisição inválido.");
 
-    const user = new User(body, true);
+    const user = new User(body);
 
     if (IsUndNull(user.Id))
         throw new Error("Id de usuário a ser atualizado não encontrado.");

@@ -28,9 +28,6 @@ export default async function QueryUser
 
         return await db_connection.query(query)
             .then(result => {
-                if (result.rowCount > 1)
-                    throw new Error("Mais de um usuário foi encontrado na consulta indivídual.") // ERRO CRÍTICO
-
                 // EM CASO DE BUSCA DE USUÁRIO REQUERIDOR, RETORNAR ERRO DIFERENTE
                 if (result.rowCount == 0)
                     throw new Error("Nenhum usuário encontrado.")

@@ -7,6 +7,8 @@ import ValidateUser from "../utilities/ValidateUser"
 import Send from "../../../functions/Responses"
 
 import SendApprovalEmailOperation from "../operational/email/SendApprovalUserEmailOperation"
+import EmailSender from "../../functions/EmailSender"
+import EmailTitles from "../../../enums/EmailTitles"
 
 /**
  * Creates a user.
@@ -38,6 +40,7 @@ export default async function CreateUserService
                 await Promise.resolve(CreateUser(DB_connection, DB_stage, user))
                     .then(async () => {
                         Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, action)
+                        new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
                         await SendApprovalEmailOperation(user, DB_stage, DB_connection)
                     })
                     .catch(ex => {

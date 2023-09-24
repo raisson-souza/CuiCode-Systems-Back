@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS testing.email_approvals(
     FOREIGN KEY (email) REFERENCES testing.users (email)
 );
 
-CREATE OR REPLACE PROCEDURE approve_user_email(db_stage varchar, _user_id int)
+CREATE OR REPLACE PROCEDURE testing.approve_user_email(db_stage varchar, _user_id int, approval_id int)
 LANGUAGE plpgsql AS 
 $$
 BEGIN 
@@ -17,7 +17,9 @@ BEGIN
 		SET 
 			approved = TRUE,
 			approved_date = now()
-		WHERE user_id = $2;
+		WHERE
+			user_id = $2 AND
+			id = $3;
 
 		UPDATE testing.users
 		SET email_approved = TRUE 
@@ -28,7 +30,9 @@ BEGIN
 		SET 
 			approved = TRUE,
 			approved_date = now() 
-		WHERE user_id = $2;
+		WHERE 
+			user_id = $2 AND
+			id = $3;
 
 		UPDATE staging.users
 		SET email_approved = TRUE 
@@ -39,7 +43,9 @@ BEGIN
 		SET
 			approved = TRUE,
 			approved_date = now() 
-		WHERE user_id = $2;
+		WHERE 
+			user_id = $2 AND
+			id = $3;
 
 		UPDATE production.users
 		SET email_approved = TRUE 

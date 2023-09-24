@@ -5,21 +5,20 @@ import EmailTitles from "../../../../enums/EmailTitles"
 import User from "../../../../classes/User"
 
 import { Client } from "pg"
+import IsUndNull from "../../../../functions/IsUndNull"
+import QueryUser from "../../utilities/QueryUser"
 
 export default async function SendApprovalEmailOperation
 (
     user : User,
     db_stage : any,
-    db_connection : Client
+    db_connection : Client,
 )
 {
-    const saudations = `Olá ${ user.Name }, bem vindo(a) a CuiCodeSystems!`
+    if (IsUndNull(user.Name) || IsUndNull(user.Id))
+        user = await QueryUser(db_connection, db_stage, user.Id)
 
-    new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
-
-    user.Id = await db_connection.query(`SELECT id FROM ${ db_stage }.users WHERE email = '${ user.Email }'`)
-        .then(result => { return result.rows[0]["id"] })
-        .catch(ex => { throw new Error(ex.message) })
+    const saudation = `Olá ${ user.Name }, bem vindo(a) a CuiCodeSystems!`
 
     const createEmailApprovalQuery =
     `
@@ -34,14 +33,14 @@ export default async function SendApprovalEmailOperation
 
     return await db_connection.query(createEmailApprovalQuery)
         .then(() => {
-            const emailBody = `${ saudations } Acesse esse link para aprovar seu email no ERP:\n${ GeneratEndpoint(db_stage, user.Id, user.Email) }.`
+            const emailBody = `${ saudation } Acesse esse link para aprovar seu email no ERP:\n${ GeneratEndpoint(db_stage, user.Id, user.Email) }.`
 
             new EmailSender().External(EmailTitles.EMAIL_APPROVAL_REQUEST, emailBody, user.Email)
 
             return true
         })
         .catch(ex => {
-            const emailBody = `${ saudations } Houve um erro ao criar o seu pedido de aprovação de email, por favor realize a operação novamente manualmente no ERP:\n${ GeneratEndpoint(db_stage, user.Id, user.Email) }.`
+            const emailBody = `${ saudation } Houve um erro ao criar o seu pedido de aprovação de email, por favor realize a operação novamente manualmente no ERP:\n${ GeneratEndpoint(db_stage, user.Id, user.Email) }.`
 
             new EmailSender().External(EmailTitles.EMAIL_APPROVAL_REQUEST, emailBody, user.Email)
 

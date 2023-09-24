@@ -149,4 +149,33 @@ export default class User
         if (userLevel > levelRequired)
             throw new Error("Nível de permissão não alto o suficiente para realizar esta ação.")
     }
+
+    ConvertUserToSqlObject()
+    {
+        const userInSql : UserInSql = {
+            "id": this.Id,
+            "username": this.Username,
+            "name" : this.Name,
+            "birthdate": this.BirthDate,
+            "email": this.Email,
+            "recovery_email": this.RecoveryEmail,
+            "phone": this.Phone,
+            "password": this.Password,
+            "password_hint": this.PasswordHint,
+            "photo_base_64" : this.PhotoBase64,
+            "permission_level": this.PermissionLevel,
+            "sex": this.Sex,
+            "email_approved" : this.EmailAproved,
+            "active": this.Active,
+            "created_date": this.CreatedDate,
+            "deleted": this.Deleted
+        }
+
+        return userInSql
+    }
+}
+
+// Index signature para aceitar qualquer propriedade de string
+interface UserInSql {
+    [key: string]: any
 }
