@@ -6,6 +6,7 @@ import Sex from "../enums/Sex"
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
+import UserInSql from "../interfaces/UserInSql"
 
 export default class User
 {
@@ -173,9 +174,4 @@ export default class User
 
         return userInSql
     }
-}
-
-// Index signature para aceitar qualquer propriedade de string
-interface UserInSql {
-    [key: string]: any
 }

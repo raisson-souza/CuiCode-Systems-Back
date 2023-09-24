@@ -5,6 +5,9 @@ import { Client } from "pg";
 import IsUndNull from "../../../functions/IsUndNull";
 
 import SqlLabel from "../../../classes/SqlLabel";
+import EmailSender from "../../functions/EmailSender";
+import EmailTitles from "../../../enums/EmailTitles";
+import UserInSql from "../../../interfaces/UserInSql";
 
 /**
  * Updates a user.
@@ -33,7 +36,7 @@ export default async function UpdateUser
 
                 // userDb assume o tipo de userInSql que utiliza de assinatura de índice
                 // na qual permite acesso as chaves por qualquer string.
-                return result.rows[0] as typeof userInSql
+                return result.rows[0] as UserInSql
             })
             .catch(ex => {
                 throw new Error((ex as Error).message)
@@ -55,6 +58,9 @@ export default async function UpdateUser
                     newUserProps.push(new SqlLabel("email_approved", false))
                     user.EmailAproved = false
                 }
+
+                if (prop == "active" || prop == "deleted")
+                    DetectUserDeactivationOrDeletion(prop, userInSql[prop], user, userDb)
             }
         }
 
@@ -88,4 +94,38 @@ function BuildUserPutQuery(newPropsList : SqlLabel[]) : string
     })
 
     return setQuery
+}
+
+/**
+ * Envia email de registro ao sistema em caso de desativação ou exclusão de usuário.
+ * @param action Ação (desativação / exclusão).
+ * @param user Usuário recém editado (novo).
+ * @param userDb Usuário no banco (antigo).
+ */
+function DetectUserDeactivationOrDeletion
+(
+    actionName : string,
+    action : boolean,
+    user : User,
+    userDb : UserInSql
+) : void
+{
+    let emailMessage = `Usuário ${ IsUndNull(user.Name) ? userDb["name"] : user.Name } (${ user.GenerateUserKey() }) foi `
+
+    if (actionName == "active")
+    {
+        emailMessage += action
+            ? "ativado(a) "
+            : "desativado(a) "
+    }
+    else
+    {
+        emailMessage += action
+            ? "excluído(a) "
+            : "restaurado(a) "
+    }
+
+    emailMessage += "no sistema."
+
+    new EmailSender().Internal(EmailTitles.USER_DEACTIVATED, emailMessage)
 }

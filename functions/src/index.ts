@@ -5,8 +5,6 @@ import Service from "./classes/Service"
 import CreateUserService from "./services/user/CRUD/CreateUserService"
 import GetUserService from "./services/user/CRUD/GetUserService"
 import ListUsersService from "./services/user/operational/CRUD/ListUsersService"
-import SetActiveUserService from "./services/user/operational/CRUD/SetActiveUserService"
-import SetDeleteUserService from "./services/user/CRUD/SetDeleteUserService"
 import TraceAccessService from "./services/features/TraceAccessService"
 import UpdateUserService from "./services/user/CRUD/UpdateUserService"
 
@@ -51,22 +49,6 @@ export const UpdateUser = onRequest((req, res) => {
 
     Promise.resolve(ValidateCorsAsync(req, res))
         .then(() => { UpdateUserService(service) })
-        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
-})
-
-export const SetActiveUser = onRequest((req, res) => {
-    const service = new Service(req, res, DATABASE)
-
-    Promise.resolve(ValidateCorsAsync(req, res))
-        .then(() => { SetActiveUserService(service) })
-        .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
-})
-
-export const SetDeleteUser = onRequest((req, res) => {
-    const service = new Service(req, res, DATABASE)
-
-    Promise.resolve(ValidateCorsAsync(req, res))
-        .then(() => { SetDeleteUserService(service) })
         .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
 })
 
