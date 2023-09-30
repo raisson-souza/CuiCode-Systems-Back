@@ -59,6 +59,9 @@ export default async function UpdateUser
                     user.EmailAproved = false
                 }
 
+                if (prop == "username" && userDb["email_approved"] == false)
+                    throw new Error("Para editar o username é necessário aprovar o email.")
+
                 if (prop == "active" || prop == "deleted")
                     DetectUserDeactivationOrDeletion(prop, userInSql[prop], user, userDb)
             }
