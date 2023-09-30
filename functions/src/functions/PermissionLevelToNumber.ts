@@ -5,14 +5,14 @@ export default function PermissionLevelToNumber(permissionLevel : PermissionLeve
     switch (permissionLevel)
     {
         case "Root":
-            return 1
+            return 4
         case "Adm":
-            return 2
-        case "Member":
             return 3
+        case "Member":
+            return 2
         case "Guest":
-            return 4
+            return 1
         default:
-            return 4
+            return 1
     }
 }

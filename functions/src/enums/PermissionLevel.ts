@@ -1,9 +1,9 @@
 enum PermissionLevel
 {
-    Root = 1,
-    Adm = 2,
-    Member = 3,
-    Guest = 4
+    Root = 4,
+    Adm = 3,
+    Member = 2,
+    Guest = 1
 }
 
 export default PermissionLevel

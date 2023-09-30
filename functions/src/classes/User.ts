@@ -143,11 +143,11 @@ export default class User
             throw new Error("Nível de permissão de usuário não encontrado.")
 
         if (IsUndNull(this.EmailAproved) || !this.EmailAproved)
-            throw new Error("Email de usuário não aprovado, qualquer ação é negada.")
+            throw new Error("Email de usuário não aprovado, ação negada.")
 
         const userLevel = PermissionLevelToNumber(PermissionLevel[this.PermissionLevel?.Value!])
 
-        if (userLevel > levelRequired)
+        if (userLevel < levelRequired)
             throw new Error("Nível de permissão não alto o suficiente para realizar esta ação.")
     }
 
