@@ -8,7 +8,7 @@ import Send from "../../../functions/Responses"
 
 import SendApprovalEmailOperation from "../operational/email/SendApprovalUserEmailOperation"
 import EmailSender from "../../functions/EmailSender"
-import EmailTitles from "../../../enums/EmailTitles"
+import EmailTitles from "../../../enums/EmailTitlesEnum"
 
 /**
  * Creates a user.

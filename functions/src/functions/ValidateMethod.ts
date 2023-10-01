@@ -1,5 +1,5 @@
 import { Request, Response } from "firebase-functions"
-import HttpStatus from "../enums/HttpStatus"
+import HttpStatus from "../enums/HttpStatusEnum"
 import Send from "./Responses"
 
 /**

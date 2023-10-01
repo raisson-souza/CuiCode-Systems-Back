@@ -1,6 +1,6 @@
 import EmailSender from "../../../functions/EmailSender"
 
-import EmailTitles from "../../../../enums/EmailTitles"
+import EmailTitles from "../../../../enums/EmailTitlesEnum"
 
 import User from "../../../../classes/User"
 

@@ -3,7 +3,7 @@ import {
     logger
 } from "firebase-functions"
 
-import HttpStatus from "../enums/HttpStatus"
+import HttpStatus from "../enums/HttpStatusEnum"
 
 import GetDate from "./GetDate"
 

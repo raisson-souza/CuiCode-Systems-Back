@@ -1,4 +1,4 @@
-enum Methods
+enum MethodsEnum
 {
     GET = "GET",
     POST = "POST",
@@ -6,4 +6,4 @@ enum Methods
     DELETE = "DELETE",
 }
 
-export default Methods
+export default MethodsEnum

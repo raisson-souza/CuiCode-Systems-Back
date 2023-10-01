@@ -8,8 +8,8 @@ import User from "./User"
 
 import QueryUser from "../services/user/utilities/QueryUser"
 
-import DatabaseStage from "../enums/DatabaseStage"
-import PermissionLevel from "../enums/PermissionLevel"
+import DatabaseStage from "../enums/DatabaseStageEnum"
+import PermissionLevel from "../enums/PermissionLevelEnum"
 
 import IsUndNull from "../functions/IsUndNull"
 import Send from "../functions/Responses"

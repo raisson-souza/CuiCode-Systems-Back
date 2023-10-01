@@ -6,7 +6,7 @@ import Send from "../../../../functions/Responses"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
 import EmailSender from "../../../functions/EmailSender"
 
-import EmailTitles from "../../../../enums/EmailTitles"
+import EmailTitles from "../../../../enums/EmailTitlesEnum"
 
 export default async function ApproveUserEmailService
 (

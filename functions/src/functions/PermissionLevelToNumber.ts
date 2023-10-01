@@ -1,4 +1,4 @@
-import PermissionLevel from "../enums/PermissionLevel"
+import PermissionLevel from "../enums/PermissionLevelEnum"
 
 export default function PermissionLevelToNumber(permissionLevel : PermissionLevel | string)
 {

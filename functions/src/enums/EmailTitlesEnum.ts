@@ -1,4 +1,4 @@
-enum EmailTitles
+enum EmailTitlesEnum
 {
     // SISTEMA
     CRITICAL_ERROR =  "ERRO CRÍTICO",
@@ -23,4 +23,4 @@ enum EmailTitles
     EMAIL_APPROVAL_REQUEST = "APROVAÇÃO DE EMAIL",
 }
 
-export default EmailTitles
+export default EmailTitlesEnum

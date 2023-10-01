@@ -1,7 +1,7 @@
 import Label from "./Label"
 
-import PermissionLevel from "../enums/PermissionLevel"
-import Sex from "../enums/Sex"
+import PermissionLevel from "../enums/PermissionLevelEnum"
+import Sex from "../enums/SexEnum"
 
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"

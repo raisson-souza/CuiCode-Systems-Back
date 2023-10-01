@@ -2,7 +2,7 @@ import { Client } from "pg"
 
 import User from "../../../classes/User"
 
-import PermissionLevel from "../../../enums/PermissionLevel"
+import PermissionLevel from "../../../enums/PermissionLevelEnum"
 
 /**
  * Validates a user

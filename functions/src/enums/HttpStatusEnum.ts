@@ -1,4 +1,4 @@
-enum HttpStatus
+enum HttpStatusEnum
 {
     OK = 200,
     CREATED = 201,
@@ -9,4 +9,4 @@ enum HttpStatus
     INTERNAL_SERVER_ERROR = 500,
 }
 
-export default HttpStatus
+export default HttpStatusEnum

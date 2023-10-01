@@ -6,7 +6,7 @@ import IsUndNull from "../../../functions/IsUndNull";
 
 import SqlLabel from "../../../classes/SqlLabel";
 import EmailSender from "../../functions/EmailSender";
-import EmailTitles from "../../../enums/EmailTitles";
+import EmailTitles from "../../../enums/EmailTitlesEnum";
 import UserInSql from "../../../interfaces/UserInSql";
 
 /**

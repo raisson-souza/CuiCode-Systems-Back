@@ -1,4 +1,4 @@
-enum PermissionLevel
+enum PermissionLevelEnum
 {
     Root = 4,
     Adm = 3,
@@ -6,4 +6,4 @@ enum PermissionLevel
     Guest = 1
 }
 
-export default PermissionLevel
+export default PermissionLevelEnum

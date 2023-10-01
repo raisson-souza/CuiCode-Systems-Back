@@ -13,7 +13,7 @@ import Send from "./functions/Responses"
 import ValidateCorsAsync from "./functions/ValidateCorsAsync"
 
 // Database schema stage
-import DatabaseStage from "./enums/DatabaseStage"
+import DatabaseStage from "./enums/DatabaseStageEnum"
 import ApproveUserEmailOperation from "./services/user/operational/email/ApproveUserEmailService"
 import SendManualEmailApprovalService from "./services/user/operational/email/SendManualEmailApprovalService"
 const DATABASE = DatabaseStage.testing
