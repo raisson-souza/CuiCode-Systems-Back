@@ -7,7 +7,7 @@ import IsUndNull from "../../../functions/IsUndNull";
 import SqlLabel from "../../../classes/SqlLabel";
 import EmailSender from "../../functions/EmailSender";
 import EmailTitles from "../../../enums/EmailTitlesEnum";
-import UserInSql from "../../../interfaces/UserInSql";
+import IUserInSql from "../../../interfaces/IUserInSql";
 
 /**
  * Updates a user.
@@ -36,7 +36,7 @@ export default async function UpdateUser
 
                 // userDb assume o tipo de userInSql que utiliza de assinatura de índice
                 // na qual permite acesso as chaves por qualquer string.
-                return result.rows[0] as UserInSql
+                return result.rows[0] as IUserInSql
             })
             .catch(ex => {
                 throw new Error((ex as Error).message)
@@ -110,7 +110,7 @@ function DetectUserDeactivationOrDeletion
     actionName : string,
     action : boolean,
     user : User,
-    userDb : UserInSql
+    userDb : IUserInSql
 ) : void
 {
     let emailMessage = `Usuário ${ IsUndNull(user.Name) ? userDb["name"] : user.Name } (${ user.GenerateUserKey() }) foi `

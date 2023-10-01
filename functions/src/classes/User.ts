@@ -6,7 +6,7 @@ import Sex from "../enums/SexEnum"
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
-import UserInSql from "../interfaces/UserInSql"
+import IUserInSql from "../interfaces/IUserInSql"
 
 export default class User
 {
@@ -153,7 +153,7 @@ export default class User
 
     ConvertUserToSqlObject()
     {
-        const userInSql : UserInSql = {
+        const userInSql : IUserInSql = {
             "id": this.Id,
             "username": this.Username,
             "name" : this.Name,
