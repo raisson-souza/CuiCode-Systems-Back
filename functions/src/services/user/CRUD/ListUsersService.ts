@@ -1,9 +1,9 @@
-import IsUndNull from "../../../../functions/IsUndNull"
-import Send from "../../../../functions/Responses"
+import IsUndNull from "../../../functions/IsUndNull"
+import Send from "../../../functions/Responses"
 
-import QueryUsersInfo from "../../utilities/QueryUsersInfo"
+import QueryUsersInfo from "../utilities/QueryUsersInfo"
 
-import Service from "../../../../classes/Service"
+import Service from "../../../classes/Service"
 
 /**
  * Queries specific information about all users.

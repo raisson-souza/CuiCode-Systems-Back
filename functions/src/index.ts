@@ -4,7 +4,7 @@ import Service from "./classes/Service"
 // USER
 import CreateUserService from "./services/user/CRUD/CreateUserService"
 import GetUserService from "./services/user/CRUD/GetUserService"
-import ListUsersService from "./services/user/operational/CRUD/ListUsersService"
+import ListUsersService from "./services/user/CRUD/ListUsersService"
 import TraceAccessService from "./services/features/TraceAccessService"
 import UpdateUserService from "./services/user/CRUD/UpdateUserService"
 
@@ -14,8 +14,8 @@ import ValidateCorsAsync from "./functions/ValidateCorsAsync"
 
 // Database schema stage
 import DatabaseStage from "./enums/DatabaseStageEnum"
-import ApproveUserEmailOperation from "./services/user/operational/email/ApproveUserEmailService"
-import SendManualEmailApprovalService from "./services/user/operational/email/SendManualEmailApprovalService"
+import ApproveUserEmailOperation from "./services/user/services/email/ApproveUserEmailService"
+import SendManualEmailApprovalService from "./services/user/services/email/SendManualEmailApprovalService"
 const DATABASE = DatabaseStage.testing
 
 // USER SERVICES

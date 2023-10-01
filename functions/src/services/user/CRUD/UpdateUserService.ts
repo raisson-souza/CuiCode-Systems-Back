@@ -6,7 +6,7 @@ import Send from "../../../functions/Responses"
 import IsUndNull from "../../../functions/IsUndNull"
 import Service from "../../../classes/Service"
 import UpdateUser from "../utilities/UpdateUser"
-import SendApprovalEmailOperation from "../operational/email/SendApprovalUserEmailOperation"
+import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
 /**
  * Updates a user.
