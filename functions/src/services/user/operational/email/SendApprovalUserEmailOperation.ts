@@ -1,4 +1,4 @@
-import EmailSender from "../../../functions/EmailSender"
+import EmailSender from "../../../../functions/system/EmailSender"
 
 import EmailTitles from "../../../../enums/EmailTitlesEnum"
 

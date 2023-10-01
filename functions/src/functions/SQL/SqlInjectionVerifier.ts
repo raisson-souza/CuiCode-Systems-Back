@@ -1,5 +1,5 @@
 import EmailTitles from "../../enums/EmailTitlesEnum"
-import EmailSender from "../../services/functions/EmailSender"
+import EmailSender from "../system/EmailSender"
 
 /**
  * Validates SQL injection risk in a query parameter.

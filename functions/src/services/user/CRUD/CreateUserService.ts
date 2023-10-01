@@ -7,7 +7,7 @@ import ValidateUser from "../utilities/ValidateUser"
 import Send from "../../../functions/Responses"
 
 import SendApprovalEmailOperation from "../operational/email/SendApprovalUserEmailOperation"
-import EmailSender from "../../functions/EmailSender"
+import EmailSender from "../../../functions/system/EmailSender"
 import EmailTitles from "../../../enums/EmailTitlesEnum"
 
 /**

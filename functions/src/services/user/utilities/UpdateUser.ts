@@ -5,7 +5,7 @@ import { Client } from "pg";
 import IsUndNull from "../../../functions/IsUndNull";
 
 import SqlLabel from "../../../classes/SqlLabel";
-import EmailSender from "../../functions/EmailSender";
+import EmailSender from "../../../functions/system/EmailSender";
 import EmailTitles from "../../../enums/EmailTitlesEnum";
 import IUserInSql from "../../../interfaces/IUserInSql";
 

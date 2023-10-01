@@ -4,7 +4,7 @@ import Service from "../../../../classes/Service"
 import IsUndNull from "../../../../functions/IsUndNull"
 import Send from "../../../../functions/Responses"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
-import EmailSender from "../../../functions/EmailSender"
+import EmailSender from "../../../../functions/system/EmailSender"
 
 import EmailTitles from "../../../../enums/EmailTitlesEnum"
 
