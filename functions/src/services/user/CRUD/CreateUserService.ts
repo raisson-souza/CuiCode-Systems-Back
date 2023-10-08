@@ -35,13 +35,13 @@ export default async function CreateUserService
 
         const user = CheckBody(REQ.body)
 
-        await Promise.resolve(ValidateUser(DB_connection, DB_stage, user))
+        await Promise.resolve(ValidateUser(DB_connection, DB_stage, user, true))
             .then(async () => {
                 await Promise.resolve(CreateUser(DB_connection, DB_stage, user))
                     .then(async () => {
                         Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, action)
                         new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
-                        await SendApprovalEmailOperation(user, DB_stage, DB_connection)
+                        await SendApprovalEmailOperation(user, DB_stage, DB_connection, true)
                     })
                     .catch(ex => {
                         Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)

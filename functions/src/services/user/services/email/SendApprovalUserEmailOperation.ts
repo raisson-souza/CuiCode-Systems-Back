@@ -6,19 +6,18 @@ import User from "../../../../classes/User"
 
 import { Client } from "pg"
 import IsUndNull from "../../../../functions/IsUndNull"
-import QueryUser from "../../utilities/QueryUser"
+import QueryDbRowByProperty from "../../../../functions/SQL/QueryDbRowByProperty"
 
 export default async function SendApprovalEmailOperation
 (
     user : User,
     db_stage : any,
     db_connection : Client,
+    is_creation : boolean = false
 )
 {
-    if (IsUndNull(user.Name) || IsUndNull(user.Id))
-        user = await QueryUser(db_connection, db_stage, user.Id)
-
-    const saudation = `Olá ${ user.Name }, bem vindo(a) a CuiCodeSystems!`
+    if (is_creation || IsUndNull(user.Id))
+        user.Id = await QueryDbRowByProperty(db_connection, db_stage, "users", "username", user.Username, "id")
 
     const createEmailApprovalQuery =
     `
@@ -30,6 +29,8 @@ export default async function SendApprovalEmailOperation
             false
         )
     `
+
+    const saudation = `Olá ${ user.Name }, bem vindo(a) a CuiCodeSystems!`
 
     return await db_connection.query(createEmailApprovalQuery)
         .then(() => {
