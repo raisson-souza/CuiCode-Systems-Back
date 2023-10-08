@@ -65,5 +65,5 @@ export default async function CreateUserService
 
 function CheckBody(body : any) : User
 {
-    return new User(body)
+    return new User(body, false, true)
 }

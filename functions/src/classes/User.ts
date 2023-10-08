@@ -32,11 +32,14 @@ export default class User extends Entity
     constructor(
         body : any,
         isBodySQL = false,
+        isCreation : boolean = false
     ) {
         super()
         try
         {
             this.ConvertBody(body, isBodySQL)
+            if (isCreation)
+                this.ValidateUserInfo()
         }
         catch (ex)
         {
@@ -68,19 +71,41 @@ export default class User extends Entity
         this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
     }
 
+    private ValidateUserInfo() : void
+    {
+        this.ValidateEmptyness()
+        this.ValidateUsername()
+
+        if (this.Email.indexOf("@") == -1 || this.RecoveryEmail.indexOf("@") == -1)
+            throw new Error("Email ou email de recuperação inválido.")
+
+        if (this.Password.search(/^[0-9]+$/) != -1)
+            throw new Error("A senha não pode conter apenas números.")
+
+        if (this.Password.search(/\d+/g) == -1)
+            throw new Error("A senha não pode conter apenas letras.")
+
+        this.Name.split(" ").forEach(namePart => {
+            if (this.Password.includes(namePart))
+                throw new Error("A senha não pode conter partes do nome do usuário.")
+        })
+
+        if (this.PasswordHint.includes(this.Password))
+            throw new Error("A senha não pode estar presente na dica da senha.")
+    }
+
     /**
      * Validates the rightness of a username user
-     * @param username 
      */
-    static ValidateUsername(username: string) : void
+    private ValidateUsername() : void
     {
-        if (username.length > 20)
+        if (this.Username.length > 20)
             throw new Error("Username além do limite.")
         
-        if (username.charAt(0) != "@")
+        if (this.Username.charAt(0) != "@")
             throw new Error("Username inválido.")
 
-        let newUsername = username.replace("@", "").split("")
+        let newUsername = this.Username.replace("@", "").split("")
 
         if (newUsername.includes("@"))
             throw new Error("Username inválido.")
@@ -88,9 +113,39 @@ export default class User extends Entity
         const UnwantedCharacters = ["!", "?", "#", "$", "%", "¨", "&", "*", "(", ")", "-", "=", "+", "°", '"', "'", "´", "`", "[", "]", "{", "}", ",", "."]
 
         UnwantedCharacters.forEach(character => {
-            if (username.includes(character))
+            if (this.Username.includes(character))
                 throw new Error("Username inválido.")
         })
+    }
+
+    private ValidateEmptyness()
+    {
+        if (IsUndNull(this.Username))
+            throw new Error("Username de usuário inválido.")
+
+        if (IsUndNull(this.Name))
+            throw new Error("Nome de usuário inválido.")
+
+        if (IsUndNull(this.BirthDate))
+            throw new Error("Data de aniversário de usuário inválida.")
+
+        if (IsUndNull(this.Email))
+            throw new Error("Email de usuário inválido.")
+
+        if (IsUndNull(this.RecoveryEmail))
+            throw new Error("Email de recuperação de usuário inválido.")
+
+        if (IsUndNull(this.Phone))
+            throw new Error("Número de celular de usuário inválido.")
+
+        if (IsUndNull(this.Password))
+            throw new Error("Senha de usuário inválida.")
+
+        if (IsUndNull(this.PasswordHint))
+            throw new Error("Dica de senha de usuário inválida.")
+
+        if (IsUndNull(this.Sex))
+            throw new Error("Sexo de usuário inválido.")
     }
 
     FormatUsername()
