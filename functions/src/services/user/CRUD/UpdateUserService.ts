@@ -65,7 +65,7 @@ function CheckBody(body : any) : User
     if (IsUndNull(body))
         throw new Error("Corpo da requisição inválido.");
 
-    const user = new User(body);
+    const user = new User(body, false, false, true);
 
     if (IsUndNull(user.Id))
         throw new Error("Id de usuário a ser atualizado não encontrado.");

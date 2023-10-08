@@ -32,14 +32,15 @@ export default class User extends Entity
     constructor(
         body : any,
         isBodySQL = false,
-        isCreation : boolean = false
+        isCreation : boolean = false,
+        isUpdate : boolean = false
     ) {
         super()
         try
         {
             this.ConvertBody(body, isBodySQL)
-            if (isCreation)
-                this.ValidateUserInfo()
+            if (isCreation || isUpdate)
+                this.ValidateUserInfo(isUpdate)
         }
         catch (ex)
         {
@@ -71,27 +72,49 @@ export default class User extends Entity
         this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
     }
 
-    private ValidateUserInfo() : void
+    private ValidateUserInfo(isUpdate : boolean) : void
     {
-        this.ValidateEmptyness()
-        this.ValidateUsername()
+        // Se não estiver atulizando (e sim criando) validar valores indefinidos
+        // (na edição nem todos os valores são preenchidos)
+        if (!isUpdate)
+            this.ValidateEmptyness()
 
-        if (this.Email.indexOf("@") == -1 || this.RecoveryEmail.indexOf("@") == -1)
-            throw new Error("Email ou email de recuperação inválido.")
+        if (isPropUpdating(isUpdate, this.Username))
+            this.ValidateUsername()
 
-        if (this.Password.search(/^[0-9]+$/) != -1)
-            throw new Error("A senha não pode conter apenas números.")
+        // Adaptar função isPropUpdating para validar mais de uma propriedade
+        if (
+            (
+                (!IsUndNull(this.Email) && !IsUndNull(this.RecoveryEmail)) &&
+                isUpdate
+            ) ||
+            !isUpdate
+        )
+        {
+            if (this.Email.indexOf("@") == -1 || this.RecoveryEmail.indexOf("@") == -1)
+                throw new Error("Email ou email de recuperação inválido.")
+        }
 
-        if (this.Password.search(/\d+/g) == -1)
-            throw new Error("A senha não pode conter apenas letras.")
+        if (isPropUpdating(isUpdate, this.Password))
+        {
+            if (this.Password.search(/^[0-9]+$/) != -1)
+                throw new Error("A senha não pode conter apenas números.")
 
-        this.Name.split(" ").forEach(namePart => {
-            if (this.Password.includes(namePart))
-                throw new Error("A senha não pode conter partes do nome do usuário.")
-        })
+            if (this.Password.search(/\d+/g) == -1)
+                throw new Error("A senha não pode conter apenas letras.")
+        }
 
-        if (this.PasswordHint.includes(this.Password))
-            throw new Error("A senha não pode estar presente na dica da senha.")
+        // Necessário implementar maneira de captar o nome e a dica de senha para validar a nova senha
+        if (!isUpdate)
+        {
+            if (this.PasswordHint.includes(this.Password))
+                throw new Error("A senha não pode estar presente na dica da senha.")
+
+            this.Name.toLocaleLowerCase().split(" ").forEach(namePart => {
+                if (this.Password.includes(namePart))
+                    throw new Error("A senha não pode conter partes do nome do usuário.")
+            })
+        }
     }
 
     /**
@@ -148,13 +171,10 @@ export default class User extends Entity
             throw new Error("Sexo de usuário inválido.")
     }
 
-    FormatUsername()
-    {
-        let newUsername = this.Username.toLowerCase()
-        this.Username = newUsername.trim()
-    }
-
-    GenerateUserKey()
+    /**
+     * Generates non obligational user key for identification
+     */
+    GenerateUserKey() : string | undefined
     {
         if (!IsUndNull(this.Username) && !IsUndNull(this.Id))
             return `${ this.Username }#${ FormatIdNumber(this.Id) }`
@@ -168,6 +188,9 @@ export default class User extends Entity
         return undefined
     }
 
+    /**
+     * Converts sex into sex enum
+     */
     private ConvertSexEnum(body : any, isBodySQL : boolean)
     {
         const bodyProp = !isBodySQL ? "Sex" : "sex"
@@ -177,6 +200,9 @@ export default class User extends Entity
             : new Label(Sex, body[bodyProp], "Sex")
     }
 
+    /**
+     * Converts permission level into permission level enum
+     */
     private ConvertLevelEnum(body : any, isBodySQL : boolean)
     {
         const bodyProp = !isBodySQL ? "PermissionLevel" : "permission_level"
@@ -227,4 +253,22 @@ export default class User extends Entity
 
         return userInSql
     }
+}
+
+/**
+ * Função especifica para a instânciação de um usuário a ser atualizado.
+ * Valida se uma propriedade existe e se a ação é de edição,
+ * o que significa que se está editando OU se não estiver editando,
+ * o que significa que está criando e a validação seguinte deve ocorrer.
+ */
+function isPropUpdating(isUpdate : boolean, prop : any) : boolean
+{
+    return (!IsUndNull(prop) && isUpdate) || !isUpdate
+    /*
+        (!IsUndNull(prop) && isUpdate):
+            Se a prop não é nula e se esta editando, a prop foi editada e deve ser validada.
+        
+        !isUpdate:
+            Se não se está editando, logicamente está se criando, portanto, a prop existe e deve ser validada.
+    */
 }
