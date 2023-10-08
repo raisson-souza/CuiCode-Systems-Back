@@ -1,6 +1,7 @@
-class EmailApproval
+import Entity from "./Entity"
+
+class EmailApproval extends Entity
 {
-    Id : number
     UserId : number
     Email : string
     Approved : boolean
@@ -13,6 +14,7 @@ class EmailApproval
         approved : boolean
     )
     {
+        super()
         this.Id = id
         this.UserId = user_id
         this.Email = email

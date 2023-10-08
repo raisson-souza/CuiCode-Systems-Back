@@ -7,11 +7,11 @@ import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
 import IUserInSql from "../interfaces/IUserInSql"
+import Entity from "./Entity"
 
-export default class User
+export default class User extends Entity
 {
     // Identificação
-    Id: number
     Username: string
     Name : string
 
@@ -28,14 +28,12 @@ export default class User
     PermissionLevel: Label | null
     Sex: Label | null
     EmailAproved : boolean
-    Active: boolean
-    CreatedDate: Date
-    Deleted: boolean
 
     constructor(
         body : any,
         isBodySQL = false,
     ) {
+        super()
         try
         {
             this.ConvertBody(body, isBodySQL)
