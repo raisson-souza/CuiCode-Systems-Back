@@ -1,10 +1,10 @@
-import { Client } from "pg";
+import { Client } from "pg"
 
 import User from "../../../classes/User"
 
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
 
-import * as crypto from "crypto-js"
+import crypto from "crypto-js"
 
 /**
  * Creates a user.

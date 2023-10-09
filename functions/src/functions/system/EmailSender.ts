@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer"
 
 import CaseUndNull from "../CaseUndNull"
+
 import EmailTitles from "../../enums/EmailTitlesEnum"
 
 export default class EmailSender

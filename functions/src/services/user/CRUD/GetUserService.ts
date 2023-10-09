@@ -1,9 +1,10 @@
+import Service from "../../../classes/Service"
+
 import QueryUser from "../utilities/QueryUser"
 
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/Responses"
 
-import Service from "../../../classes/Service"
 
 /**
  * Queries a user.

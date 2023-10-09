@@ -1,12 +1,12 @@
-import EmailSender from "../../../../functions/system/EmailSender"
-
-import EmailTitles from "../../../../enums/EmailTitlesEnum"
+import { Client } from "pg"
 
 import User from "../../../../classes/User"
 
-import { Client } from "pg"
+import EmailSender from "../../../../functions/system/EmailSender"
 import IsUndNull from "../../../../functions/IsUndNull"
 import QueryDbRowByProperty from "../../../../functions/SQL/QueryDbRowByProperty"
+
+import EmailTitles from "../../../../enums/EmailTitlesEnum"
 
 export default async function SendApprovalEmailOperation
 (

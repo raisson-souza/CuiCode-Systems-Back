@@ -1,13 +1,14 @@
 import Service from "../../../classes/Service"
 import User from "../../../classes/User"
 
+import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
+
 import CreateUser from "../utilities/CreateUser"
 import ValidateUser from "../utilities/ValidateUser"
 
 import Send from "../../../functions/Responses"
-
-import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 import EmailSender from "../../../functions/system/EmailSender"
+
 import EmailTitles from "../../../enums/EmailTitlesEnum"
 
 /**

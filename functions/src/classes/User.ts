@@ -1,4 +1,7 @@
+import Entity from "./Entity"
 import Label from "./Label"
+
+import IUserInSql from "../interfaces/IUserInSql"
 
 import PermissionLevel from "../enums/PermissionLevelEnum"
 import Sex from "../enums/SexEnum"
@@ -6,8 +9,6 @@ import Sex from "../enums/SexEnum"
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
-import IUserInSql from "../interfaces/IUserInSql"
-import Entity from "./Entity"
 
 export default class User extends Entity
 {
@@ -48,11 +49,12 @@ export default class User extends Entity
         }
     }
 
-    private ConvertBody
-    (
-        body : any,
-        isSQL = false
-    )
+    /**
+     * Converts the body into the instantiation of User.
+     * @param body Body object to convert.
+     * @param isSQL Is the body in SQL form of user.
+     */
+    private ConvertBody(body : any, isSQL = false) : void
     {
         this.Id = body[!isSQL ? "Id" : "id"]
         this.Username = body[!isSQL ? "Username" : "username"]
@@ -72,6 +74,9 @@ export default class User extends Entity
         this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
     }
 
+    /**
+     * Validates user's info
+     */
     private ValidateUserInfo(isUpdate : boolean) : void
     {
         // Se não estiver atulizando (e sim criando) validar valores indefinidos
@@ -141,7 +146,10 @@ export default class User extends Entity
         })
     }
 
-    private ValidateEmptyness()
+    /**
+     * Validates any undefined propertie into User.
+     */
+    private ValidateEmptyness() : void
     {
         if (IsUndNull(this.Username))
             throw new Error("Username de usuário inválido.")

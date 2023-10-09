@@ -1,5 +1,5 @@
 import { Request, Response } from "firebase-functions"
-import HttpStatus from "../enums/HttpStatusEnum"
+
 import Send from "./Responses"
 
 /**
@@ -8,7 +8,6 @@ import Send from "./Responses"
  * @param res Response
  * @param req Request
  * @param methods Methods expected
- * @returns 
  */
 export default function ValidateMethod
 (

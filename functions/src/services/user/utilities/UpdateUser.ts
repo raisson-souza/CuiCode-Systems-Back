@@ -1,13 +1,14 @@
+import { Client } from "pg"
+
 import User from "../../../classes/User"
+import SqlLabel from "../../../classes/SqlLabel"
 
-import { Client } from "pg";
+import IUserInSql from "../../../interfaces/IUserInSql"
 
-import IsUndNull from "../../../functions/IsUndNull";
+import EmailTitles from "../../../enums/EmailTitlesEnum"
 
-import SqlLabel from "../../../classes/SqlLabel";
-import EmailSender from "../../../functions/system/EmailSender";
-import EmailTitles from "../../../enums/EmailTitlesEnum";
-import IUserInSql from "../../../interfaces/IUserInSql";
+import IsUndNull from "../../../functions/IsUndNull"
+import EmailSender from "../../../functions/system/EmailSender"
 
 /**
  * Updates a user.

@@ -7,7 +7,6 @@ const nodemailer = require('nodemailer');
 
 import Send from "../../functions/Responses"
 import GetDate from "../../functions/GetDate";
-import ValidateMethod from "../../functions/ValidateMethod";
 
 export default async function TraceAccessService
 (

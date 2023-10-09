@@ -1,7 +1,5 @@
 /**
  * Checks all params of a body for a process.
- * @param body 
- * @param params 
  */
 export default function BodyChecker(body : Object, params : string[]) : void
 {

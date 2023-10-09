@@ -1,9 +1,9 @@
-import EmailTitles from "../../enums/EmailTitlesEnum"
 import EmailSender from "../system/EmailSender"
+
+import EmailTitles from "../../enums/EmailTitlesEnum"
 
 /**
  * Validates SQL injection risk in a query parameter.
- * @param param 
  */
 export default function SqlInjectionVerifier(param : string)
 {

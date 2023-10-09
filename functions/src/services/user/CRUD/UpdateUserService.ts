@@ -1,12 +1,13 @@
+import Service from "../../../classes/Service"
 import User from "../../../classes/User"
 
+import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
+
 import ValidateUser from "../utilities/ValidateUser"
+import UpdateUser from "../utilities/UpdateUser"
 
 import Send from "../../../functions/Responses"
 import IsUndNull from "../../../functions/IsUndNull"
-import Service from "../../../classes/Service"
-import UpdateUser from "../utilities/UpdateUser"
-import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
 /**
  * Updates a user.
