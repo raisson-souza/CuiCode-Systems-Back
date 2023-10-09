@@ -1,0 +1,16 @@
+{
+    "DatabaseConfig": {
+        "user": "postgres",
+        "host": "0.tcp.sa.ngrok.io",
+        "database": "cuicode_systems",
+        "password": "20042223",
+        "port": 11057
+    },
+    "_DatabaseConfig": {
+        "user": "postgres",
+        "host": "localhost",
+        "database": "cuicode_systems",
+        "password": "20042223",
+        "port": 5432
+    }
+}

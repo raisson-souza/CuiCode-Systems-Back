@@ -5,7 +5,7 @@ import {
 
 import IsUndNull from "./IsUndNull"
 
-import CORS_CONFIG from "../config/CORS_CONFIG.json"
+import CONFIG from "../config/cors_config.json"
 
 export default async function ValidateCorsAsync
 (
@@ -15,20 +15,20 @@ export default async function ValidateCorsAsync
 : Promise<void>
 {
     const {
-        ALLOWED_ORIGINS,
-        API_TEST_TOKEN
-    } = CORS_CONFIG
+        allowed_origins,
+        api_test_token
+    } = CONFIG
 
-    const cors = require("cors")({ origin: ALLOWED_ORIGINS })
+    const cors = require("cors")({ origin: allowed_origins })
 
     if (
         (
             req.header("Origin") ||
             IsUndNull(req.header("Origin"))
         ) &&
-        !ALLOWED_ORIGINS.includes(req.header("Origin")!)
+        !allowed_origins.includes(req.header("Origin")!)
     )
-        if (req.header("authorization") != API_TEST_TOKEN)
+        if (req.header("authorization") != api_test_token)
             throw new Error()
 
     cors(req, res, () => {

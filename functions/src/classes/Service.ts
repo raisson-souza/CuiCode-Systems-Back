@@ -14,7 +14,7 @@ import PermissionLevel from "../enums/PermissionLevelEnum"
 import IsUndNull from "../functions/IsUndNull"
 import Send from "../functions/Responses"
 
-import DATABASE from "../config/DATABASE.json"
+import CONFIG from "../config/database_config.json"
 
 /**
  * Contains all necessary params for all endpoints
@@ -44,7 +44,7 @@ export default class Service
         this.REQ = req
         this.RES = res
         this.DB_stage = DatabaseStage[db_stage]
-        this.DB_connection = new Client(DATABASE.DatabaseConfig)
+        this.DB_connection = new Client(CONFIG.DatabaseConfig)
         this.PerformConnection()
     }
 
