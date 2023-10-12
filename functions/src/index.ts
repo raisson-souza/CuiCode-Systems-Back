@@ -8,15 +8,18 @@ import ListUsersService from "./services/user/CRUD/ListUsersService"
 import TraceAccessService from "./services/features/TraceAccessService"
 import UpdateUserService from "./services/user/CRUD/UpdateUserService"
 
+// EMAIL
+import ApproveUserEmailOperation from "./services/user/services/email/ApproveUserEmailService"
+import SendManualEmailApprovalService from "./services/user/services/email/SendManualEmailApprovalService"
+
 // FUNCTIONS
 import Send from "./functions/Responses"
 import ValidateCorsAsync from "./functions/ValidateCorsAsync"
 
-// Database schema stage
-import DatabaseStage from "./enums/DatabaseStageEnum"
-import ApproveUserEmailOperation from "./services/user/services/email/ApproveUserEmailService"
-import SendManualEmailApprovalService from "./services/user/services/email/SendManualEmailApprovalService"
-const DATABASE = DatabaseStage.testing
+// Environment Config
+import { ConvertNumberToDatabaseStageEnum } from "./enums/DatabaseStageEnum"
+import ENVIRONMENT_STAGE from "./config/environment_config.json"
+const DATABASE = ConvertNumberToDatabaseStageEnum(ENVIRONMENT_STAGE.environment)
 
 // USER SERVICES
 
@@ -54,10 +57,8 @@ export const UpdateUser = onRequest((req, res) => {
 
 export const ApproveUserEmail = onRequest((req, res) => {
     const service = new Service(req, res, DATABASE)
-
     // enviar link do ERP para acessar
     // CORS não é necessário pois o acesso é externo
-
     ApproveUserEmailOperation(service)
 })
 

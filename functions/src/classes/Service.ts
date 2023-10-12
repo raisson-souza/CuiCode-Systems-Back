@@ -8,7 +8,7 @@ import User from "./User"
 
 import QueryUser from "../services/user/utilities/QueryUser"
 
-import DatabaseStage from "../enums/DatabaseStageEnum"
+import { DatabaseStageEnum } from "../enums/DatabaseStageEnum"
 import PermissionLevel from "../enums/PermissionLevelEnum"
 
 import IsUndNull from "../functions/IsUndNull"
@@ -38,12 +38,12 @@ export default class Service
     (
         req : Request,
         res : Response,
-        db_stage : DatabaseStage,
+        db_stage : DatabaseStageEnum,
     )
     {
         this.REQ = req
         this.RES = res
-        this.DB_stage = DatabaseStage[db_stage]
+        this.DB_stage = DatabaseStageEnum[db_stage]
         this.DB_connection = new Client(CONFIG.DatabaseConfig)
         this.PerformConnection()
     }
@@ -113,7 +113,6 @@ export default class Service
 
     private async PerformConnection()
     {
-        // VALIDAR ERRO EM CASO DE BANCO DESCONECTADO
         await this.DB_connection.connect()
             .then(() => {})
             .catch(ex => {
