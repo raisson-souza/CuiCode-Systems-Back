@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS testing."users"(
 	password_hint varchar(100) NOT NULL,
 	email_approved bool DEFAULT FALSE,
 	photo_base_64 TEXT DEFAULT NULL,
-	permission_level int NOT NULL DEFAULT 3,
+	permission_level int NOT NULL DEFAULT 2,
 	created_date timestamp NOT NULL DEFAULT now(),
 	active boolean NOT NULL DEFAULT TRUE,
 	deleted boolean NOT NULL DEFAULT FALSE,
@@ -26,10 +26,10 @@ CREATE TABLE IF NOT EXISTS testing.permission_levels(
 )
 
 INSERT INTO testing.permission_levels VALUES
-(1, 'Root'),
-(2, 'Adm'),
-(3, 'Member'),
-(4, 'Guest')
+(4, 'Root'),
+(3, 'Adm'),
+(2, 'Member'),
+(1, 'Guest')
 
 CREATE TABLE IF NOT EXISTS testing.sexs(
 	id int PRIMARY KEY,
