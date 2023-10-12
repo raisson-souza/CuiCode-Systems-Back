@@ -3,9 +3,9 @@ import {
     Response,
 } from "firebase-functions"
 
-import IsUndNull from "./IsUndNull"
+import IsUndNull from "../IsUndNull"
 
-import CONFIG from "../config/cors_config.json"
+import CONFIG from "../../config/cors_config.json"
 
 export default async function ValidateCorsAsync
 (

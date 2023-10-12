@@ -14,7 +14,7 @@ import SendManualEmailApprovalService from "./services/user/services/email/SendM
 
 // FUNCTIONS
 import Send from "./functions/Responses"
-import ValidateCorsAsync from "./functions/ValidateCorsAsync"
+import ValidateCorsAsync from "./functions/system/ValidateCorsAsync"
 
 // Environment Config
 import { ConvertNumberToDatabaseStageEnum } from "./enums/DatabaseStageEnum"
