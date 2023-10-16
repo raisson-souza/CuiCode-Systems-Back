@@ -1,0 +1,1 @@
+{"version":3,"file":"ToSqlTimestamp.js","sourceRoot":"","sources":["../../../src/functions/SQL/ToSqlTimestamp.ts"],"names":[],"mappings":";;AAAA;;GAEG;AACH,SAAwB,cAAc,CAAC,IAAW;IAE9C,MAAM,OAAO,GAAG,IAAI,IAAI,CAAC,IAAI,CAAC,CAAC,OAAO,EAAE,GAAG,IAAI,CAAA;IAE/C,OAAO,iBAAiB,OAAO,IAAI,CAAA;AACvC,CAAC;AALD,iCAKC"}

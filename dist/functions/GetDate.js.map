@@ -1,0 +1,1 @@
+{"version":3,"file":"GetDate.js","sourceRoot":"","sources":["../../src/functions/GetDate.ts"],"names":[],"mappings":";;AAAA;;GAEG;AACH,SAAwB,OAAO;IAE3B,MAAM,IAAI,GAAG,IAAI,IAAI,EAAE,CAAA;IAEvB,OAAO,IAAI,CAAC,cAAc,CAAC,OAAO,EAAE,EAAE,QAAQ,EAAE,mBAAmB,EAAE,CAAC,CAAA;AAC1E,CAAC;AALD,0BAKC"}
