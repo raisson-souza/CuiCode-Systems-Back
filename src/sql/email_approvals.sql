@@ -1,14 +1,14 @@
-CREATE TABLE IF NOT EXISTS testing.email_approvals(
-    id SERIAL PRIMARY KEY,
-    user_id int NOT NULL,
-    email varchar NOT NULL,
-    approved bool NOT NULL,
-    created timestamp DEFAULT now(),
-    FOREIGN KEY (user_id) REFERENCES testing.users (id),
-    FOREIGN KEY (email) REFERENCES testing.users (email)
+CREATE TABLE IF NOT EXISTS email_approvals(
+	id SERIAL PRIMARY KEY,
+	user_id int NOT NULL,
+	email varchar NOT NULL,
+	approved bool NOT NULL,
+	approved_date timestamp DEFAULT NULL,
+	created timestamp DEFAULT now(),
+	FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE OR REPLACE PROCEDURE testing.approve_user_email(db_stage varchar, _user_id int, approval_id int)
+CREATE OR REPLACE PROCEDURE approve_user_email(db_stage varchar, _user_id int, approval_id int)
 LANGUAGE plpgsql AS 
 $$
 BEGIN 

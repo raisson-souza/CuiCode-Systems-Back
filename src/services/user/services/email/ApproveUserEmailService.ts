@@ -25,8 +25,8 @@ export default async function ApproveUserEmailService
             DB_stage,
         } = service
 
-        if (REQ.method != "GET")
-            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
+        // if (REQ.method != "GET")
+        //     return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
 
         await service.SetReqUserAsync()
 

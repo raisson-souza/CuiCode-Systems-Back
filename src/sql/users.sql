@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS testing."users"(
+CREATE TABLE IF NOT EXISTS users(
 	id SERIAL,
 	username varchar(20) NOT NULL UNIQUE,
 	"name" varchar(100) NOT NULL,
@@ -16,30 +16,30 @@ CREATE TABLE IF NOT EXISTS testing."users"(
 	active boolean NOT NULL DEFAULT TRUE,
 	deleted boolean NOT NULL DEFAULT FALSE,
 	PRIMARY KEY (id),
-	FOREIGN KEY (sex) REFERENCES testing.sexs (id),
-	FOREIGN KEY (permission_level) REFERENCES testing.permission_levels (id)
-)
+	FOREIGN KEY (sex) REFERENCES sexs (id),
+	FOREIGN KEY (permission_level) REFERENCES permission_levels (id)
+);
 
-CREATE TABLE IF NOT EXISTS testing.permission_levels(
+CREATE TABLE IF NOT EXISTS permission_levels(
 	id int PRIMARY KEY,
 	description varchar
-)
+);
 
-INSERT INTO testing.permission_levels VALUES
+INSERT INTO permission_levels VALUES
 (4, 'Root'),
 (3, 'Adm'),
 (2, 'Member'),
-(1, 'Guest')
+(1, 'Guest');
 
-CREATE TABLE IF NOT EXISTS testing.sexs(
+CREATE TABLE IF NOT EXISTS sexs(
 	id int PRIMARY KEY,
 	description varchar
-)
+);
 
-INSERT INTO testing.sexs VALUES
+INSERT INTO sexs VALUES
 (1, 'Masculino'),
 (2, 'Feminino'),
-(3, 'Outro')
+(3, 'Outro');
 
 /*
 CHAT
