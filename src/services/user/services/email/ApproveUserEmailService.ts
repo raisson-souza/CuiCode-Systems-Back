@@ -22,7 +22,6 @@ export default async function ApproveUserEmailService
             REQ,
             RES,
             DB_connection,
-            DB_stage,
         } = service
 
         // if (REQ.method != "GET")
@@ -37,11 +36,11 @@ export default async function ApproveUserEmailService
         const selectEmailQuery = 
         `
             SELECT *
-            FROM ${ DB_stage }.email_approvals
+            FROM email_approvals
             WHERE
                 email = '${ toApproveEmail }' AND
                 user_id = ${ service.USER_req?.Id } AND
-                created = (SELECT max(created) FROM ${ DB_stage }.email_approvals)
+                created = (SELECT max(created) FROM email_approvals)
         `
 
         const emailApproval = await DB_connection.query(selectEmailQuery)
@@ -66,7 +65,7 @@ export default async function ApproveUserEmailService
 
         // A partir daqui é garantido que o usuário requeridor é quem está tentando aprovar o email.
 
-        const approveEmailQuery = `CALL ${ DB_stage }.approve_user_email('${ DB_stage }', ${ emailApproval.UserId }, ${ emailApproval.Id })`
+        const approveEmailQuery = `CALL approve_user_email(${ emailApproval.UserId }, ${ emailApproval.Id })`
 
         await DB_connection.query(approveEmailQuery)
             .then(() => {})

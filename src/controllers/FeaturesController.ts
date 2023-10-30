@@ -1,15 +1,11 @@
 import { Express } from "express"
 
-import Service from "../classes/Service"
 import TraceAccessService from "../services/features/TraceAccessService"
 import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 import Send from "../functions/Responses"
 
-import { DatabaseStageEnum } from "../enums/DatabaseStageEnum"
-
 function FeaturesController(
-    app : Express,
-    database : DatabaseStageEnum
+    app : Express
 )
 {
     app.trace('/TraceAccess', (req, res) => {

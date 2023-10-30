@@ -11,10 +11,6 @@ import IsUndNull from "../../../functions/IsUndNull"
 
 /**
  * Updates a user.
- * @param req User object
- * @param res 
- * @param db 
- * @param admin 
  */
 export default async function UpdateUserService
 (
@@ -30,7 +26,6 @@ export default async function UpdateUserService
             REQ,
             RES,
             DB_connection,
-            DB_stage
         } = service
 
         if (REQ.method != "PUT")
@@ -38,9 +33,9 @@ export default async function UpdateUserService
 
         const user = CheckBody(REQ.body)
 
-        await ValidateUser(DB_connection, DB_stage, user, false)
+        await ValidateUser(DB_connection, user, false)
 
-        await Promise.resolve(UpdateUser(DB_connection, DB_stage, user))
+        await Promise.resolve(UpdateUser(DB_connection, user))
             .then(() => {
                 Send.Ok(RES, `Usuário editado com sucesso.`, action)
             })
@@ -49,7 +44,7 @@ export default async function UpdateUserService
             })
 
         if (!IsUndNull(user.EmailAproved) && !user.EmailAproved)
-            await SendApprovalEmailOperation(user, DB_stage, DB_connection)
+            await SendApprovalEmailOperation(user, DB_connection)
     }
     catch (ex)
     {

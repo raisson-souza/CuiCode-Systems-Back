@@ -23,7 +23,6 @@ export default async function GetUserService
             REQ,
             RES,
             DB_connection,
-            DB_stage
         } = service
 
         if (REQ.method != "GET")
@@ -31,7 +30,7 @@ export default async function GetUserService
 
         const userId = CheckQuery(REQ.query)
 
-        await Promise.resolve(QueryUser(DB_connection, DB_stage, userId))
+        await Promise.resolve(QueryUser(DB_connection, userId))
             .then(user => {
                 Send.Ok(RES, user, action)
             })

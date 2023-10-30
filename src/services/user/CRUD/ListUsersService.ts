@@ -25,7 +25,6 @@ export default async function ListUsersService
             REQ,
             RES,
             DB_connection,
-            DB_stage
         } = service
 
         if (REQ.method != "GET")
@@ -34,7 +33,7 @@ export default async function ListUsersService
         // O FRONT-END DEVE ENVIAR AS INFORMAÇÕES JÁ CONVERTIDAS PARA OS MESMOS CAMPOS DO BANCO
         const userRequiredInfo = CheckQuery(REQ.query)
 
-        await Promise.resolve(QueryUsersInfo(DB_connection, DB_stage, userRequiredInfo))
+        await Promise.resolve(QueryUsersInfo(DB_connection, userRequiredInfo))
             .then(userInfos => {
                 Send.Ok(RES, userInfos, action)
             })

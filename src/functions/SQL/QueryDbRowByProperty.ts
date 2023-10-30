@@ -7,7 +7,6 @@ import SqlLabel from "../../classes/SqlLabel"
 /**
  * Queries a user by a property.
  * @param db_connection 
- * @param db_stage 
  * @param dbTable Tabela do banco a ser realizada query
  * @param userSqlColumn Coluna a ser aplicado WHERE
  * @param userSqlColumnValue Valor da coluna a ser procurado na tabela
@@ -17,7 +16,6 @@ import SqlLabel from "../../classes/SqlLabel"
 export default async function QueryDbRowByProperty
 (
     db_connection : Client,
-    db_stage : string,
     dbTable : string,
     userSqlColumn : string,
     userSqlColumnValue : any,
@@ -33,7 +31,7 @@ export default async function QueryDbRowByProperty
         const query =
         `
             SELECT *
-            FROM ${ db_stage }.${ dbTable }
+            FROM ${ dbTable }
             WHERE
                 ${ userSqlColumn } = ${ SqlLabel.ParsePropNameToSql(typeof userSqlColumnValue, userSqlColumnValue) }
         `

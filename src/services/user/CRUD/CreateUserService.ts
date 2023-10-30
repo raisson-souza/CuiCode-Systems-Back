@@ -28,7 +28,6 @@ export default async function CreateUserService
             REQ,
             RES,
             DB_connection,
-            DB_stage,
         } = service
 
         if (REQ.method != "POST")
@@ -36,13 +35,13 @@ export default async function CreateUserService
 
         const user = CheckBody(REQ.body)
 
-        await Promise.resolve(ValidateUser(DB_connection, DB_stage, user, true))
+        await Promise.resolve(ValidateUser(DB_connection, user, true))
             .then(async () => {
-                await Promise.resolve(CreateUser(DB_connection, DB_stage, user))
+                await Promise.resolve(CreateUser(DB_connection, user))
                     .then(async () => {
                         Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, action)
                         new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
-                        await SendApprovalEmailOperation(user, DB_stage, DB_connection, true)
+                        await SendApprovalEmailOperation(user, DB_connection, true)
                     })
                     .catch(ex => {
                         Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)

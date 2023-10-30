@@ -9,7 +9,7 @@
     "DatabaseConfig": {
         "user": "postgres",
         "host": "localhost",
-        "database": "cuicode_systems",
+        "database": "cuicode_systems_testing",
         "password": "20042223",
         "port": 5432
     }

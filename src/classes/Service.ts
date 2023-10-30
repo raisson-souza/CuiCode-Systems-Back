@@ -5,7 +5,6 @@ import User from "./User"
 
 import QueryUser from "../services/user/utilities/QueryUser"
 
-import { DatabaseStageEnum } from "../enums/DatabaseStageEnum"
 import PermissionLevel from "../enums/PermissionLevelEnum"
 
 import IsUndNull from "../functions/IsUndNull"
@@ -17,7 +16,6 @@ import CONFIG from "../config/database_config.json"
  * Contains all necessary params for all endpoints
  * @param REQ Request
  * @param RES Response
- * @param DB_stage Database reference
  * @param DB_connection Database connection
  * @param USER_req User Requester
  */
@@ -25,7 +23,6 @@ export default class Service
 {
     REQ : Request
     RES : Response
-    DB_stage : string
     DB_connection : Client
     // Necessário chamar SetReqUserAsync() na service requerida.
     // Caso UserReqId não exista, estoura erro.
@@ -35,12 +32,10 @@ export default class Service
     (
         req : Request,
         res : Response,
-        db_stage : DatabaseStageEnum,
     )
     {
         this.REQ = req
         this.RES = res
-        this.DB_stage = DatabaseStageEnum[db_stage]
         this.DB_connection = new Client(CONFIG.DatabaseConfig)
         this.PerformConnection()
     }
@@ -56,7 +51,7 @@ export default class Service
             throw new Error("Usuário requeridor não encontrado na requisição.")
 
         const user = await Promise.resolve(
-            QueryUser(this.DB_connection, this.DB_stage, userReqId))
+            QueryUser(this.DB_connection, userReqId))
                 .then(user => {
                     return user
                 })

@@ -15,15 +15,12 @@ import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 import ApproveUserEmailOperation from "../services/user/services/email/ApproveUserEmailService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 
-import { DatabaseStageEnum } from "../enums/DatabaseStageEnum"
-
 export default function UsersController(
-    app : Express,
-    database : DatabaseStageEnum
+    app : Express
 )
 {
     app.get('/GetUser', (req, res) => {
-        const service = new Service(req, res, database)
+        const service = new Service(req, res)
     
         Promise.resolve(ValidateCorsAsync(req, res))
             .then(() => { GetUserService(service) })
@@ -31,7 +28,7 @@ export default function UsersController(
     })
 
     app.get('/ListUsers', (req, res) => {
-        const service = new Service(req, res, database)
+        const service = new Service(req, res)
         
         Promise.resolve(ValidateCorsAsync(req, res))
             .then(() => { ListUsersService(service) })
@@ -39,7 +36,7 @@ export default function UsersController(
     })
 
     app.post('/CreateUser', (req, res) => {
-        const service = new Service(req, res, database)
+        const service = new Service(req, res)
     
         Promise.resolve(ValidateCorsAsync(req, res))
             .then(() => { CreateUserService(service) })
@@ -47,22 +44,22 @@ export default function UsersController(
     })
 
     app.put('/UpdateUser', (req, res) => {
-        const service = new Service(req, res, database)
+        const service = new Service(req, res)
     
         Promise.resolve(ValidateCorsAsync(req, res))
             .then(() => { UpdateUserService(service) })
             .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
     })
 
-    app.post('/ApproveUserEmail', (req, res) => {
-        const service = new Service(req, res, database)
+    app.get('/ApproveUserEmail', (req, res) => {
+        const service = new Service(req, res)
         // enviar link do ERP para acessar
         // CORS não é necessário pois o acesso é externo
         ApproveUserEmailOperation(service)
     })
 
     app.post('SendManualEmailApproval', (req, res) => {
-        const service = new Service(req, res, database)
+        const service = new Service(req, res)
     
         Promise.resolve(ValidateCorsAsync(req, res))
             .then(() => { SendManualEmailApprovalService(service) })

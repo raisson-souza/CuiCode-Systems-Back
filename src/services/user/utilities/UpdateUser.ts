@@ -16,7 +16,6 @@ import EmailSender from "../../../functions/system/EmailSender"
 export default async function UpdateUser
 (
     db_connection : Client,
-    db_stage : string,
     user : User,
 )
 : Promise<void>
@@ -28,7 +27,7 @@ export default async function UpdateUser
 
         const userInSql = user.ConvertUserToSqlObject()
 
-        const checkUserExistenceQuery = `SELECT * FROM ${ db_stage }.users WHERE id = ${ user.Id }`
+        const checkUserExistenceQuery = `SELECT * FROM users WHERE id = ${ user.Id }`
 
         const userDb = await db_connection.query(checkUserExistenceQuery)
             .then(result => {
@@ -71,7 +70,7 @@ export default async function UpdateUser
         if (newUserProps.length == 0)
             throw new Error("Nenhuma edição realizada no usuário.")
 
-        const userPutQuery = `UPDATE ${ db_stage }.users SET ${ BuildUserPutQuery(newUserProps) } WHERE id = ${ user.Id }`
+        const userPutQuery = `UPDATE users SET ${ BuildUserPutQuery(newUserProps) } WHERE id = ${ user.Id }`
 
         await db_connection.query(userPutQuery)
             .then(async () => {})

@@ -12,7 +12,6 @@ import crypto from "crypto-js"
 export default async function CreateUser
 (
     db_connection : Client,
-    db_stage : string,
     user : User,
 )
 : Promise<void>
@@ -23,7 +22,7 @@ export default async function CreateUser
 
         let query =
         `
-            INSERT INTO ${ db_stage }.users (${ GenerateUserFields() }) VALUES 
+            INSERT INTO users (${ GenerateUserFields() }) VALUES 
             (
                 '${ user.Username }',
                 '${ user.Name }',

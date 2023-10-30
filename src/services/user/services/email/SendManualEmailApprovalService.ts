@@ -18,7 +18,6 @@ export default async function SendManualEmailApprovalService
             REQ,
             RES,
             DB_connection,
-            DB_stage,
         } = service
 
         if (REQ.method != "POST")
@@ -28,7 +27,7 @@ export default async function SendManualEmailApprovalService
 
         // O email a ser aprovado já está no UserReq
 
-        await Promise.resolve(SendApprovalEmailOperation(service.USER_req!, DB_stage, DB_connection))
+        await Promise.resolve(SendApprovalEmailOperation(service.USER_req!, DB_connection))
             .then(() => {
                 Send.Ok(RES, "Solicitação de aprovação de email realizada com sucesso.", action)
             })

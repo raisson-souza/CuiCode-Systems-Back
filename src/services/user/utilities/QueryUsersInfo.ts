@@ -3,14 +3,12 @@ import { Client } from "pg"
 /**
  * Queries specific information about all users.
  * @param db_connection
- * @param db_stage
  * @param requiredInfo
  * @returns
  */
 export default async function QueryUsersInfo
 (
     db_connection : Client,
-    db_stage : string,
     requiredInfo : Array<string>
 )
 : Promise<Array<object> | null>
@@ -29,7 +27,7 @@ export default async function QueryUsersInfo
                 query += ` "${ info }" `
         })
 
-        query += `FROM ${ db_stage }.users`
+        query += `FROM users`
 
         return await db_connection.query(query)
             .then(result => {

@@ -8,7 +8,6 @@ import User from "../../../classes/User"
 export default async function ValidateUser
 (
     db_connection : Client,
-    db_stage : string,
     user : User,
     isCreation : boolean = false
 )
@@ -21,7 +20,7 @@ export default async function ValidateUser
             SELECT
                 *
             FROM
-                ${ db_stage }.users
+                users
             WHERE
                 ${
                     !isCreation

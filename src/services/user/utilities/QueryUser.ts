@@ -7,14 +7,12 @@ import IsUndNull from "../../../functions/IsUndNull"
 /**
  * Queries information about a user.
  * @param db_connection 
- * @param db_stage 
  * @param userId 
  * @returns 
  */
 export default async function QueryUser
 (
     db_connection : Client,
-    db_stage : string,
     userId : number | null,
 )
 : Promise<User>
@@ -24,7 +22,7 @@ export default async function QueryUser
         if (IsUndNull(userId))
             throw new Error("Id de usuário deve ser informado.");
 
-        const query = `SELECT * FROM ${ db_stage }.users WHERE id = ${ userId }`;
+        const query = `SELECT * FROM users WHERE id = ${ userId }`;
 
         return await db_connection.query(query)
             .then(result => {

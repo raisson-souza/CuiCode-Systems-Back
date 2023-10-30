@@ -2,7 +2,6 @@ import Service from "../../classes/Service"
 
 import Send from "../../functions/Responses"
 
-import { ConvertNumberToDatabaseStageEnum } from "../../enums/DatabaseStageEnum"
 import IService from "../../interfaces/IService"
 
 /**
@@ -11,21 +10,20 @@ import IService from "../../interfaces/IService"
 export default class DatabaseService extends Service implements IService
 {
     Action : string = "Configuração da Base de Dados"
-    Schemas : string[] = ["production", "staging", "testing"]
 
     constructor(service : Service)
     {
-        super(service.REQ, service.RES, ConvertNumberToDatabaseStageEnum(parseInt(service.DB_stage)))
+        super(service.REQ, service.RES)
     }
 
-    CheckBody(body: any) {
+    CheckBody(body : any) {
         // Não há corpo de requisição para DatabaseService
         throw new Error("Method not implemented.")
     }
 
     async CheckDatabaseStatus()
     {
-        return await this.DB_connection.query(`SELECT sql_commands_created FROM ${ this.DB_stage }.parameters`)
+        return await this.DB_connection.query(`SELECT sql_commands_created FROM parameters`)
             .then(result => {
                 if (result.rows[0]["sql_commands_created"] == false)
                 {
@@ -52,50 +50,30 @@ export default class DatabaseService extends Service implements IService
 
     private async FoundCuiCodeSystemsDatabase()
     {
-        await this.CreateRootSql()
-
-        for (let _schema in this.Schemas)
-        {
-            const schema = this.Schemas[_schema]
-
-            await this.CreateParameters(schema)
-            await this.CreateUser(schema)
-            await this.CreateGroup(schema)
-            await this.CreateBoard(schema)
-            await this.CreateSolicitations(schema)
-            await this.CreateCron(schema)
-            await this.CreateHestia(schema)
-            await this.CreateMoney(schema)
-            await this.CreateLevels(schema)
-        }
-    }
-
-    // Criação dos Schemas.
-    private async CreateRootSql()
-    {
-        try
-        {
-            await this.DB_connection.query(`
-                CREATE SCHEMA production;
-                CREATE SCHEMA staging;
-                CREATE SCHEMA testing;
-            `)
-        } catch { }
+        await this.CreateParameters()
+        await this.CreateUser()
+        await this.CreateGroup()
+        await this.CreateBoard()
+        await this.CreateSolicitations()
+        await this.CreateCron()
+        await this.CreateHestia()
+        await this.CreateMoney()
+        await this.CreateLevels()
     }
 
     // Criação da tabela parâmetros.
-    private async CreateParameters(schema : string)
+    private async CreateParameters()
     {
         try
         {
             await this.DB_connection.query(`
-                CREATE TABLE IF NOT EXISTS "${ schema }"."parameters"(
+                CREATE TABLE IF NOT EXISTS "parameters"(
                     id SERIAL PRIMARY KEY,
                     sql_commands_created boolean NOT NULL,
                     system_under_maintence boolean NOT NULL
                 );
                 
-                INSERT INTO "${ schema }"."parameters"
+                INSERT INTO "parameters"
                 (id, sql_commands_created, system_under_maintence)
                 VALUES
                 (1, true, false)
@@ -104,33 +82,33 @@ export default class DatabaseService extends Service implements IService
     }
 
     // Criação do Módulo Usuários.
-    private async CreateUser(schema : string)
+    private async CreateUser()
     {
         try
         {
             await this.DB_connection.query(`
-                CREATE TABLE IF NOT EXISTS "${ schema }"."permission_levels"(
+                CREATE TABLE IF NOT EXISTS "permission_levels"(
                     id int PRIMARY KEY,
                     description varchar
                 );
                 
-                INSERT INTO "${ schema }"."permission_levels" VALUES
+                INSERT INTO "permission_levels" VALUES
                 (4, 'Root'),
                 (3, 'Adm'),
                 (2, 'Member'),
                 (1, 'Guest');
                 
-                CREATE TABLE IF NOT EXISTS "${ schema }"."sexs"(
+                CREATE TABLE IF NOT EXISTS "sexs"(
                     id int PRIMARY KEY,
                     description varchar
                 );
                 
-                INSERT INTO "${ schema }"."sexs" VALUES
+                INSERT INTO "sexs" VALUES
                 (1, 'Masculino'),
                 (2, 'Feminino'),
                 (3, 'Outro');
 
-                CREATE TABLE IF NOT EXISTS "${ schema }"."users"(
+                CREATE TABLE IF NOT EXISTS "users"(
                     id SERIAL,
                     username varchar(20) NOT NULL UNIQUE,
                     "name" varchar(100) NOT NULL,
@@ -148,67 +126,39 @@ export default class DatabaseService extends Service implements IService
                     active boolean NOT NULL DEFAULT TRUE,
                     deleted boolean NOT NULL DEFAULT FALSE,
                     PRIMARY KEY (id),
-                    FOREIGN KEY (sex) REFERENCES "${ schema }"."sexs" (id),
-                    FOREIGN KEY (permission_level) REFERENCES "${ schema }"."permission_levels" (id)
+                    FOREIGN KEY (sex) REFERENCES "sexs" (id),
+                    FOREIGN KEY (permission_level) REFERENCES "permission_levels" (id)
                 );
 
-                CREATE TABLE IF NOT EXISTS "${ schema }"."email_approvals"(
+                CREATE TABLE IF NOT EXISTS "email_approvals"(
                     id SERIAL PRIMARY KEY,
                     user_id int NOT NULL,
                     email varchar NOT NULL,
                     approved bool NOT NULL,
                     approved_date timestamp DEFAULT NULL,
                     created timestamp DEFAULT now(),
-                    FOREIGN KEY (user_id) REFERENCES "${ schema }"."users" (id)
+                    FOREIGN KEY (user_id) REFERENCES "users" (id)
                 );
                 
-                CREATE OR REPLACE PROCEDURE "${ schema }".approve_user_email(db_stage varchar, _user_id int, approval_id int)
+                CREATE OR REPLACE PROCEDURE approve_user_email(_user_id int, approval_id int)
                 LANGUAGE plpgsql AS 
                 $$
                 BEGIN 
-                    IF db_stage = 'testing' THEN 
-                        UPDATE "testing"."email_approvals" em
-                        SET 
-                            approved = TRUE,
-                            approved_date = now()
-                        WHERE
-                            user_id = $2 AND
-                            id = $3;
-                
-                        UPDATE "testing"."users"
-                        SET email_approved = TRUE 
-                        WHERE id = $2;
-                    
-                    ELSEIF db_stage = 'staging' THEN 
-                        UPDATE staging."email_approvals"
-                        SET 
-                            approved = TRUE,
-                            approved_date = now() 
-                        WHERE 
-                            user_id = $2 AND
-                            id = $3;
-                
-                        UPDATE staging."users"
-                        SET email_approved = TRUE 
-                        WHERE id = $2;
-                
-                    ELSEIF db_stage = 'production' THEN 
-                        UPDATE production."email_approvals"
-                        SET
-                            approved = TRUE,
-                            approved_date = now() 
-                        WHERE 
-                            user_id = $2 AND
-                            id = $3;
-                
-                        UPDATE production."users"
-                        SET email_approved = TRUE 
-                        WHERE id = $2;
-                    
-                    ELSE
-                        RAISE info 'db_stage: % inválido.', db_stage;
-                    
-                    END IF;
+                    UPDATE
+                        email_approvals em
+                    SET 
+                        approved = TRUE,
+                        approved_date = now()
+                    WHERE
+                        user_id = _user_id AND
+                        id = approval_id;
+
+                    UPDATE
+                        users
+                    SET
+                        email_approved = TRUE 
+                    WHERE
+                        id = _user_id;
                 END;
                 $$;
             `)
@@ -216,30 +166,30 @@ export default class DatabaseService extends Service implements IService
     }
 
     // Criação do Módulo Grupos.
-    private async CreateGroup(schema : string)
+    private async CreateGroup()
     { }
 
     // Criação do Módulo Board.
-    private async CreateBoard(schema : string)
+    private async CreateBoard()
     { }
 
     // Criação do Módulo Solicitações.
-    private async CreateSolicitations(schema : string)
+    private async CreateSolicitations()
     { }
 
     // Criação do Módulo CRON.
-    private async CreateCron(schema : string)
+    private async CreateCron()
     { }
 
     // Criação do Módulo Héstia.
-    private async CreateHestia(schema : string)
+    private async CreateHestia()
     { }
 
     // Criação do módulo de dinheiro.
-    private async CreateMoney(schema : string)
+    private async CreateMoney()
     { }
 
     // Criação do módulo de níveis de usuário.
-    private async CreateLevels(schema : string)
+    private async CreateLevels()
     { }
 }
