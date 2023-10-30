@@ -4,7 +4,7 @@ import cors from "cors"
 
 import FeaturesController from "./controllers/FeaturesController"
 
-import CORS_CONFIG from "./config/CORS_CONFIG.json"
+import cors_config from "./config/cors_config.json"
 
 import UsersController from "./controllers/UserController"
 import SystemController from "./controllers/SystemController"
@@ -13,7 +13,7 @@ const app = express()
 
 app.use(bodyParser.json())
 
-cors({ origin: CORS_CONFIG.allowed_origins })
+cors({ origin: cors_config.allowed_origins })
 
 app.get('/', (_, res) => {
     res.send("CuiCodeSystems ERP by Raisson Souza")

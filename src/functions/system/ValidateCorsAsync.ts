@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 
 import IsUndNull from "../IsUndNull"
 
-import CONFIG from "../../config/CORS_CONFIG.json"
+import config from "../../config/cors_config.json"
 
 export default async function ValidateCorsAsync
 (
@@ -14,7 +14,7 @@ export default async function ValidateCorsAsync
     const {
         allowed_origins,
         api_test_token
-    } = CONFIG
+    } = config
 
     const cors = require("cors")({ origin: allowed_origins })
 
