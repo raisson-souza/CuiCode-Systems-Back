@@ -1,7 +1,5 @@
 import { Express } from "express"
 
-import Service from "../classes/Service"
-
 import Send from "../functions/Responses"
 import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 
@@ -20,49 +18,58 @@ export default function UsersController(
 )
 {
     app.get('/GetUser', (req, res) => {
-        const service = new Service(req, res)
-    
         Promise.resolve(ValidateCorsAsync(req, res))
-            .then(() => { GetUserService(service) })
-            .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
+            .then(() => {
+                new GetUserService(req, res).GetUserServiceOperation()
+            })
+            .catch(() => {
+                Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API")
+            })
     })
 
     app.get('/ListUsers', (req, res) => {
-        const service = new Service(req, res)
-        
         Promise.resolve(ValidateCorsAsync(req, res))
-            .then(() => { ListUsersService(service) })
-            .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
+            .then(() => {
+                new ListUsersService(req, res).ListUsersServiceOperation()
+            })
+            .catch(() => {
+                Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API")
+            })
     })
 
     app.post('/CreateUser', (req, res) => {
-        const service = new Service(req, res)
-    
         Promise.resolve(ValidateCorsAsync(req, res))
-            .then(() => { CreateUserService(service) })
-            .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
+            .then(() => {
+                new CreateUserService(req, res).CreateUserServiceOperation()
+            })
+            .catch(() => {
+                Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API")
+            })
     })
 
     app.put('/UpdateUser', (req, res) => {
-        const service = new Service(req, res)
-    
         Promise.resolve(ValidateCorsAsync(req, res))
-            .then(() => { UpdateUserService(service) })
-            .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
+            .then(() => {
+                new UpdateUserService(req, res).UpdateUserServiceOperation()
+            })
+            .catch(() => {
+                Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API")
+            })
     })
 
     app.get('/ApproveUserEmail', (req, res) => {
-        const service = new Service(req, res)
-        // enviar link do ERP para acessar
+        // enviar link do ERP para aces
         // CORS não é necessário pois o acesso é externo
-        ApproveUserEmailOperation(service)
+        new ApproveUserEmailOperation(req, res).ApproveUserEmailServiceOperation()
     })
 
     app.post('SendManualEmailApproval', (req, res) => {
-        const service = new Service(req, res)
-    
         Promise.resolve(ValidateCorsAsync(req, res))
-            .then(() => { SendManualEmailApprovalService(service) })
-            .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
+            .then(() => {
+                new SendManualEmailApprovalService(req, res).SendManualEmailApprovalServiceOperation()
+            })
+            .catch(() => {
+                Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API")
+            })
     })
 }

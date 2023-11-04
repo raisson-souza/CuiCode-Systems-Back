@@ -1,46 +1,59 @@
 import Service from "../../../../classes/Service"
 
+import IService from "../../../../interfaces/IService"
+
 import Send from "../../../../functions/Responses"
 
 import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
-export default async function SendManualEmailApprovalService
-(
-    service : Service
-)
-: Promise<void>
+export default class SendManualEmailApprovalService extends Service implements IService
 {
-    const action = "Envio manual de aprovação de email de usuário"
+    Action = "Envio manual de aprovação de email de usuário"
 
-    try
+    CheckBody()
     {
-        const {
-            REQ,
-            RES,
-            DB_connection,
-        } = service
-
-        if (REQ.method != "POST")
-            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
-
-        await service.SetReqUserAsync()
-
-        // O email a ser aprovado já está no UserReq
-
-        await Promise.resolve(SendApprovalEmailOperation(service.USER_req!, DB_connection))
-            .then(() => {
-                Send.Ok(RES, "Solicitação de aprovação de email realizada com sucesso.", action)
-            })
-            .catch(ex => {
-                throw new Error(ex.message)
-            })
+        throw new Error("Method not implemented.")
     }
-    catch (ex)
+
+    CheckQuery()
     {
-        Send.Error(service.RES, `Houve um erro ao realizar a solicitação de aprovação de email. Erro: ${ (ex as Error).message }`, action)
+        throw new Error("Method not implemented.")
     }
-    finally
+
+    async SendManualEmailApprovalServiceOperation()
     {
-        service.DB_connection.end()
+        try
+        {
+            const {
+                REQ,
+                RES,
+                DB_connection,
+                USER_req,
+                Action
+            } = this
+
+            if (REQ.method != "POST")
+                return Send.MethodNotAllowed(RES, "Método não autorizado.", Action)
+
+            await this.SetReqUserAsync()
+
+            // O email a ser aprovado já está no UserReq
+
+            await Promise.resolve(SendApprovalEmailOperation(USER_req!, DB_connection))
+                .then(() => {
+                    Send.Ok(RES, "Solicitação de aprovação de email realizada com sucesso.", Action)
+                })
+                .catch(ex => {
+                    throw new Error(ex.message)
+                })
+        }
+        catch (ex)
+        {
+            Send.Error(this.RES, `Houve um erro ao realizar a solicitação de aprovação de email. Erro: ${ (ex as Error).message }`, this.Action)
+        }
+        finally
+        {
+            this.DB_connection.end()
+        }
     }
 }

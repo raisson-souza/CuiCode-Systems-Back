@@ -1,60 +1,66 @@
 import Service from "../../../classes/Service"
 
+import IService from "../../../interfaces/IService"
+
 import QueryUser from "../utilities/QueryUser"
 
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/Responses"
 
-
 /**
  * Queries a user.
  */
-export default async function GetUserService
-(
-    service : Service
-)
-: Promise<void>
+export default class GetUserService extends Service implements IService
 {
-    const action = "Consulta de usuário."
+    Action = "Consulta de usuário."
 
-    try
+    CheckBody()
     {
-        const {
-            REQ,
-            RES,
-            DB_connection,
-        } = service
-
-        if (REQ.method != "GET")
-            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
-
-        const userId = CheckQuery(REQ.query)
-
-        await Promise.resolve(QueryUser(DB_connection, userId))
-            .then(user => {
-                Send.Ok(RES, user, action)
-            })
-            .catch(ex => {
-                Send.Error(RES, `Houve um erro ao consultar o usuário. Erro: ${ ex.message }`, action)
-            })
+        throw new Error("Method not implemented.")
     }
-    catch (ex)
+
+    CheckQuery(query : any) : number
     {
-        Send.Error(service.RES, `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`, action)
+        if (IsUndNull(query.UserId))
+            throw new Error("Id de usuário não encontrado na URL.");
+
+        if (query.UserId < 0)
+            throw new Error("Id de usuário inválido.");
+
+        return Number.parseInt(query.UserId)
     }
-    finally
+
+    async GetUserServiceOperation()
     {
-        service.DB_connection.end()
+        try
+        {
+            const {
+                REQ,
+                RES,
+                DB_connection,
+                Action
+            } = this
+
+            if (REQ.method != "GET")
+                return Send.MethodNotAllowed(RES, "Método não autorizado.", Action)
+
+            const userId = this.CheckQuery(REQ.query)
+
+            await Promise.resolve(QueryUser(DB_connection, userId))
+                .then(user => {
+                    Send.Ok(RES, user, Action)
+                })
+                .catch(ex => {
+                    Send.Error(RES, `Houve um erro ao consultar o usuário. Erro: ${ ex.message }`, Action)
+                })
+        }
+        catch (ex)
+        {
+            Send.Error(this.RES, `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`, this.Action)
+        }
+        finally
+        {
+            this.DB_connection.end()
+        }
     }
-}
-
-function CheckQuery(query : any) : number
-{
-    if (IsUndNull(query.UserId))
-        throw new Error("Id de usuário não encontrado na URL.");
-
-    if (query.UserId < 0)
-        throw new Error("Id de usuário inválido.");
-
-    return Number.parseInt(query.UserId)
 }

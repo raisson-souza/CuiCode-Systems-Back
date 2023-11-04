@@ -1,6 +1,8 @@
 import Service from "../../../classes/Service"
 import User from "../../../classes/User"
 
+import IService from "../../../interfaces/IService"
+
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
 import ValidateUser from "../utilities/ValidateUser"
@@ -10,61 +12,63 @@ import Send from "../../../functions/Responses"
 import IsUndNull from "../../../functions/IsUndNull"
 
 /**
- * Updates a user.
+ * Updates a user
  */
-export default async function UpdateUserService
-(
-    service : Service
-)
-: Promise<void> 
+export default class UpdateUserService extends Service implements IService
 {
-    const action = "Edição de usuário"
+    Action = "Edição de usuário."
 
-    try
+    CheckBody(body : any) : User
     {
-        const {
-            REQ,
-            RES,
-            DB_connection,
-        } = service
+        if (IsUndNull(body))
+            throw new Error("Corpo da requisição inválido.")
 
-        if (REQ.method != "PUT")
-            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
+        const user = new User(body, false, false, true);
 
-        const user = CheckBody(REQ.body)
+        if (IsUndNull(user.Id))
+            throw new Error("Id de usuário a ser atualizado não encontrado.")
 
-        await ValidateUser(DB_connection, user, false)
-
-        await Promise.resolve(UpdateUser(DB_connection, user))
-            .then(() => {
-                Send.Ok(RES, `Usuário editado com sucesso.`, action)
-            })
-            .catch(ex => {
-                throw new Error((ex as Error).message)
-            })
-
-        if (!IsUndNull(user.EmailAproved) && !user.EmailAproved)
-            await SendApprovalEmailOperation(user, DB_connection)
+        return user
     }
-    catch (ex)
+
+    CheckQuery()
     {
-        Send.Error(service.RES, `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`, action)
+        throw new Error("Method not implemented.")
     }
-    finally
+
+    async UpdateUserServiceOperation()
     {
-        service.DB_connection.end()
+        try
+        {
+            const {
+                REQ,
+                RES,
+                DB_connection,
+                Action
+            } = this
+
+            const user = this.CheckBody(REQ.body)
+
+            await ValidateUser(DB_connection, user, false)
+
+            await Promise.resolve(UpdateUser(DB_connection, user))
+                .then(() => {
+                    Send.Ok(RES, `Usuário editado com sucesso.`, Action)
+                })
+                .catch(ex => {
+                    throw new Error((ex as Error).message)
+                })
+
+            if (!IsUndNull(user.EmailAproved) && !user.EmailAproved)
+                await SendApprovalEmailOperation(user, DB_connection)
+        }
+        catch (ex)
+        {
+            Send.Error(this.RES, `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`, this.Action)
+        }
+        finally
+        {
+            this.DB_connection.end()
+        }
     }
-}
-
-function CheckBody(body : any) : User
-{
-    if (IsUndNull(body))
-        throw new Error("Corpo da requisição inválido.");
-
-    const user = new User(body, false, false, true);
-
-    if (IsUndNull(user.Id))
-        throw new Error("Id de usuário a ser atualizado não encontrado.");
-
-    return user
 }

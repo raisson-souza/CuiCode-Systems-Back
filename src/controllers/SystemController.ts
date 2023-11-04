@@ -1,10 +1,8 @@
 import { Express } from "express"
 
-import Service from "../classes/Service"
+import DatabaseService from "../services/system/DatabaseService"
 
 import Send from "../functions/Responses"
-
-import DatabaseService from "../services/system/DatabaseService"
 import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 
 export default function SystemController(
@@ -15,7 +13,7 @@ export default function SystemController(
         .get((req, res) => {
             Promise.resolve(ValidateCorsAsync(req, res))
                 .then(async () => {
-                    const service = new DatabaseService(new Service(req, res))
+                    const service = new DatabaseService(req, res)
                     await service.CheckDatabaseStatus()
                 })
                 .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })
@@ -23,7 +21,7 @@ export default function SystemController(
         .post((req, res) => {
             Promise.resolve(ValidateCorsAsync(req, res))
                 .then(async () => {
-                    const service = new DatabaseService(new Service(req, res))
+                    const service = new DatabaseService(req, res)
                     await service.CheckDatabaseStatus()
                 })
                 .catch(() => { Send.Error(res, "Acesso a CuiCodeSystems negado.", "Acesso a API") })

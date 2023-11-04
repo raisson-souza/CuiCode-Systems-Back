@@ -1,8 +1,8 @@
 import Service from "../../classes/Service"
 
-import Send from "../../functions/Responses"
-
 import IService from "../../interfaces/IService"
+
+import Send from "../../functions/Responses"
 
 /**
  * Service de configuração e validação do banco.
@@ -11,13 +11,13 @@ export default class DatabaseService extends Service implements IService
 {
     Action : string = "Configuração da Base de Dados"
 
-    constructor(service : Service)
+    CheckBody()
     {
-        super(service.REQ, service.RES)
+        throw new Error("Method not implemented.")
     }
 
-    CheckBody(body : any) {
-        // Não há corpo de requisição para DatabaseService
+    CheckQuery()
+    {
         throw new Error("Method not implemented.")
     }
 

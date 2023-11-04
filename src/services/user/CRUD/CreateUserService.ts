@@ -1,5 +1,9 @@
+import { Request, Response } from "express"
+
 import Service from "../../../classes/Service"
 import User from "../../../classes/User"
+
+import IService from "../../../interfaces/IService"
 
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
@@ -11,59 +15,64 @@ import EmailSender from "../../../functions/system/EmailSender"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"
 
+
 /**
  * Creates a user.
  */
-export default async function CreateUserService
-(
-    service : Service
-)
-: Promise<void>
+export default class CreateUserService extends Service implements IService
 {
-    const action = "Criação de usuário"
+    // A criação de usuário não necessita de um usuário requeridor.
+    Action : string = "Criação de Usuário"
 
-    try
+    CheckBody(body : any) : User
     {
-        const {
-            REQ,
-            RES,
-            DB_connection,
-        } = service
-
-        if (REQ.method != "POST")
-            return Send.MethodNotAllowed(RES, "Método não autorizado.", action)
-
-        const user = CheckBody(REQ.body)
-
-        await Promise.resolve(ValidateUser(DB_connection, user, true))
-            .then(async () => {
-                await Promise.resolve(CreateUser(DB_connection, user))
-                    .then(async () => {
-                        Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, action)
-                        new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
-                        await SendApprovalEmailOperation(user, DB_connection, true)
-                    })
-                    .catch(ex => {
-                        Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)
-                    })
-            })
-            .catch(ex => {
-                Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, action)
-            })
+        return new User(body, false, true)
     }
-    catch (ex)
+
+    CheckQuery()
     {
-        Send.Error(service.RES, `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`, action)
+        throw new Error("Method not implemented.")
     }
-    finally
+
+    async CreateUserServiceOperation()
     {
-        service.DB_connection.end()
+        try
+        {
+            const {
+                REQ,
+                RES,
+                DB_connection,
+                Action
+            } = this
+
+            if (REQ.method != "POST")
+                return Send.MethodNotAllowed(RES, "Método não autorizado.", Action)
+
+            const user = this.CheckBody(REQ.body)
+
+            await Promise.resolve(ValidateUser(DB_connection, user, true))
+                .then(async () => {
+                    await Promise.resolve(CreateUser(DB_connection, user))
+                        .then(async () => {
+                            Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, Action)
+                            new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
+                            await SendApprovalEmailOperation(user, DB_connection, true)
+                        })
+                        .catch(ex => {
+                            Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, Action)
+                        })
+                })
+                .catch(ex => {
+                    Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, Action)
+                })
+        }
+        catch (ex)
+        {
+            Send.Error(this.RES, `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`, this.Action)
+        }
+        finally
+        {
+            this.DB_connection.end()
+        }
     }
-}
-
-// A criação de usuário não necessita de um usuário requeridor.
-
-function CheckBody(body : any) : User
-{
-    return new User(body, false, true)
 }

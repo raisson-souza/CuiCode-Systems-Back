@@ -19,7 +19,7 @@ import CONFIG from "../config/database_config.json"
  * @param DB_connection Database connection
  * @param USER_req User Requester
  */
-export default class Service
+export default abstract class Service
 {
     REQ : Request
     RES : Response
