@@ -4,6 +4,8 @@ import IsUndNull from "../IsUndNull"
 
 import config from "../../config/cors_config.json"
 
+import Send from "../Responses"
+
 export default async function ValidateCorsAsync
 (
     req : Request,
@@ -26,7 +28,10 @@ export default async function ValidateCorsAsync
         !allowed_origins.includes(req.header("Origin")!)
     )
         if (req.header("authorization") != api_test_token)
+        {
+            Send.Unauthorized(res, "Acesso a CuiCodeSystems negado.", "Acesso externo não-autorizado a API.")
             throw new Error()
+        }
 
     cors(req, res, () => {
         res.set("Access-Control-Allow-Origin", req.get("Origin"));
