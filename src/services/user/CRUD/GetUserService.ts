@@ -41,9 +41,6 @@ export default class GetUserService extends Service implements IService
                 Action
             } = this
 
-            if (REQ.method != "GET")
-                return Send.MethodNotAllowed(RES, "Método não autorizado.", Action)
-
             const userId = this.CheckQuery(REQ.query)
 
             await Promise.resolve(QueryUser(DB_connection, userId))

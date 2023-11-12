@@ -45,9 +45,6 @@ export default class CreateUserService extends Service implements IService
                 Action
             } = this
 
-            if (REQ.method != "POST")
-                return Send.MethodNotAllowed(RES, "Método não autorizado.", Action)
-
             const user = this.CheckBody(REQ.body)
 
             await Promise.resolve(ValidateUser(DB_connection, user, true))

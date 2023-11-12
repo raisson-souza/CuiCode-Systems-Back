@@ -32,9 +32,6 @@ export default class SendManualEmailApprovalService extends Service implements I
                 Action
             } = this
 
-            if (REQ.method != "POST")
-                return Send.MethodNotAllowed(RES, "Método não autorizado.", Action)
-
             await this.SetReqUserAsync()
 
             // O email a ser aprovado já está no UserReq

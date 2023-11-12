@@ -15,7 +15,6 @@ type SendFunctions = {
     NotFound:         sendFunction,
     Invalid:          sendFunction,
     Unauthorized:     sendFunction,
-    MethodNotAllowed: sendFunction,
 }
 
 /**
@@ -30,7 +29,6 @@ const Send : SendFunctions = {
     NotFound: NotFound,
     Invalid: Invalid,
     Unauthorized: Unauthorized,
-    MethodNotAllowed: MethodNotAllowed,
 }
 
 function Ok(res: Response, responseMessage: any, logMessage: string) : void
@@ -61,11 +59,6 @@ function Invalid(res: Response, responseMessage: any, logMessage: string) : void
 function Unauthorized(res: Response, responseMessage: any, logMessage: string) : void
 {
     res.status(HttpStatus.UNAUTHORIZED).send(responseMessage)
-}
-
-function MethodNotAllowed(res: Response, responseMessage: any, logMessage: string) : void
-{
-    res.status(HttpStatus.METHOD_NOT_ALLOWED).send(responseMessage)
 }
 
 export default Send

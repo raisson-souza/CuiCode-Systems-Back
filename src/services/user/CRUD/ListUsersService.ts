@@ -42,9 +42,6 @@ export default class ListUsersService extends Service implements IService
                 Action
             } = this
 
-                if (REQ.method != "GET")
-                    return Send.MethodNotAllowed(RES, "Método não autorizado.", Action)
-
                 // O FRONT-END DEVE ENVIAR AS INFORMAÇÕES JÁ CONVERTIDAS PARA OS MESMOS CAMPOS DO BANCO
                 const userRequiredInfo = this.CheckQuery(REQ.query)
 
