@@ -6,7 +6,7 @@ import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 
 export default function FeaturesController(app : Express)
 {
-    app.trace('/TraceAccess', (req, res) => {
+    app.trace('/trace', (req, res) => {
         ValidateCorsAsync(req, res)
             .then(() => {
                 new TraceAccessService(req, res).TraceUserAccessServiceOperation()

@@ -35,7 +35,6 @@ export default class ApproveUserEmailService extends Service implements IService
                 REQ,
                 RES,
                 DB_connection,
-                USER_req,
                 Action
             } = this
 
@@ -51,7 +50,7 @@ export default class ApproveUserEmailService extends Service implements IService
                 FROM email_approvals
                 WHERE
                     email = '${ toApproveEmail }' AND
-                    user_id = ${ USER_req?.Id } AND
+                    user_id = ${ this.USER_req?.Id } AND
                     created = (SELECT max(created) FROM email_approvals)
             `
 
@@ -65,12 +64,12 @@ export default class ApproveUserEmailService extends Service implements IService
                     if (emailApproval.Approved)
                         throw new Error("Email já aprovado.")
 
-                    if (USER_req?.Id != emailApproval.UserId)
+                    if (this.USER_req?.Id != emailApproval.UserId)
                     {
                         new EmailSender()
                             .Internal(
                                 EmailTitles.DIFFERENT_USER_ON_EMAIL_APPROVAL,
-                                `Usuário ${ USER_req?.GenerateUserKey() } tentou aprovar o email ${ emailApproval.Email } pertencente ao usuário ${ emailApproval.Id }.`
+                                `Usuário ${ this.USER_req?.GenerateUserKey() } tentou aprovar o email ${ emailApproval.Email } pertencente ao usuário ${ emailApproval.Id }.`
                             )
                         throw new Error("Você não pode realizar essa aprovação.")
                     }

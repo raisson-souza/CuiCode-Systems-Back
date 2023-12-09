@@ -25,10 +25,8 @@ export default class SendManualEmailApprovalService extends Service implements I
         try
         {
             const {
-                REQ,
                 RES,
                 DB_connection,
-                USER_req,
                 Action
             } = this
 
@@ -36,7 +34,7 @@ export default class SendManualEmailApprovalService extends Service implements I
 
             // O email a ser aprovado já está no UserReq
 
-            await Promise.resolve(SendApprovalEmailOperation(USER_req!, DB_connection))
+            await Promise.resolve(SendApprovalEmailOperation(this.USER_req!, DB_connection))
                 .then(() => {
                     Send.Ok(RES, "Solicitação de aprovação de email realizada com sucesso.", Action)
                 })

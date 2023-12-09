@@ -52,5 +52,5 @@ export default async function SendApprovalEmailOperation
 
 function GeneratEndpoint(id : number, email : string)
 {
-    return `http://localhost:3000/ApproveUserEmail?UserReqId=${ id }&email=${ email }`
+    return `http://localhost:3000/email/approval?UserReqId=${ id }&email=${ email }`
 }

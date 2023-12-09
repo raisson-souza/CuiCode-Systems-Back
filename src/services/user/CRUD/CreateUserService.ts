@@ -12,9 +12,9 @@ import ValidateUser from "../utilities/ValidateUser"
 
 import Send from "../../../functions/Responses"
 import EmailSender from "../../../functions/system/EmailSender"
+import IsUndNull from "../../../functions/IsUndNull"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"
-
 
 /**
  * Creates a user.
@@ -26,6 +26,9 @@ export default class CreateUserService extends Service implements IService
 
     CheckBody(body : any) : User
     {
+        if (IsUndNull(body))
+            throw new Error("Corpo da requisição inválido.")
+
         return new User(body, false, true)
     }
 
