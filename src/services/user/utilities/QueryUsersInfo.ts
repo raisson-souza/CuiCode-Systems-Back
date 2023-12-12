@@ -2,9 +2,6 @@ import { Client } from "pg"
 
 /**
  * Queries specific information about all users.
- * @param db_connection
- * @param requiredInfo
- * @returns
  */
 async function QueryUsersInfo
 (

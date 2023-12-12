@@ -6,9 +6,6 @@ import IsUndNull from "../../../functions/IsUndNull"
 
 /**
  * Queries information about a user.
- * @param db_connection 
- * @param userId 
- * @returns 
  */
 async function QueryUser
 (
