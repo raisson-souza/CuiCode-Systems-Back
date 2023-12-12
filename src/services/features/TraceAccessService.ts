@@ -2,26 +2,14 @@ const nodemailer = require('nodemailer');
 
 import Service from "../../classes/Service"
 
-import IService from "../../interfaces/IService"
-
 import Send from "../../functions/Responses"
 import GetDate from "../../functions/GetDate"
 
-export default class TraceAccessService extends Service implements IService
+export default class TraceAccessService extends Service
 {
     Action : string = "Rastreio de Ação de Usuário"
 
-    CheckBody()
-    {
-        throw new Error("Method not implemented.")
-    }
-
-    CheckQuery()
-    {
-        throw new Error("Method not implemented.");
-    }
-
-    TraceUserAccessServiceOperation()
+    Operation()
     {
         try
         {

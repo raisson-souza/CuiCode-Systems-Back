@@ -1,8 +1,6 @@
 import Service from "../../../../classes/Service"
 import { EmailApprovalSql } from "../../../../classes/EmailApproval"
 
-import IService from "../../../../interfaces/IService"
-
 import IsUndNull from "../../../../functions/IsUndNull"
 import Send from "../../../../functions/Responses"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
@@ -10,14 +8,9 @@ import EmailSender from "../../../../functions/system/EmailSender"
 
 import EmailTitles from "../../../../enums/EmailTitlesEnum"
 
-export default class ApproveUserEmailService extends Service implements IService
+export default class ApproveUserEmailService extends Service
 {
     Action = "Aprovação de email de usuário"
-
-    CheckBody()
-    {
-        throw new Error("Method not implemented.")
-    }
 
     CheckQuery(query : any)
     {
@@ -27,7 +20,7 @@ export default class ApproveUserEmailService extends Service implements IService
         return query.email as string
     }
 
-    async ApproveUserEmailServiceOperation()
+    async Operation()
     {
         try
         {

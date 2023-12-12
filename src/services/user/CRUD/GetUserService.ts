@@ -1,7 +1,5 @@
 import Service from "../../../classes/Service"
 
-import IService from "../../../interfaces/IService"
-
 import QueryUser from "../utilities/QueryUser"
 
 import IsUndNull from "../../../functions/IsUndNull"
@@ -10,14 +8,9 @@ import Send from "../../../functions/Responses"
 /**
  * Queries a user.
  */
-export default class GetUserService extends Service implements IService
+export default class GetUserService extends Service
 {
     Action = "Consulta de usuário."
-
-    CheckBody()
-    {
-        throw new Error("Method not implemented.")
-    }
 
     CheckQuery(query : any) : number
     {
@@ -30,7 +23,7 @@ export default class GetUserService extends Service implements IService
         return Number.parseInt(query.UserId)
     }
 
-    async GetUserServiceOperation()
+    async Operation()
     {
         try
         {

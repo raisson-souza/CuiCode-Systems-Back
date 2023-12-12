@@ -1,8 +1,6 @@
 import Service from "../../../classes/Service"
 import User from "../../../classes/User"
 
-import IService from "../../../interfaces/IService"
-
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
 import ValidateUser from "../utilities/ValidateUser"
@@ -14,7 +12,7 @@ import IsUndNull from "../../../functions/IsUndNull"
 /**
  * Updates a user
  */
-export default class UpdateUserService extends Service implements IService
+export default class UpdateUserService extends Service
 {
     Action = "Edição de usuário."
 
@@ -31,12 +29,7 @@ export default class UpdateUserService extends Service implements IService
         return user
     }
 
-    CheckQuery()
-    {
-        throw new Error("Method not implemented.")
-    }
-
-    async UpdateUserServiceOperation()
+    async Operation()
     {
         try
         {
@@ -60,7 +53,7 @@ export default class UpdateUserService extends Service implements IService
                 })
 
             if (!IsUndNull(user.EmailAproved) && !user.EmailAproved)
-                await SendApprovalEmailOperation(user, DB_connection)
+                await new SendApprovalEmailOperation(user, DB_connection).PerformOperation()
         }
         catch (ex)
         {

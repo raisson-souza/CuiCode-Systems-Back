@@ -10,13 +10,13 @@ export default function SystemController(app : Express)
         .get((req, res) => {
             ValidateCorsAsync(req, res)
                 .then(async () => {
-                    await new DatabaseService(req, res).CheckDatabaseStatus()
+                    await new DatabaseService(req, res).Operation()
                 }).catch(() => {})
         })
         .post((req, res) => {
             ValidateCorsAsync(req, res)
                 .then(async () => {
-                    await new DatabaseService(req, res).CheckDatabaseStatus()
+                    await new DatabaseService(req, res).Operation()
                 }).catch(() => {})
         })
 }

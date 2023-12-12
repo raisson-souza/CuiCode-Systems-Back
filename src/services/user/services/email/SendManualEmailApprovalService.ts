@@ -1,26 +1,14 @@
 import Service from "../../../../classes/Service"
 
-import IService from "../../../../interfaces/IService"
-
 import Send from "../../../../functions/Responses"
 
 import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
-export default class SendManualEmailApprovalService extends Service implements IService
+export default class SendManualEmailApprovalService extends Service
 {
     Action = "Envio manual de aprovação de email de usuário"
 
-    CheckBody()
-    {
-        throw new Error("Method not implemented.")
-    }
-
-    CheckQuery()
-    {
-        throw new Error("Method not implemented.")
-    }
-
-    async SendManualEmailApprovalServiceOperation()
+    async Operation()
     {
         try
         {

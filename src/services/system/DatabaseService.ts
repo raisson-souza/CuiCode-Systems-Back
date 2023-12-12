@@ -11,17 +11,7 @@ export default class DatabaseService extends Service implements IService
 {
     Action : string = "Configuração da Base de Dados"
 
-    CheckBody()
-    {
-        throw new Error("Method not implemented.")
-    }
-
-    CheckQuery()
-    {
-        throw new Error("Method not implemented.")
-    }
-
-    async CheckDatabaseStatus()
+    async Operation()
     {
         return await this.DB_connection.query(`SELECT sql_commands_created FROM parameters`)
             .then(result => {

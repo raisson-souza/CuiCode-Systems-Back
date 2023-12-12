@@ -1,9 +1,5 @@
-import { Request, Response } from "express"
-
 import Service from "../../../classes/Service"
 import User from "../../../classes/User"
-
-import IService from "../../../interfaces/IService"
 
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
@@ -19,7 +15,7 @@ import EmailTitles from "../../../enums/EmailTitlesEnum"
 /**
  * Creates a user.
  */
-export default class CreateUserService extends Service implements IService
+export default class CreateUserService extends Service
 {
     // A criação de usuário não necessita de um usuário requeridor.
     Action : string = "Criação de Usuário"
@@ -32,12 +28,7 @@ export default class CreateUserService extends Service implements IService
         return new User(body, false, true)
     }
 
-    CheckQuery()
-    {
-        throw new Error("Method not implemented.")
-    }
-
-    async CreateUserServiceOperation()
+    async Operation()
     {
         try
         {
@@ -56,7 +47,7 @@ export default class CreateUserService extends Service implements IService
                         .then(async () => {
                             Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, Action)
                             new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
-                            await SendApprovalEmailOperation(user, DB_connection, true)
+                            await new SendApprovalEmailOperation(user, DB_connection).PerformOperation(true)
                         })
                         .catch(ex => {
                             Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, Action)

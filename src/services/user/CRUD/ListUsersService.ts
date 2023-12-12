@@ -1,7 +1,5 @@
 import Service from "../../../classes/Service"
 
-import IService from "../../../interfaces/IService"
-
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/Responses"
 
@@ -10,14 +8,9 @@ import QueryUsersInfo from "../utilities/QueryUsersInfo"
 /**
  * Queries specific information about all users.
  */
-export default class ListUsersService extends Service implements IService
+export default class ListUsersService extends Service
 {
     Action = "Listagem de usuários."
-
-    CheckBody()
-    {
-        throw new Error("Method not implemented.")
-    }
 
     CheckQuery(query : any) : Array<string>
     {
@@ -31,7 +24,7 @@ export default class ListUsersService extends Service implements IService
         return RequiredInfoArray[0]
     }
 
-    async ListUsersServiceOperation()
+    async Operation()
     {
         try
         {

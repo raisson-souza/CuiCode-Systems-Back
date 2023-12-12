@@ -9,7 +9,7 @@ export default function FeaturesController(app : Express)
     app.trace('/trace', (req, res) => {
         ValidateCorsAsync(req, res)
             .then(() => {
-                new TraceAccessService(req, res).TraceUserAccessServiceOperation()
+                new TraceAccessService(req, res).Operation()
             }).catch(() => {})
     })
 }

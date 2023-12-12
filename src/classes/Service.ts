@@ -11,6 +11,7 @@ import IsUndNull from "../functions/IsUndNull"
 import Send from "../functions/Responses"
 
 import CONFIG from "../config/database_config.json"
+import IService from "../interfaces/IService"
 
 /**
  * Contains all necessary params for all endpoints
@@ -19,7 +20,7 @@ import CONFIG from "../config/database_config.json"
  * @param DB_connection Database connection
  * @param USER_req User Requester
  */
-export default abstract class Service
+export default abstract class Service implements IService
 {
     REQ : Request
     RES : Response
@@ -27,6 +28,7 @@ export default abstract class Service
     // Necessário chamar SetReqUserAsync() na service requerida.
     // Caso UserReqId não exista, estoura erro.
     USER_req : User | null
+    Action : string = ""
 
     constructor
     (
@@ -39,6 +41,22 @@ export default abstract class Service
         this.DB_connection = new Client(CONFIG.DatabaseConfig)
         this.PerformConnection()
     }
+
+    Operation()
+    {
+        throw new Error("Method not implemented.")
+    }
+
+    CheckBody(_ : any)
+    {
+        throw new Error("Method not implemented.")
+    }
+
+    CheckQuery(_ : any)
+    {
+        throw new Error("Method not implemented.")
+    }
+
 
     /**
      * Queries all UserReq info
