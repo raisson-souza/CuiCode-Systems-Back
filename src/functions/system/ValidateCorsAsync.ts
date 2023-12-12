@@ -6,7 +6,7 @@ import config from "../../config/cors_config.json"
 
 import Send from "../Responses"
 
-export default async function ValidateCorsAsync
+async function ValidateCorsAsync
 (
     req : Request,
     res : Response,
@@ -37,3 +37,5 @@ export default async function ValidateCorsAsync
         res.set("Access-Control-Allow-Origin", req.get("Origin"));
     })
 }
+
+export default ValidateCorsAsync

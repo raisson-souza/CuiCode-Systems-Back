@@ -1,7 +1,7 @@
 /**
  * Validates if a param is undefined or null
  */
-export default function IsUndNull(param : any) : boolean
+function IsUndNull(param : any) : boolean
 {
     if (param == undefined || param == null)
         return true
@@ -14,3 +14,5 @@ export default function IsUndNull(param : any) : boolean
 
     return false
 }
+
+export default IsUndNull

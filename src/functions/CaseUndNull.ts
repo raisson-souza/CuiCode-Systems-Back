@@ -5,9 +5,11 @@ import IsUndNull from "./IsUndNull"
  * If true, returns the second argument,
  * If false, returns the first argument
  */
-export default function CaseUndNull(param1 : any, param2 : any)
+function CaseUndNull(param1 : any, param2 : any)
 {
     return IsUndNull(param1)
         ? param2
         : param1
 }
+
+export default CaseUndNull

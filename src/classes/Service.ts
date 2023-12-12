@@ -20,7 +20,7 @@ import IService from "../interfaces/IService"
  * @param DB_connection Database connection
  * @param USER_req User Requester
  */
-export default abstract class Service implements IService
+abstract class Service implements IService
 {
     REQ : Request
     RES : Response
@@ -156,3 +156,5 @@ export default abstract class Service implements IService
             : null
     }
 }
+
+export default Service

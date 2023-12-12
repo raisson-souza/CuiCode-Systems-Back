@@ -4,7 +4,7 @@ import CaseUndNull from "../CaseUndNull"
 
 import EmailTitles from "../../enums/EmailTitlesEnum"
 
-export default class EmailSender
+class EmailSender
 {
     Transporter = nodemailer.createTransport(
         {
@@ -62,3 +62,5 @@ export default class EmailSender
         }
     }
 }
+
+export default EmailSender

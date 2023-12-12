@@ -13,7 +13,7 @@ import EmailSender from "../../../functions/system/EmailSender"
 /**
  * Updates a user.
  */
-export default async function UpdateUser
+async function UpdateUser
 (
     db_connection : Client,
     user : User,
@@ -132,3 +132,5 @@ function DetectUserDeactivationOrDeletion
 
     new EmailSender().Internal(EmailTitles.USER_DEACTIVATED, emailMessage)
 }
+
+export default UpdateUser

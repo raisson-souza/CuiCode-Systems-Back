@@ -5,7 +5,7 @@ import EmailTitles from "../../enums/EmailTitlesEnum"
 /**
  * Validates SQL injection risk in a query parameter.
  */
-export default function SqlInjectionVerifier(param : string)
+function SqlInjectionVerifier(param : string)
 {
     if (param.toUpperCase().includes("OR"))
     {
@@ -13,3 +13,5 @@ export default function SqlInjectionVerifier(param : string)
         throw new Error("Injeção de SQL verificada, operação interrompida.")
     }
 }
+
+export default SqlInjectionVerifier

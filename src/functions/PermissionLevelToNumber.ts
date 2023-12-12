@@ -1,6 +1,6 @@
 import PermissionLevel from "../enums/PermissionLevelEnum"
 
-export default function PermissionLevelToNumber(permissionLevel : PermissionLevel | string)
+function PermissionLevelToNumber(permissionLevel : PermissionLevel | string)
 {
     switch (permissionLevel)
     {
@@ -16,3 +16,5 @@ export default function PermissionLevelToNumber(permissionLevel : PermissionLeve
             return 1
     }
 }
+
+export default PermissionLevelToNumber

@@ -8,7 +8,7 @@ import QueryUsersInfo from "../utilities/QueryUsersInfo"
 /**
  * Queries specific information about all users.
  */
-export default class ListUsersService extends Service
+class ListUsersService extends Service
 {
     Action = "Listagem de usuários."
 
@@ -56,3 +56,5 @@ export default class ListUsersService extends Service
         }
     }
 }
+
+export default ListUsersService

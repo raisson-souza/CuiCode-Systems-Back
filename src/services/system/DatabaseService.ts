@@ -1,13 +1,11 @@
 import Service from "../../classes/Service"
 
-import IService from "../../interfaces/IService"
-
 import Send from "../../functions/Responses"
 
 /**
  * Service de configuração e validação do banco.
  */
-export default class DatabaseService extends Service implements IService
+class DatabaseService extends Service
 {
     Action : string = "Configuração da Base de Dados"
 
@@ -183,3 +181,5 @@ export default class DatabaseService extends Service implements IService
     private async CreateLevels()
     { }
 }
+
+export default DatabaseService

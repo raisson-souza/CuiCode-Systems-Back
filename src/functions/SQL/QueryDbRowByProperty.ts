@@ -13,7 +13,7 @@ import SqlLabel from "../../classes/SqlLabel"
  * @param extractColumnName Valor da coluna na linha encontrada a ser extraido
  * @returns 
  */
-export default async function QueryDbRowByProperty
+async function QueryDbRowByProperty
 (
     db_connection : Client,
     dbTable : string,
@@ -53,3 +53,5 @@ export default async function QueryDbRowByProperty
         throw new Error((ex as Error).message);
     }
 }
+
+export default QueryDbRowByProperty

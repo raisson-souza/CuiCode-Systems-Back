@@ -8,7 +8,7 @@ import IOperation from "../interfaces/IOperation"
  * @param User User to perform operation.
  * @param DB_connection DB Connection.
  */
-export default abstract class Operation implements IOperation
+abstract class Operation implements IOperation
 {
     protected User : User | null
     protected DB_connection : Client
@@ -28,3 +28,5 @@ export default abstract class Operation implements IOperation
         throw new Error("Method not implemented.")
     }
 }
+
+export default Operation

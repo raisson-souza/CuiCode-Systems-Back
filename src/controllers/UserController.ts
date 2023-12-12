@@ -11,9 +11,10 @@ import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 // EMAIL
 import ApproveUserEmailOperation from "../services/user/services/email/ApproveUserEmailService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
+
 import Send from "../functions/Responses"
 
-export default function UsersController(app : Express)
+function UsersController(app : Express)
 {
     app.route("/user")
         .get((req, res) => {
@@ -62,3 +63,5 @@ export default function UsersController(app : Express)
             }).catch(() => {})
     })
 }
+
+export default UsersController

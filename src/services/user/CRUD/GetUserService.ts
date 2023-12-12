@@ -8,7 +8,7 @@ import Send from "../../../functions/Responses"
 /**
  * Queries a user.
  */
-export default class GetUserService extends Service
+class GetUserService extends Service
 {
     Action = "Consulta de usuário."
 
@@ -54,3 +54,5 @@ export default class GetUserService extends Service
         }
     }
 }
+
+export default GetUserService

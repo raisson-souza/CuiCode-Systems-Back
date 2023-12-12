@@ -10,7 +10,7 @@ import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
 
-export default class User extends Entity
+class User extends Entity
 {
     // Identificação
     Username: string
@@ -280,3 +280,5 @@ function isPropUpdating(isUpdate : boolean, prop : any) : boolean
             Se não se está editando, logicamente está se criando, portanto, a prop existe e deve ser validada.
     */
 }
+
+export default User

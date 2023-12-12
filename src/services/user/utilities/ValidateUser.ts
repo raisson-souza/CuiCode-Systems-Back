@@ -5,7 +5,7 @@ import User from "../../../classes/User"
 /**
  * Validates a user
  */
-export default async function ValidateUser
+async function ValidateUser
 (
     db_connection : Client,
     user : User,
@@ -68,3 +68,5 @@ function GenereateUserComparisonQuery(user : User) : string
         phone = '${ user.Phone }'
     `
 }
+
+export default ValidateUser

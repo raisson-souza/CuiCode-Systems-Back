@@ -9,7 +9,7 @@ import crypto from "crypto-js"
 /**
  * Creates a user.
  */
-export default async function CreateUser
+async function CreateUser
 (
     db_connection : Client,
     user : User,
@@ -71,3 +71,5 @@ function EncryptUserPassword(user : User) : void
 {
     user.Password = crypto.MD5(user.Password).toString()
 }
+
+export default CreateUser

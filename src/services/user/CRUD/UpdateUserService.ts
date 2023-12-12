@@ -12,7 +12,7 @@ import IsUndNull from "../../../functions/IsUndNull"
 /**
  * Updates a user
  */
-export default class UpdateUserService extends Service
+class UpdateUserService extends Service
 {
     Action = "Edição de usuário."
 
@@ -65,3 +65,5 @@ export default class UpdateUserService extends Service
         }
     }
 }
+
+export default UpdateUserService

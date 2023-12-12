@@ -1,4 +1,6 @@
-export default interface IOperation
+interface IOperation
 {
     PerformOperation() : any
 }
+
+export default IOperation

@@ -4,7 +4,7 @@ import DatabaseService from "../services/system/DatabaseService"
 
 import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 
-export default function SystemController(app : Express)
+function SystemController(app : Express)
 {
     app.route('/database')
         .get((req, res) => {
@@ -20,3 +20,5 @@ export default function SystemController(app : Express)
                 }).catch(() => {})
         })
 }
+
+export default SystemController

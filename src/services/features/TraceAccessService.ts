@@ -5,7 +5,7 @@ import Service from "../../classes/Service"
 import Send from "../../functions/Responses"
 import GetDate from "../../functions/GetDate"
 
-export default class TraceAccessService extends Service
+class TraceAccessService extends Service
 {
     Action : string = "Rastreio de Ação de Usuário"
 
@@ -47,3 +47,5 @@ export default class TraceAccessService extends Service
         }
     }
 }
+
+export default TraceAccessService

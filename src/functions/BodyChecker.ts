@@ -1,7 +1,7 @@
 /**
  * Checks all params of a body for a process.
  */
-export default function BodyChecker(body : Object, params : string[]) : void
+function BodyChecker(body : Object, params : string[]) : void
 {
     let c : number = 0
 
@@ -12,3 +12,5 @@ export default function BodyChecker(body : Object, params : string[]) : void
     if (c < params.length)
         throw new Error('O objeto não contém todos os parâmetros.')
 }
+
+export default BodyChecker

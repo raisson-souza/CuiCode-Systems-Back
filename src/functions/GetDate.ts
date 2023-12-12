@@ -1,9 +1,11 @@
 /**
  * Gets local time.
  */
-export default function GetDate() : string
+function GetDate() : string
 {
     const date = new Date()
 
     return date.toLocaleString('pt-BR', { timeZone: "America/Sao_Paulo" })
 }
+
+export default GetDate

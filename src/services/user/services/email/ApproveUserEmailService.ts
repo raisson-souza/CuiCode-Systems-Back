@@ -8,7 +8,7 @@ import EmailSender from "../../../../functions/system/EmailSender"
 
 import EmailTitles from "../../../../enums/EmailTitlesEnum"
 
-export default class ApproveUserEmailService extends Service
+class ApproveUserEmailService extends Service
 {
     Action = "Aprovação de email de usuário"
 
@@ -93,3 +93,5 @@ export default class ApproveUserEmailService extends Service
         }
     }
 }
+
+export default ApproveUserEmailService

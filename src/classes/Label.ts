@@ -1,4 +1,4 @@
-export default class Label
+class Label
 {
     Description: string
     Value: number
@@ -39,3 +39,5 @@ function DecodeEnum<T extends Record<string, number>>
     
     throw new Error(`Houve um erro ao converter o enumerador ${ enumName }. Valor ${ enumValue } não existe.`)
 }
+
+export default Label

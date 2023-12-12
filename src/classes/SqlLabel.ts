@@ -4,7 +4,7 @@ import Label from "./Label"
  * Armazena o nome da coluna, o valor da mesma e o tipo.
  * Uso em SQL.
  */
-export default class SqlLabel
+class SqlLabel
 {
     ColumnName : string
     ColumnValue : any
@@ -64,3 +64,5 @@ export default class SqlLabel
         }
     }
 }
+
+export default SqlLabel

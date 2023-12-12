@@ -15,7 +15,7 @@ import EmailTitles from "../../../enums/EmailTitlesEnum"
 /**
  * Creates a user.
  */
-export default class CreateUserService extends Service
+class CreateUserService extends Service
 {
     // A criação de usuário não necessita de um usuário requeridor.
     Action : string = "Criação de Usuário"
@@ -67,3 +67,5 @@ export default class CreateUserService extends Service
         }
     }
 }
+
+export default CreateUserService

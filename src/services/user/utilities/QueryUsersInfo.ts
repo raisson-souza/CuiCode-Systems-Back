@@ -6,7 +6,7 @@ import { Client } from "pg"
  * @param requiredInfo
  * @returns
  */
-export default async function QueryUsersInfo
+async function QueryUsersInfo
 (
     db_connection : Client,
     requiredInfo : Array<string>
@@ -45,3 +45,5 @@ export default async function QueryUsersInfo
         throw new Error((ex as Error).message);
     }
 }
+
+export default QueryUsersInfo

@@ -1,7 +1,7 @@
 /**
  * Formats a number to client-friendly.
  */
-export default function FormatIdNumber(id: number) : string
+function FormatIdNumber(id: number) : string
 {
     const stringId = id.toString()
 
@@ -17,3 +17,5 @@ export default function FormatIdNumber(id: number) : string
             return stringId
     }
 }
+
+export default FormatIdNumber

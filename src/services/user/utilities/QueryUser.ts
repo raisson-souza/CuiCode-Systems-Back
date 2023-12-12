@@ -10,7 +10,7 @@ import IsUndNull from "../../../functions/IsUndNull"
  * @param userId 
  * @returns 
  */
-export default async function QueryUser
+async function QueryUser
 (
     db_connection : Client,
     userId : number | null,
@@ -42,3 +42,5 @@ export default async function QueryUser
         throw new Error((ex as Error).message);
     }
 }
+
+export default QueryUser

@@ -4,7 +4,7 @@ import Send from "../../../../functions/Responses"
 
 import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
-export default class SendManualEmailApprovalService extends Service
+class SendManualEmailApprovalService extends Service
 {
     Action = "Envio manual de aprovação de email de usuário"
 
@@ -40,3 +40,5 @@ export default class SendManualEmailApprovalService extends Service
         }
     }
 }
+
+export default SendManualEmailApprovalService
