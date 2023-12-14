@@ -1,4 +1,6 @@
-export default abstract class Entity implements IEntity
+import IEntity from "../interfaces/IEntity"
+
+abstract class Entity implements IEntity
 {
     Id: number
     Active: boolean
@@ -6,10 +8,4 @@ export default abstract class Entity implements IEntity
     Deleted: boolean
 }
 
-interface IEntity
-{
-    Id : number
-    Active : boolean
-    CreatedDate : Date
-    Deleted : boolean
-}
+export default Entity
