@@ -84,10 +84,10 @@ class User extends Entity
         if (!isUpdate)
             this.ValidateEmptyness()
 
-        if (isPropUpdating(isUpdate, this.Username))
+        if (this.IsPropUpdating(isUpdate, this.Username))
             this.ValidateUsername()
 
-        // Adaptar função isPropUpdating para validar mais de uma propriedade
+        // Adaptar função IsPropUpdating para validar mais de uma propriedade
         if (
             (
                 (!IsUndNull(this.Email) && !IsUndNull(this.RecoveryEmail)) &&
@@ -100,7 +100,7 @@ class User extends Entity
                 throw new Error("Email ou email de recuperação inválido.")
         }
 
-        if (isPropUpdating(isUpdate, this.Password))
+        if (this.IsPropUpdating(isUpdate, this.Password))
         {
             if (this.Password.search(/^[0-9]+$/) != -1)
                 throw new Error("A senha não pode conter apenas números.")
@@ -180,7 +180,7 @@ class User extends Entity
     }
 
     /**
-     * Generates non obligational user key for identification
+     * Gera uma chave de identificação de usuário sem consulta no banco, apenas usando dados disponíveis.
      */
     GenerateUserKey() : string | undefined
     {
@@ -261,24 +261,24 @@ class User extends Entity
 
         return userInSql
     }
-}
 
-/**
- * Função especifica para a instânciação de um usuário a ser atualizado.
- * Valida se uma propriedade existe e se a ação é de edição,
- * o que significa que se está editando OU se não estiver editando,
- * o que significa que está criando e a validação seguinte deve ocorrer.
- */
-function isPropUpdating(isUpdate : boolean, prop : any) : boolean
-{
-    return (!IsUndNull(prop) && isUpdate) || !isUpdate
-    /*
-        (!IsUndNull(prop) && isUpdate):
-            Se a prop não é nula e se esta editando, a prop foi editada e deve ser validada.
-        
-        !isUpdate:
-            Se não se está editando, logicamente está se criando, portanto, a prop existe e deve ser validada.
-    */
+    /**
+     * Função especifica para a instânciação de um usuário a ser atualizado.
+     * Valida se uma propriedade existe e se a ação é de edição,
+     * o que significa que se está editando OU se não estiver editando,
+     * o que significa que está criando e a validação seguinte deve ocorrer.
+     */
+    private IsPropUpdating(isUpdate : boolean, prop : any) : boolean
+    {
+        return (!IsUndNull(prop) && isUpdate) || !isUpdate
+        /*
+            (!IsUndNull(prop) && isUpdate):
+                Se a prop não é nula e se esta editando, a prop foi editada e deve ser validada.
+            
+            !isUpdate:
+                Se não se está editando, logicamente está se criando, portanto, a prop existe e deve ser validada.
+        */
+    }
 }
 
 export default User
