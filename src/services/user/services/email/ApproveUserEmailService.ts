@@ -1,10 +1,10 @@
 import Service from "../../../../classes/Service"
 import { EmailApprovalSql } from "../../../../classes/EmailApproval"
 
+import EmailSender from "../../../../functions/system/EmailSender"
 import IsUndNull from "../../../../functions/IsUndNull"
 import Send from "../../../../functions/Responses"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
-import EmailSender from "../../../../functions/system/EmailSender"
 
 import EmailTitles from "../../../../enums/EmailTitlesEnum"
 

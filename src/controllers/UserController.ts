@@ -1,14 +1,14 @@
 import { Express } from "express"
 
+import ApproveUserEmailOperation from "../services/user/services/email/ApproveUserEmailService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
-import UpdateUserService from "../services/user/CRUD/UpdateUserService"
-import ApproveUserEmailOperation from "../services/user/services/email/ApproveUserEmailService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
+import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
-import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 import Send from "../functions/Responses"
+import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 
 function UsersController(app : Express)
 {

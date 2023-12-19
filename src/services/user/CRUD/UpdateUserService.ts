@@ -2,16 +2,16 @@ import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailO
 
 import ValidateUser from "../utilities/ValidateUser"
 
-import Service from "../../../classes/Service"
-import User from "../../../classes/User"
 import Operation from "../../../classes/Operation"
+import Service from "../../../classes/Service"
 import SqlLabel from "../../../classes/SqlLabel"
+import User from "../../../classes/User"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
 
-import Send from "../../../functions/Responses"
-import IsUndNull from "../../../functions/IsUndNull"
 import EmailSender from "../../../functions/system/EmailSender"
+import IsUndNull from "../../../functions/IsUndNull"
+import Send from "../../../functions/Responses"
 
 import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
 

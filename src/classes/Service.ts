@@ -1,5 +1,5 @@
-import { Request, Response } from "express"
 import { Client } from "pg"
+import { Request, Response } from "express"
 
 import CONFIG from "../config/database_config.json"
 

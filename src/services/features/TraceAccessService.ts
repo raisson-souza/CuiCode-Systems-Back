@@ -2,8 +2,8 @@ const nodemailer = require('nodemailer');
 
 import Service from "../../classes/Service"
 
-import Send from "../../functions/Responses"
 import GetDate from "../../functions/GetDate"
+import Send from "../../functions/Responses"
 
 class TraceAccessService extends Service
 {
