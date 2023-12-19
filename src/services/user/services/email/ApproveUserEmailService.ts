@@ -10,7 +10,7 @@ import EmailTitles from "../../../../enums/EmailTitlesEnum"
 
 class ApproveUserEmailService extends Service
 {
-    Action = "Aprovação de email de usuário"
+    Action = "Aprovação de email de usuário."
 
     CheckQuery(query : any)
     {

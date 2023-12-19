@@ -21,7 +21,7 @@ import EmailTitles from "../../../enums/EmailTitlesEnum"
 class CreateUserService extends Service
 {
     // A criação de usuário não necessita de um usuário requeridor.
-    Action : string = "Criação de Usuário"
+    Action : string = "Criação de Usuário."
 
     CheckBody(body : any) : User
     {

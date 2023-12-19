@@ -6,7 +6,7 @@ import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
 class SendManualEmailApprovalService extends Service
 {
-    Action = "Envio manual de aprovação de email de usuário"
+    Action = "Envio manual de aprovação de email de usuário."
 
     async Operation()
     {

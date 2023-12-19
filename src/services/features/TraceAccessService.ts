@@ -7,7 +7,7 @@ import GetDate from "../../functions/GetDate"
 
 class TraceAccessService extends Service
 {
-    Action : string = "Rastreio de Ação de Usuário"
+    Action : string = "Rastreio de Ação de Usuário."
 
     Operation()
     {

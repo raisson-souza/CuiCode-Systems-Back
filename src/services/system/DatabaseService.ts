@@ -7,7 +7,7 @@ import Send from "../../functions/Responses"
  */
 class DatabaseService extends Service
 {
-    Action : string = "Configuração da Base de Dados"
+    Action : string = "Configuração da Base de Dados."
 
     async Operation()
     {
