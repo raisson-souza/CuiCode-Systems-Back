@@ -1,8 +1,8 @@
 import { Client } from "pg"
 
-import IsUndNull from "../IsUndNull"
-
 import SqlLabel from "../../classes/SqlLabel"
+
+import IsUndNull from "../IsUndNull"
 
 /**
  * Queries a user by a property.

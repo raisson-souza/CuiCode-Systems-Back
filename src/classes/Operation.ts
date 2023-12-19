@@ -1,6 +1,7 @@
 import { Client } from "pg"
 
 import User from "./User"
+
 import IOperation from "../interfaces/IOperation"
 
 /**

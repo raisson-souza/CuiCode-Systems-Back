@@ -3,12 +3,12 @@ import Label from "./Label"
 
 import IUserInSql from "../interfaces/IUserInSql"
 
-import PermissionLevel from "../enums/PermissionLevelEnum"
-import Sex from "../enums/SexEnum"
-
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
 import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
+
+import PermissionLevel from "../enums/PermissionLevelEnum"
+import Sex from "../enums/SexEnum"
 
 class User extends Entity
 {

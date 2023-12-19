@@ -1,17 +1,13 @@
 import { Express } from "express"
 
-import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
-
-// USER
 import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
-
-// EMAIL
 import ApproveUserEmailOperation from "../services/user/services/email/ApproveUserEmailService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 
+import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 import Send from "../functions/Responses"
 
 function UsersController(app : Express)
@@ -51,7 +47,6 @@ function UsersController(app : Express)
         })
 
     app.get('/email/approval', (req, res) => {
-        // enviar link do ERP para acessar
         // CORS não é necessário pois o acesso é externo
         new ApproveUserEmailOperation(req, res).Operation()
     })

@@ -1,17 +1,18 @@
 import { Request, Response } from "express"
 import { Client } from "pg"
 
-import User from "./User"
+import CONFIG from "../config/database_config.json"
 
 import QueryUser from "../services/user/utilities/QueryUser"
 
-import PermissionLevel from "../enums/PermissionLevelEnum"
+import User from "./User"
+
+import IService from "../interfaces/IService"
 
 import IsUndNull from "../functions/IsUndNull"
 import Send from "../functions/Responses"
 
-import CONFIG from "../config/database_config.json"
-import IService from "../interfaces/IService"
+import PermissionLevel from "../enums/PermissionLevelEnum"
 
 /**
  * Contains all necessary params for all endpoints

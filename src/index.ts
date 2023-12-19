@@ -2,10 +2,9 @@ import express from "express"
 import bodyParser from "body-parser"
 import cors from "cors"
 
-import FeaturesController from "./controllers/FeaturesController"
-
 import cors_config from "./config/cors_config.json"
 
+import FeaturesController from "./controllers/FeaturesController"
 import UsersController from "./controllers/UserController"
 import SystemController from "./controllers/SystemController"
 

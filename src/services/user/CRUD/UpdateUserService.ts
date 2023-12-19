@@ -1,18 +1,17 @@
-import Service from "../../../classes/Service"
-import User from "../../../classes/User"
-
-import IUserInSql from "../../../interfaces/IUserInSql"
-
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
 import ValidateUser from "../utilities/ValidateUser"
 
+import Service from "../../../classes/Service"
+import User from "../../../classes/User"
+import Operation from "../../../classes/Operation"
+import SqlLabel from "../../../classes/SqlLabel"
+
+import IUserInSql from "../../../interfaces/IUserInSql"
+
 import Send from "../../../functions/Responses"
 import IsUndNull from "../../../functions/IsUndNull"
 import EmailSender from "../../../functions/system/EmailSender"
-
-import Operation from "../../../classes/Operation"
-import SqlLabel from "../../../classes/SqlLabel"
 
 import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
 

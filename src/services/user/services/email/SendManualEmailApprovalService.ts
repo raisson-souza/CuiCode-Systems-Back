@@ -1,8 +1,8 @@
+import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
+
 import Service from "../../../../classes/Service"
 
 import Send from "../../../../functions/Responses"
-
-import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
 class SendManualEmailApprovalService extends Service
 {

@@ -1,10 +1,9 @@
 import { Request, Response } from "express"
 
-import IsUndNull from "../IsUndNull"
-
 import config from "../../config/cors_config.json"
-
 import Send from "../Responses"
+
+import IsUndNull from "../IsUndNull"
 
 async function ValidateCorsAsync
 (

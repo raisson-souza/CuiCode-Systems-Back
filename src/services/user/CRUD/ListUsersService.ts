@@ -1,9 +1,9 @@
+import QueryUsersInfo from "../utilities/QueryUsersInfo"
+
 import Service from "../../../classes/Service"
 
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/Responses"
-
-import QueryUsersInfo from "../utilities/QueryUsersInfo"
 
 /**
  * Queries specific information about all users.
