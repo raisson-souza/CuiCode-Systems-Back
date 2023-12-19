@@ -26,8 +26,3 @@ SystemController(app)
 app.listen(3000, () => {
     console.log("CuiCodeSystems ERP ouvindo na porta 3000.");
 })
-
-/*
-EM PRODUÇÃO:
-Alterar URL em SendApprovalUserEmailOperation.ts
-*/
