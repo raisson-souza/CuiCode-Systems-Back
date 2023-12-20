@@ -7,7 +7,7 @@ import ListUsersService from "../services/user/CRUD/ListUsersService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
-import Send from "../functions/Responses"
+import Send from "../functions/system/Send"
 import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
 
 function UsersController(app : Express)

@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
 
 import config from "../../config/cors_config.json"
-import Send from "../Responses"
+
+import Send from "./Send"
 
 import IsUndNull from "../IsUndNull"
 

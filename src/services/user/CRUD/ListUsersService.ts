@@ -3,7 +3,7 @@ import QueryUsersInfo from "../utilities/QueryUsersInfo"
 import Service from "../../../classes/Service"
 
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/Responses"
+import Send from "../../../functions/system/Send"
 
 /**
  * Queries specific information about all users.

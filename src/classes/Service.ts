@@ -10,7 +10,7 @@ import User from "./User"
 import IService from "../interfaces/IService"
 
 import IsUndNull from "../functions/IsUndNull"
-import Send from "../functions/Responses"
+import Send from "../functions/system/Send"
 
 import PermissionLevel from "../enums/PermissionLevelEnum"
 

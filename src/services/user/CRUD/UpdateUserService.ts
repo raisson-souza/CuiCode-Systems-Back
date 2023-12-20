@@ -11,7 +11,7 @@ import IUserInSql from "../../../interfaces/IUserInSql"
 
 import EmailSender from "../../../functions/system/EmailSender"
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/Responses"
+import Send from "../../../functions/system/Send"
 
 import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
 

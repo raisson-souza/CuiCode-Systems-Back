@@ -1,6 +1,6 @@
 import Service from "../../classes/Service"
 
-import Send from "../../functions/Responses"
+import Send from "../../functions/system/Send"
 
 /**
  * Service de configuração e validação do banco.

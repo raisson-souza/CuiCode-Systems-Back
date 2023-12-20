@@ -10,7 +10,7 @@ import ValidateUser from "../utilities/ValidateUser"
 
 import EmailSender from "../../../functions/system/EmailSender"
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/Responses"
+import Send from "../../../functions/system/Send"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"

@@ -1,6 +1,6 @@
 import { Response } from "express"
 
-import HttpStatus from "../enums/HttpStatusEnum"
+import HttpStatus from "../../enums/HttpStatusEnum"
 
 type sendFunction = (
     res: Response,

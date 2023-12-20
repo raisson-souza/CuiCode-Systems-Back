@@ -1,7 +1,7 @@
 import Service from "../../classes/Service"
 
-import Send from "../../functions/Responses"
 import EmailSender from "../../functions/system/EmailSender"
+import Send from "../../functions/system/Send"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
 

@@ -3,7 +3,7 @@ import QueryUser from "../utilities/QueryUser"
 import Service from "../../../classes/Service"
 
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/Responses"
+import Send from "../../../functions/system/Send"
 
 /**
  * Queries a user.

@@ -5,7 +5,7 @@ import IUserInSql from "../interfaces/IUserInSql"
 
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
-import PermissionLevelToNumber from "../functions/PermissionLevelToNumber"
+import PermissionLevelToNumber from "../functions/enums/PermissionLevelToNumber"
 
 import PermissionLevel from "../enums/PermissionLevelEnum"
 import Sex from "../enums/SexEnum"
