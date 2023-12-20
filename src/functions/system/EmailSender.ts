@@ -6,7 +6,7 @@ import EmailTitles from "../../enums/EmailTitlesEnum"
 
 class EmailSender
 {
-    Transporter = nodemailer.createTransport(
+    private Transporter = nodemailer.createTransport(
         {
             service: 'gmail',
             auth: {
