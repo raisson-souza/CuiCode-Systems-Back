@@ -1,9 +1,8 @@
 {
-  "name": "functions",
+  "name": "cui-code-systems-erp",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "prestart": "npm run build",
     "start": "node ./dist/index.js"
   },
   "engines": {
