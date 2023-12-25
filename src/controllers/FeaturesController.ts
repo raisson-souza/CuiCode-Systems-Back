@@ -2,15 +2,12 @@ import { Express } from "express"
 
 import TraceAccessService from "../services/features/TraceAccessService"
 
-import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
+import AuthMiddleware from "../functions/system/AuthMiddleware"
 
 function FeaturesController(app : Express)
 {
-    app.trace('/trace', (req, res) => {
-        ValidateCorsAsync(req, res)
-            .then(() => {
-                new TraceAccessService(req, res).Operation()
-            }).catch(() => {})
+    app.trace('/trace', AuthMiddleware, (req, res) => {
+        new TraceAccessService(req, res).Operation()
     })
 }
 

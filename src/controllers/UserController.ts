@@ -8,42 +8,31 @@ import SendManualEmailApprovalService from "../services/user/services/email/Send
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
 import Send from "../functions/system/Send"
-import ValidateCorsAsync from "../functions/system/ValidateCorsAsync"
+import AuthMiddleware from "../functions/system/AuthMiddleware"
 
 function UsersController(app : Express)
 {
     app.route("/user")
-        .get((req, res) => {
-            ValidateCorsAsync(req, res)
-                .then(() => {
-                    new GetUserService(req, res).Operation()
-                }).catch(() => {})
+        .get(AuthMiddleware, (req, res) => {
+            new GetUserService(req, res).Operation()
         })
         .post((req, res) => {
-            ValidateCorsAsync(req, res)
-                .then(() => {
-                    new CreateUserService(req, res).Operation()
-                }).catch(() => {})
+            // Não há autenticação na criação de usuário.
+            new CreateUserService(req, res).Operation()
         })
-        .put((req, res) => {
-            ValidateCorsAsync(req, res)
-                .then(() => {
-                    new UpdateUserService(req, res).Operation()
-                }).catch(() => {})
+        .put(AuthMiddleware, (req, res) => {
+            new UpdateUserService(req, res).Operation()
         })
 
     app.route("/users")
-        .get((req, res) => {
-            ValidateCorsAsync(req, res)
-                .then(() => {
-                    new ListUsersService(req, res).Operation()
-                }).catch(() => {})
+        .get(AuthMiddleware, (req, res) => {
+            new ListUsersService(req, res).Operation()
         })
-        .post((_, res) => {
-            Send.Invalid(res, "Operação não desenvolvida.", "Operação inválida")
+        .post(AuthMiddleware, (_, res) => {
+            Send.Invalid(res, "Operação não desenvolvida.", "Operação inválida.")
         })
-        .put((_, res) => {
-            Send.Invalid(res, "Operação não desenvolvida.", "Operação inválida")
+        .put(AuthMiddleware, (_, res) => {
+            Send.Invalid(res, "Operação não desenvolvida.", "Operação inválida.")
         })
 
     app.get('/email/approval', (req, res) => {
@@ -51,11 +40,8 @@ function UsersController(app : Express)
         new ApproveUserEmailOperation(req, res).Operation()
     })
 
-    app.post('/email/approval/send', (req, res) => {
-        ValidateCorsAsync(req, res)
-            .then(() => {
-                new SendManualEmailApprovalService(req, res).Operation()
-            }).catch(() => {})
+    app.post('/email/approval/send', AuthMiddleware, (req, res) => {
+        new SendManualEmailApprovalService(req, res).Operation()
     })
 }
 

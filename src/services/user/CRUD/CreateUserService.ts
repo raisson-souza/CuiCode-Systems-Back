@@ -1,14 +1,13 @@
-import crypto from "crypto-js"
+import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
+
+import ValidateUser from "../utilities/ValidateUser"
 
 import Operation from "../../../classes/Operation"
 import Service from "../../../classes/Service"
 import User from "../../../classes/User"
 
-import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
-
-import ValidateUser from "../utilities/ValidateUser"
-
 import EmailSender from "../../../functions/system/EmailSender"
+import EncryptPassword from "../../../functions/EncryptPassword"
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
@@ -136,7 +135,7 @@ class CreateUserOperation extends Operation
 
     private EncryptUserPassword(user : User) : void
     {
-        user.Password = crypto.MD5(user.Password).toString()
+        user.Password = EncryptPassword(user.Password)
     }
 }
 

@@ -5,7 +5,7 @@ import CONFIG from "../config/database_config.json"
 
 import QueryUser from "../services/user/utilities/QueryUser"
 
-import User from "./User"
+import UserAuth from "./UserAuth"
 
 import IService from "../interfaces/IService"
 
@@ -26,9 +26,9 @@ abstract class Service implements IService
     REQ : Request
     RES : Response
     DB_connection : Client
-    // Necessário chamar SetReqUserAsync() na service requerida.
-    // Caso UserReqId não exista, estoura erro.
-    USER_req : User | null
+    // Ao necessitar de informações do usuário requeridor, o ID do mesmo estará no JWT.
+    // Portanto, necessitando do usuário requeridor, necessita login.
+    USER_req : UserAuth | null
     Action : string = ""
 
     constructor
@@ -72,7 +72,7 @@ abstract class Service implements IService
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, userReqId))
                 .then(user => {
-                    return user
+                    return user as UserAuth
                 })
                 .catch(ex => {
                     throw new Error(ex.message)
