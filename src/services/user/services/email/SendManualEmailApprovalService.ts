@@ -18,11 +18,9 @@ class SendManualEmailApprovalService extends Service
                 Action
             } = this
 
-            await this.SetReqUserAsync()
+            // O email a ser aprovado já está no UserAuthId
 
-            // O email a ser aprovado já está no UserReq
-
-            await Promise.resolve(new SendApprovalEmailOperation(this.USER_req!, DB_connection).PerformOperation())
+            await Promise.resolve(new SendApprovalEmailOperation(this.USER_auth!, DB_connection).PerformOperation())
                 .then(() => {
                     Send.Ok(RES, "Solicitação de aprovação de email realizada com sucesso.", Action)
                 })

@@ -12,8 +12,6 @@ import IService from "../interfaces/IService"
 import IsUndNull from "../functions/IsUndNull"
 import Send from "../functions/system/Send"
 
-import PermissionLevel from "../enums/PermissionLevelEnum"
-
 /**
  * Contains all necessary params for all endpoints
  * @param REQ Request
@@ -28,19 +26,23 @@ abstract class Service implements IService
     DB_connection : Client
     // Ao necessitar de informações do usuário requeridor, o ID do mesmo estará no JWT.
     // Portanto, necessitando do usuário requeridor, necessita login.
-    USER_req : UserAuth | null
+    USER_auth : UserAuth | null
     Action : string = ""
 
     constructor
     (
         req : Request,
         res : Response,
+        find_user_auth : boolean = false
     )
     {
         this.REQ = req
         this.RES = res
         this.DB_connection = new Client(CONFIG.DatabaseConfig)
         this.PerformConnection()
+
+        if (find_user_auth)
+            this.SetUserAuthAsync()
     }
 
     Operation()
@@ -58,68 +60,46 @@ abstract class Service implements IService
         throw new Error("Method not implemented.")
     }
 
-
     /**
-     * Queries all UserReq info
+     * Queries all UserAuth info
      */
-    async SetReqUserAsync()
+    async SetUserAuthAsync()
     {
-        const userReqId = this.CheckUserIdExistance()
+        const userAuthId = this.CheckUserAuthIdExistance()
 
-        if (IsUndNull(userReqId))
+        if (IsUndNull(userAuthId))
             throw new Error("Usuário requeridor não encontrado na requisição.")
 
         const user = await Promise.resolve(
-            QueryUser(this.DB_connection, userReqId))
+            QueryUser(this.DB_connection, userAuthId))
                 .then(user => {
-                    return user as UserAuth
+                    const auth = this.REQ.headers["authorization"]
+
+                    if (IsUndNull(auth))
+                        return user as UserAuth
+
+                    const token = auth?.split(" ")[1]!
+
+                    return UserAuth.NewUserAuth(user, token)
                 })
                 .catch(ex => {
                     throw new Error(ex.message)
                 })
 
-        this.USER_req = user
+        this.USER_auth = user
     }
 
-    private CheckUserIdExistance() : number | null
+    private CheckUserAuthIdExistance() : number | null
     {
-        const userIdInBody  = this.CheckUserReqInBody()
+        const userIdInBody  = this.REQ.body.UserAuthId
         if (!IsUndNull(userIdInBody))
             return userIdInBody
 
-        const userIdInQuery = this.CheckUserReqInQuery()
+        const userIdInQuery = Number.parseInt(this.REQ.query.UserAuthId as string)
         if (!IsUndNull(userIdInQuery))
             return userIdInQuery
 
         return null
-    }
-
-    /**
-     * Checks and convert UserReq of query
-     */
-    private CheckUserReqInQuery() : number | null
-    {
-        const userReqQuery = this.REQ.query.UserReqId
-
-        if (IsUndNull(userReqQuery))
-            return null
-
-        const userReqId = Number.parseInt(userReqQuery as string)
-
-        return userReqId
-    }
-
-    /**
-     * Checks and convert UserReq of body
-     */
-    private CheckUserReqInBody() : number | null
-    {
-        const userReqId = this.REQ.body.UserReqId
-
-        if (IsUndNull(userReqId))
-            return null
-
-        return userReqId
     }
 
     private async PerformConnection()
@@ -130,31 +110,6 @@ abstract class Service implements IService
                 Send.Error(this.RES, `Houve um erro ao conectar no banco. Erro: ${ ex.message }`, "Conexão no banco")
                 throw new Error()
             })
-    }
-
-    /**
-     * @returns User level
-     */
-    GetReqUserLevel()
-    {
-        return !IsUndNull(this.USER_req)
-            ? PermissionLevel[this.USER_req?.PermissionLevel?.Value!]
-            : null
-    }
-
-    /**
-     * @returns User Id, Username, Level and Name
-     */
-    GetReqUserBasicInfo()
-    {
-        return !IsUndNull(this.USER_req)
-            ? {
-                Id: this.USER_req?.Id,
-                Username: this.USER_req?.Username,
-                PermissionLevel: this.USER_req?.PermissionLevel?.Value,
-                Name: this.USER_req?.Name
-            }
-            : null
     }
 }
 

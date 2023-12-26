@@ -18,7 +18,7 @@ class SendApprovalEmailOperation extends Operation
         } = this
 
         if (is_creation || IsUndNull(User!.Id))
-        User!.Id = await QueryDbRowByProperty(DB_connection, "users", "username", User!.Username, "id")
+            User!.Id = await QueryDbRowByProperty(DB_connection, "users", "username", User!.Username, "id")
 
         const createEmailApprovalQuery =
         `
@@ -55,7 +55,7 @@ class SendApprovalEmailOperation extends Operation
 
         private GenerateEndpoint(id : number, email : string)
         {
-            return `${ Env.Base }/email/approval?UserReqId=${ id }&email=${ email }`
+            return `${ Env.Base }/email/approval?userId=${ id }&email=${ email }`
         }
 }
 

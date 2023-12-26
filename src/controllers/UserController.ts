@@ -1,6 +1,6 @@
 import { Express } from "express"
 
-import ApproveUserEmailOperation from "../services/user/services/email/ApproveUserEmailService"
+import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
@@ -37,11 +37,11 @@ function UsersController(app : Express)
 
     app.get('/email/approval', (req, res) => {
         // CORS não é necessário pois o acesso é externo
-        new ApproveUserEmailOperation(req, res).Operation()
+        new ApproveUserEmailService(req, res).Operation()
     })
 
     app.post('/email/approval/send', AuthMiddleware, (req, res) => {
-        new SendManualEmailApprovalService(req, res).Operation()
+        new SendManualEmailApprovalService(req, res, true).Operation()
     })
 }
 

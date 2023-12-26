@@ -26,7 +26,7 @@ class LoginService extends Service
         if (IsUndNull(email) || IsUndNull(password))
             throw new Error("Um ou mais dados de autenticação estão ausentes.")
 
-        this.USER_req = new UserAuth(email, password)
+        this.USER_auth = new UserAuth(email, password)
     }
 
     async Operation()
@@ -39,12 +39,12 @@ class LoginService extends Service
                 .then(user => { return user })
                 .catch(ex => { throw new Error(ex) })
 
-            if (this.USER_req?.Password != userDb.Password)
+            if (this.USER_auth?.Password != userDb.Password)
                 throw new Error("Senha de usuário incorreta.")
 
             const token = sign({ id: userDb.Id }, Env.JWT_key, { expiresIn: "1d" })
 
-            Send.Ok(this.RES, { token: token, user_req: userDb }, this.Action)
+            Send.Ok(this.RES, { token: token, USER_auth: userDb }, this.Action)
         }
         catch (ex)
         {
@@ -60,7 +60,7 @@ class LoginService extends Service
     {
         try
         {
-            let query = `SELECT * FROM users WHERE email = '${ this.USER_req?.Email }'`
+            let query = `SELECT * FROM users WHERE email = '${ this.USER_auth?.Email }'`
 
             return await this.DB_connection.query(query)
                 .then(result => {

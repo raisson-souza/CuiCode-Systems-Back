@@ -45,9 +45,9 @@ async function AuthMiddleware
             const id = (decoded as any)["id"]
 
             if (req.method == "GET")
-                req.query["UserReqId"] = id
+                req.query["UserAuthId"] = id
             else
-                req.body["UserReqId"] = id
+                req.body["UserAuthId"] = id
         }
 
         cors(req, res, () => {
