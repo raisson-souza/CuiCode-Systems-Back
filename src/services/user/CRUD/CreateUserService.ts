@@ -3,7 +3,7 @@ import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailO
 import ValidateUser from "../utilities/ValidateUser"
 
 import Operation from "../../../classes/Operation"
-import Service from "../../../classes/Service"
+import ServerService from "../../../classes/service/ServerService"
 import User from "../../../classes/User"
 
 import EmailSender from "../../../functions/system/EmailSender"
@@ -17,7 +17,7 @@ import EmailTitles from "../../../enums/EmailTitlesEnum"
 /**
  * Creates a user.
  */
-class CreateUserService extends Service
+class CreateUserService extends ServerService
 {
     // A criação de usuário não necessita de um usuário requeridor.
     Action : string = "Criação de Usuário."
@@ -29,6 +29,8 @@ class CreateUserService extends Service
 
         return new User(body, false, true)
     }
+
+    CheckQuery() { throw new Error("Method not implemented.") }
 
     async Operation()
     {

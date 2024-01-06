@@ -1,6 +1,6 @@
 import QueryUsersInfo from "../utilities/QueryUsersInfo"
 
-import Service from "../../../classes/Service"
+import ServerService from "../../../classes/service/ServerService"
 
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
@@ -8,9 +8,11 @@ import Send from "../../../functions/system/Send"
 /**
  * Queries specific information about all users.
  */
-class ListUsersService extends Service
+class ListUsersService extends ServerService
 {
     Action = "Listagem de usuários."
+
+    CheckBody() { throw new Error("Method not implemented.") }
 
     CheckQuery(query : any) : Array<string>
     {
@@ -35,16 +37,18 @@ class ListUsersService extends Service
                 Action
             } = this
 
-                // O FRONT-END DEVE ENVIAR AS INFORMAÇÕES JÁ CONVERTIDAS PARA OS MESMOS CAMPOS DO BANCO
-                const userRequiredInfo = this.CheckQuery(REQ.query)
+            this.AuthenticateRequestor()
 
-                await Promise.resolve(QueryUsersInfo(DB_connection, userRequiredInfo))
-                    .then(userInfos => {
-                        Send.Ok(RES, userInfos, Action)
-                    })
-                    .catch(ex => {
-                        Send.Error(RES, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ ex.message }`, Action)
-                    })
+            // O FRONT-END DEVE ENVIAR AS INFORMAÇÕES JÁ CONVERTIDAS PARA OS MESMOS CAMPOS DO BANCO
+            const userRequiredInfo = this.CheckQuery(REQ.query)
+
+            await Promise.resolve(QueryUsersInfo(DB_connection, userRequiredInfo))
+                .then(userInfos => {
+                    Send.Ok(RES, userInfos, Action)
+                })
+                .catch(ex => {
+                    Send.Error(RES, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ ex.message }`, Action)
+                })
         }
         catch (ex)
         {

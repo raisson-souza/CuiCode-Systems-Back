@@ -12,7 +12,8 @@ class UserAuth extends User
         email : string,
         password : string,
         token : string | null = null,
-        user_props : User | null = null
+        user_props : User | null = null,
+        isUserPropsSql : boolean = false
     )
     {
         if (IsUndNull(user_props))
@@ -21,7 +22,7 @@ class UserAuth extends User
             this.Password = EncryptPassword(password)
         }
         else
-            super({ ...user_props }, false, false, false)
+            super({ ...user_props }, isUserPropsSql, false, false)
 
         this.Token = token
     }
@@ -29,10 +30,11 @@ class UserAuth extends User
     static NewUserAuth
     (
         user_props : User,
-        token : string | null = null
+        token : string | null = null,
+        isUserPropsSql : boolean = false
     )
     {
-        return new UserAuth("", "", token, user_props)
+        return new UserAuth("", "", token, user_props, isUserPropsSql)
     }
 }
 

@@ -17,6 +17,7 @@ const Env = {
             "http://127.0.0.1:5000/",
             "http://127.0.0.1:5000"
             ],
+    SystemUserKey: "6f83517d7035894c05c13ee3a48fd746", // cui_code_systems_admin_key
 }
 
 export default Env

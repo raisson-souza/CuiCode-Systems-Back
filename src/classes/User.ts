@@ -203,6 +203,9 @@ class User extends Entity
     {
         const bodyProp = !isBodySQL ? "Sex" : "sex"
 
+        if (typeof body[bodyProp] === "object")
+            return body[bodyProp]
+
         return IsUndNull(body[bodyProp])
             ? null
             : new Label(Sex, body[bodyProp], "Sex")
@@ -214,6 +217,9 @@ class User extends Entity
     private ConvertLevelEnum(body : any, isBodySQL : boolean)
     {
         const bodyProp = !isBodySQL ? "PermissionLevel" : "permission_level"
+
+        if (typeof body[bodyProp] === "object")
+            return body[bodyProp]
 
         return IsUndNull(body[bodyProp])
             ? null
@@ -229,13 +235,10 @@ class User extends Entity
         if (IsUndNull(this.PermissionLevel?.Value))
             throw new Error("Nível de permissão de usuário não encontrado.")
 
-        if (IsUndNull(this.EmailAproved) || !this.EmailAproved)
-            throw new Error("Email de usuário não aprovado, ação negada.")
-
         const userLevel = PermissionLevelToNumber(PermissionLevel[this.PermissionLevel?.Value!])
 
         if (userLevel < levelRequired)
-            throw new Error("Nível de permissão não alto o suficiente para realizar esta ação.")
+            throw new Error("Ação não autorizada para o usuário.")
     }
 
     ConvertUserToSqlObject()

@@ -43,11 +43,19 @@ async function AuthMiddleware
 
             const decoded = verify(token,  Env.JWT_key)
             const id = (decoded as any)["id"]
+            // Para a credencial do sistema é necessário enviar crua do front
+            const systemKey = (decoded as any)["system_key"]
 
             if (req.method == "GET")
+            {
                 req.query["UserAuthId"] = id
+                req.query["SystemKey"] = systemKey
+            }
             else
+            {
                 req.body["UserAuthId"] = id
+                req.body["SystemKey"] = systemKey
+            }
         }
 
         cors(req, res, () => {

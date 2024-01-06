@@ -1,13 +1,16 @@
 import { EmailApprovalSql } from "../../../../classes/EmailApproval"
-import Service from "../../../../classes/Service"
+
+import ClientService from "../../../../classes/service/ClientService"
 
 import IsUndNull from "../../../../functions/IsUndNull"
 import Send from "../../../../functions/system/Send"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
 
-class ApproveUserEmailService extends Service
+class ApproveUserEmailService extends ClientService
 {
     Action = "Aprovação de email de usuário."
+
+    CheckBody() { throw new Error("Method not implemented.") }
 
     CheckQuery(query : any)
     : { email : string, userId : number }

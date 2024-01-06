@@ -33,32 +33,38 @@ const Send : SendFunctions = {
 
 function Ok(res: Response, responseMessage: any, logMessage: string) : void
 {
-    res.status(HttpStatus.OK).send(responseMessage)
+    if (!res.headersSent)
+        res.status(HttpStatus.OK).send(responseMessage)
 }
 
 function Created(res: Response, responseMessage: any, logMessage: string) : void
 {
-    res.status(HttpStatus.CREATED).send(responseMessage)
+    if (!res.headersSent)
+        res.status(HttpStatus.CREATED).send(responseMessage)
 }
 
 function Error(res: Response, responseMessage: any, logMessage: string) : void
 {
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(responseMessage)
+    if (!res.headersSent)
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(responseMessage)
 }
 
 function NotFound(res: Response, responseMessage: any, logMessage: string) : void
 {
-    res.status(HttpStatus.NOT_FOUND).send(responseMessage)
+    if (!res.headersSent)
+        res.status(HttpStatus.NOT_FOUND).send(responseMessage)
 }
 
 function Invalid(res: Response, responseMessage: any, logMessage: string) : void
 {
-    res.status(HttpStatus.INVALID).send(responseMessage)
+    if (!res.headersSent)
+        res.status(HttpStatus.INVALID).send(responseMessage)
 }
 
 function Unauthorized(res: Response, responseMessage: any, logMessage: string) : void
 {
-    res.status(HttpStatus.UNAUTHORIZED).send(responseMessage)
+    if (!res.headersSent)
+        res.status(HttpStatus.UNAUTHORIZED).send(responseMessage)
 }
 
 export default Send

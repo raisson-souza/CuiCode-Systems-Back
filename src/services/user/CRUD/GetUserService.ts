@@ -1,6 +1,6 @@
 import QueryUser from "../utilities/QueryUser"
 
-import Service from "../../../classes/Service"
+import ServerClientService from "../../../classes/service/ServerClientService"
 
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
@@ -8,9 +8,11 @@ import Send from "../../../functions/system/Send"
 /**
  * Queries a user.
  */
-class GetUserService extends Service
+class GetUserService extends ServerClientService
 {
     Action = "Consulta de usuário."
+
+    CheckBody() { throw new Error("Method not implemented.") }
 
     CheckQuery(query : any) : number
     {
@@ -33,6 +35,8 @@ class GetUserService extends Service
                 DB_connection,
                 Action
             } = this
+
+            await this.AuthenticateRequestor()
 
             const userId = this.CheckQuery(REQ.query)
 

@@ -1,12 +1,16 @@
 import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
-import Service from "../../../../classes/Service"
+import ClientService from "../../../../classes/service/ClientService"
 
 import Send from "../../../../functions/system/Send"
 
-class SendManualEmailApprovalService extends Service
+class SendManualEmailApprovalService extends ClientService
 {
     Action = "Envio manual de aprovação de email de usuário."
+
+    CheckQuery() { throw new Error("Method not implemented.") }
+
+    CheckBody() { throw new Error("Method not implemented.") }
 
     async Operation()
     {
@@ -17,6 +21,8 @@ class SendManualEmailApprovalService extends Service
                 DB_connection,
                 Action
             } = this
+
+            await this.AuthenticateRequestor()
 
             // O email a ser aprovado já está no UserAuthId
 

@@ -41,7 +41,7 @@ function UsersController(app : Express)
     })
 
     app.post('/email/approval/send', AuthMiddleware, (req, res) => {
-        new SendManualEmailApprovalService(req, res, true).Operation()
+        new SendManualEmailApprovalService(req, res).Operation()
     })
 }
 

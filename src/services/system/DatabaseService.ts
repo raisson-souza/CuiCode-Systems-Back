@@ -1,16 +1,22 @@
-import Service from "../../classes/Service"
+import ServerService from "../../classes/service/ServerService"
 
 import Send from "../../functions/system/Send"
 
 /**
  * Service de configuração e validação do banco.
  */
-class DatabaseService extends Service
+class DatabaseService extends ServerService
 {
     Action : string = "Configuração da Base de Dados."
 
+    CheckQuery() { throw new Error("Method not implemented.") }
+
+    CheckBody() { throw new Error("Method not implemented.") }
+
     async Operation()
     {
+        this.AuthenticateRequestor()
+
         return await this.DB_connection.query(`SELECT sql_commands_created FROM parameters`)
             .then(result => {
                 if (result.rows[0]["sql_commands_created"] == false)

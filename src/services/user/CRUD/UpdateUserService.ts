@@ -2,8 +2,8 @@ import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailO
 
 import ValidateUser from "../utilities/ValidateUser"
 
+import ClientService from "../../../classes/service/ClientService"
 import Operation from "../../../classes/Operation"
-import Service from "../../../classes/Service"
 import SqlLabel from "../../../classes/SqlLabel"
 import User from "../../../classes/User"
 
@@ -18,7 +18,7 @@ import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
 /**
  * Updates a user
  */
-class UpdateUserService extends Service
+class UpdateUserService extends ClientService
 {
     Action = "Edição de usuário."
 
@@ -35,6 +35,8 @@ class UpdateUserService extends Service
         return user
     }
 
+    CheckQuery() { throw new Error("Method not implemented.") }
+
     async Operation()
     {
         try
@@ -45,6 +47,8 @@ class UpdateUserService extends Service
                 DB_connection,
                 Action
             } = this
+
+            await this.AuthenticateRequestor()
 
             const user = this.CheckBody(REQ.body)
 

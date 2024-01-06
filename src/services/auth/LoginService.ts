@@ -2,7 +2,8 @@ import { sign } from "jsonwebtoken"
 
 import Env from "../../config/environment"
 
-import Service from "../../classes/Service"
+import ClientService from "../../classes/service/ClientService"
+
 import User from "../../classes/User"
 import UserAuth from "../../classes/UserAuth"
 
@@ -12,7 +13,7 @@ import Send from "../../functions/system/Send"
 /**
  * Realiza o login e autenticação de um usuário.
  */
-class LoginService extends Service
+class LoginService extends ClientService
 {
     Action : string = "Autenticação de Usuário."
 
@@ -29,6 +30,8 @@ class LoginService extends Service
         this.USER_auth = new UserAuth(email, password)
     }
 
+    CheckQuery() { throw new Error("Method not implemented.") }
+
     async Operation()
     {
         try
@@ -42,7 +45,13 @@ class LoginService extends Service
             if (this.USER_auth?.Password != userDb.Password)
                 throw new Error("Senha de usuário incorreta.")
 
-            const token = sign({ id: userDb.Id }, Env.JWT_key, { expiresIn: "1d" })
+            const token = sign(
+                {
+                    id: userDb.Id,
+                },
+                Env.JWT_key,
+                { expiresIn: "1d" }
+            )
 
             Send.Ok(this.RES, { token: token, USER_auth: userDb }, this.Action)
         }

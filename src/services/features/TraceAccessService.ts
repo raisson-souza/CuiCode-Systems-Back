@@ -1,21 +1,22 @@
-import Service from "../../classes/Service"
+import ServerService from "../../classes/service/ServerService"
 
 import EmailSender from "../../functions/system/EmailSender"
 import Send from "../../functions/system/Send"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
 
-class TraceAccessService extends Service
+class TraceAccessService extends ServerService
 {
     Action : string = "Rastreio de Ação de Usuário."
 
-    CheckBody()
-    {
-        return this.REQ.body
-    }
+    CheckBody() { return this.REQ.body }
+
+    CheckQuery() { throw new Error("Method not implemented.") }
 
     Operation()
     {
+        this.AuthenticateRequestor()
+
         try
         {
             const emailBody = this.CheckBody()
