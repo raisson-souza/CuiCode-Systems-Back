@@ -1,6 +1,5 @@
 import User from "./User"
 
-import EncryptPassword from "../functions/EncryptPassword"
 import IsUndNull from "../functions/IsUndNull"
 
 class UserAuth extends User
@@ -9,32 +8,35 @@ class UserAuth extends User
 
     constructor
     (
-        email : string,
-        password : string,
-        token : string | null = null,
-        user_props : User | null = null,
-        isUserPropsSql : boolean = false
+        user_props : any,
+        isUserPropsSql : boolean = false,
+        headers : any
     )
     {
-        if (IsUndNull(user_props))
-        {
-            super({ Email: email, Password: password }, false, false, false)
-            this.Password = EncryptPassword(password)
-        }
-        else
+        if (user_props instanceof User)
             super({ ...user_props }, isUserPropsSql, false, false)
 
-        this.Token = token
+        super(user_props, isUserPropsSql, false, false)
+
+        this.ExtractToken(headers)
     }
 
-    static NewUserAuth
-    (
-        user_props : User,
-        token : string | null = null,
-        isUserPropsSql : boolean = false
-    )
+    private ExtractToken(headers : any)
     {
-        return new UserAuth("", "", token, user_props, isUserPropsSql)
+        try
+        {
+            const { authorization } = headers
+
+            if (IsUndNull(authorization))
+                this.Token = null
+
+            const token = authorization?.split(" ")[1]!
+            this.Token = token
+        }
+        catch
+        {
+            this.Token = null
+        }
     }
 }
 

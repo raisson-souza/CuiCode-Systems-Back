@@ -27,7 +27,7 @@ class LoginService extends ClientService
         if (IsUndNull(email) || IsUndNull(password))
             throw new Error("Um ou mais dados de autenticação estão ausentes.")
 
-        this.USER_auth = new UserAuth(email, password)
+        this.USER_auth = new UserAuth({ "Email": email, "Password": password }, false, this.REQ.headers)
     }
 
     CheckQuery() { throw new Error("Method not implemented.") }

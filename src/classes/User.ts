@@ -203,7 +203,7 @@ class User extends Entity
     {
         const bodyProp = !isBodySQL ? "Sex" : "sex"
 
-        if (typeof body[bodyProp] === "object")
+        if (typeof body[bodyProp] === "object") // TODO: Validar body[bodyProp] instanceof Label
             return body[bodyProp]
 
         return IsUndNull(body[bodyProp])

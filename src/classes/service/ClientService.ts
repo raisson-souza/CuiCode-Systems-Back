@@ -5,7 +5,6 @@ import QueryUser from "../../services/user/utilities/QueryUser"
 import Service from "./base/Service"
 import UserAuth from "../UserAuth"
 
-import ExtractToken from "../../functions/system/ExtractToken"
 import IsUndNull from "../../functions/IsUndNull"
 
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
@@ -27,9 +26,7 @@ abstract class ClientService extends Service
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, userAuthId))
                 .then(user => {
-                    const token = ExtractToken(this.REQ)
-
-                    return UserAuth.NewUserAuth(user, token)
+                    return new UserAuth(user, true, this.REQ.headers)
                 })
                 .catch(ex => {
                     throw new Error(ex.message)
