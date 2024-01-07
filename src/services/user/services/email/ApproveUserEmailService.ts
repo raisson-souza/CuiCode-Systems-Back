@@ -52,7 +52,11 @@ class ApproveUserEmailService extends ClientService
                 WHERE
                     email = '${ email }' AND
                     user_id = ${ userId } AND
-                    created = (SELECT max(created) FROM email_approvals)
+                    created = (
+                                SELECT max(created)
+                                FROM email_approvals
+                                WHERE user_id = ${ userId }
+                            )
             `
 
             const emailApproval = await DB_connection.query(query)

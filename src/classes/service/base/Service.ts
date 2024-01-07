@@ -40,7 +40,7 @@ abstract class Service implements IService
 
     abstract Operation() : void
 
-    abstract AuthenticateRequestor(_ : PermissionLevelEnum) : void
+    abstract AuthenticateRequestor(_ : PermissionLevelEnum, __ : number) : void
 
     private async PerformConnection()
     {

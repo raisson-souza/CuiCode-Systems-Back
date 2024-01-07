@@ -6,6 +6,8 @@ import Service from "./base/Service"
 import UserAuth from "../UserAuth"
 
 import IsUndNull from "../../functions/IsUndNull"
+import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"
+import Send from "../../functions/system/Send"
 
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 
@@ -19,14 +21,18 @@ abstract class ClientService extends Service
      * Collects UserAuthId info on request.
      * Requires call upon restricted level services.
      */
-    async AuthenticateRequestor(level : PermissionLevelEnum = PermissionLevelEnum.Member)
+    async AuthenticateRequestor
+    (
+        userIdToOperate : number | null = null,
+        level : PermissionLevelEnum = PermissionLevelEnum.Member,
+    )
     {
         const userAuthId = this.CheckUserAuthId()
 
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, userAuthId))
                 .then(user => {
-                    return new UserAuth(user, true, this.REQ.headers)
+                    return new UserAuth(user, false, this.REQ.headers)
                 })
                 .catch(ex => {
                     throw new Error(ex.message)
@@ -35,6 +41,19 @@ abstract class ClientService extends Service
         user.CheckUserPermission(level)
 
         this.USER_auth = user
+
+        if (!IsUndNull(userIdToOperate))
+        {
+            if
+            (
+                this.USER_auth?.Id != userIdToOperate &&
+                this.USER_auth?.PermissionLevel?.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
+            )
+            {
+                Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
+                throw new Error("Usuário não autorizado para tal ação.")
+            }
+        }
     }
 
     private CheckUserAuthId() : number

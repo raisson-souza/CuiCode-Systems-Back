@@ -18,7 +18,7 @@ abstract class ServerClientService extends Service
      * Upon call, if there is PermissionLevel, runs ClientService, otherwise runs ServerService.
      * At all ServerClientService services, pass UserAuthPermissionLevel or null.
      */
-    async AuthenticateRequestor(level : PermissionLevelEnum | null = PermissionLevelEnum.Member)
+    async AuthenticateRequestor(userIdToOperate : number | null = null, level : PermissionLevelEnum | null = PermissionLevelEnum.Member)
     {
         if (IsUndNull(level))
         {
@@ -30,7 +30,7 @@ abstract class ServerClientService extends Service
         const clientServiceClass = ClientService
         clientServiceClass.prototype.REQ = this.REQ
         clientServiceClass.prototype.DB_connection = this.DB_connection
-        return clientServiceClass.prototype.AuthenticateRequestor(level!)
+        return await clientServiceClass.prototype.AuthenticateRequestor(userIdToOperate, level!)
     }
 }
 

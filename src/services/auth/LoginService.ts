@@ -57,7 +57,7 @@ class LoginService extends ClientService
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao autenticar o usuário. Erro: ${ (ex as Error).message }`, this.Action)
+            Send.Error(this.RES, `Houve um erro no login. Erro: ${ (ex as Error).message }`, this.Action)
         }
         finally
         {

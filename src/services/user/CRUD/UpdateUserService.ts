@@ -48,9 +48,9 @@ class UpdateUserService extends ClientService
                 Action
             } = this
 
-            await this.AuthenticateRequestor()
-
             const user = this.CheckBody(REQ.body)
+
+            await this.AuthenticateRequestor(user.Id)
 
             await ValidateUser(DB_connection, user, false)
 

@@ -5,6 +5,7 @@ import Env from "../../config/environment"
 import Service from "./base/Service"
 
 import EncryptPassword from "../../functions/EncryptPassword"
+import IsUndNull from "../../functions/IsUndNull"
 import Send from "../../functions/system/Send"
 
 abstract class ServerService extends Service
@@ -23,7 +24,7 @@ abstract class ServerService extends Service
             ? this.REQ.query["SystemKey"]
             : this.REQ.body["SystemKey"]
 
-        const encryptedKey = EncryptPassword(key)
+        const encryptedKey = EncryptPassword(IsUndNull(key) ? "" : key)
 
         if (encryptedKey != Env.SystemUserKey)
         {

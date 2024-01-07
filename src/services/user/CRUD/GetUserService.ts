@@ -1,6 +1,6 @@
 import QueryUser from "../utilities/QueryUser"
 
-import ServerClientService from "../../../classes/service/ServerClientService"
+import ServerService from "../../../classes/service/ServerService"
 
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
@@ -8,7 +8,7 @@ import Send from "../../../functions/system/Send"
 /**
  * Queries a user.
  */
-class GetUserService extends ServerClientService
+class GetUserService extends ServerService
 {
     Action = "Consulta de usuário."
 
@@ -36,7 +36,7 @@ class GetUserService extends ServerClientService
                 Action
             } = this
 
-            await this.AuthenticateRequestor()
+            this.AuthenticateRequestor()
 
             const userId = this.CheckQuery(REQ.query)
 
