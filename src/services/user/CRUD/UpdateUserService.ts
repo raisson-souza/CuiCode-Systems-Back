@@ -27,7 +27,7 @@ class UpdateUserService extends ClientService
         if (IsUndNull(body))
             throw new Error("Corpo da requisição inválido.")
 
-        const user = new User(body, false, false, true);
+        const user = new User(body, false, false, true)
 
         if (IsUndNull(user.Id))
             throw new Error("Id de usuário a ser atualizado não encontrado.")
@@ -61,9 +61,6 @@ class UpdateUserService extends ClientService
                 .catch(ex => {
                     throw new Error((ex as Error).message)
                 })
-
-            if (!IsUndNull(user.EmailAproved) && !user.EmailAproved)
-                await new SendApprovalEmailOperation(user, DB_connection).PerformOperation()
         }
         catch (ex)
         {
@@ -82,22 +79,19 @@ class UpdateUserOperation extends Operation
     {
         try
         {
-            const {
-                User,
-                DB_connection
-            } = this
+            const { DB_connection } = this
 
-            if (IsUndNull(User!.Id))
+            if (IsUndNull(this.User!.Id))
                 throw new Error("Id do usuário a ser editado deve ser informado.")
 
-            const userInSql = User!.ConvertUserToSqlObject()
+            const userInSql = this.User!.ConvertUserToSqlObject()
 
-            const checkUserExistenceQuery = `SELECT * FROM users WHERE id = ${ User!.Id }`
+            const checkUserExistenceQuery = `SELECT * FROM users WHERE id = ${ this.User!.Id }`
 
             const userDb = await DB_connection.query(checkUserExistenceQuery)
                 .then(result => {
                     if (result.rowCount == 0)
-                        throw new Error(`Usuário ${ User!.GenerateUserKey() } não encontrado.`)
+                        throw new Error(`Usuário ${ this.User!.GenerateUserKey() } não encontrado.`)
 
                     // userDb assume o tipo de userInSql que utiliza de assinatura de índice
                     // na qual permite acesso as chaves por qualquer string.
@@ -108,6 +102,8 @@ class UpdateUserOperation extends Operation
                 })
 
             let newUserProps : SqlLabel[] = []
+
+            let emailChanged = false
 
             // Serão comparadas as diferenças entre o usuário do banco com as novas alterações.
             // Um objeto contendo o nome da coluna, o valor e o tipo do valor será criado.
@@ -121,27 +117,34 @@ class UpdateUserOperation extends Operation
                     if (prop == "email")
                     {
                         newUserProps.push(new SqlLabel("email_approved", false))
-                        User!.EmailAproved = false
+                        emailChanged = true
                     }
 
                     if (prop == "username" && userDb["email_approved"] == false)
                         throw new Error("Para editar o username é necessário aprovar o email.")
 
                     if (prop == "active" || prop == "deleted")
-                        this.DetectUserDeactivationOrDeletion(prop, userInSql[prop], User!, userDb)
+                        this.DetectUserDeactivationOrDeletion(prop, userInSql[prop], this.User!, userDb)
                 }
             }
 
             if (newUserProps.length == 0)
                 throw new Error("Nenhuma edição realizada no usuário.")
 
-            const userPutQuery = `UPDATE users SET ${ this.BuildUserPutQuery(newUserProps) } WHERE id = ${ User!.Id }`
+            const userPutQuery = `UPDATE users SET ${ this.BuildUserPutQuery(newUserProps) } WHERE id = ${ this.User!.Id }`
 
             await DB_connection.query(userPutQuery)
-                .then(async () => {})
+                .then(() => {})
                 .catch(ex => {
                     throw new Error((ex as Error).message)
                 })
+
+            // Valida se o email foi mudado, se sim, captura as informações necessárias para a nova aprovação de email.
+            if (emailChanged)
+            {
+                const userEmailAlert = this.CaptureUserEmailAlert(userDb, newUserProps)
+                await new SendApprovalEmailOperation(userEmailAlert,DB_connection).PerformOperation()
+            }
         }
         catch (ex)
         {
@@ -196,6 +199,31 @@ class UpdateUserOperation extends Operation
         emailMessage += "no sistema."
 
         new EmailSender().Internal(EmailTitlesEnum.USER_DEACTIVATED, emailMessage)
+    }
+
+    private CaptureUserEmailAlert
+    (
+        userDb : IUserInSql,
+        newUserProps : SqlLabel[]
+    )
+    : User
+    {
+        let userName : string | null = null; let userUsername = null
+        newUserProps.forEach(prop => {
+            if (prop.ColumnName === "name") userName = prop.ColumnValue
+            if (prop.ColumnName === "username") userUsername = prop.ColumnValue
+        })
+        return new User(
+            {
+                "Id": this.User?.Id,
+                "Email": this.User!.Email,
+                "Name": IsUndNull(userName) ? userDb.username : userName,
+                "Username": IsUndNull(userUsername) ? userDb.username : userName
+            },
+            false,
+            false,
+            false
+        )
     }
 }
 

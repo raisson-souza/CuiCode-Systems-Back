@@ -282,6 +282,15 @@ class User extends Entity
                 Se não se está editando, logicamente está se criando, portanto, a prop existe e deve ser validada.
         */
     }
+
+    CheckUserValidity() : void
+    {
+        if (IsUndNull(this.Active) || IsUndNull(this.Deleted))
+            throw new Error("Usuário inapto para tal ação.")
+
+        if (this.Active === false || this.Deleted === true)
+            throw new Error("Usuário inapto para tal ação.")
+    }
 }
 
 export default User

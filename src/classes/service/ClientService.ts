@@ -35,8 +35,17 @@ abstract class ClientService extends Service
                     return new UserAuth(user, false, this.REQ.headers)
                 })
                 .catch(ex => {
-                    throw new Error(ex.message)
+                    if ((ex as Error).message === "Nenhum usuário encontrado.")
+                    {
+                        Send.NotFound(this.RES, "Usuário requeridor não encontrado.", this.Action)
+                        throw new Error("Usuário requeridor não encontrado.")
+                    }
+
+                    Send.Error(this.RES, (ex as Error).message, this.Action)
+                    throw new Error((ex as Error).message)
                 })
+
+        user.CheckUserValidity()
 
         user.CheckUserPermission(level)
 
@@ -65,7 +74,7 @@ abstract class ClientService extends Service
         const userIdInQuery = Number.parseInt(this.REQ.query.UserAuthId as string)
         if (!IsUndNull(userIdInQuery))
             return userIdInQuery
-
+        
         throw new Error("Usuário requeridor não encontrado na requisição.")
     }
 }
