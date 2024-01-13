@@ -13,6 +13,8 @@ import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 
 abstract class ClientService extends Service
 {
+    SameUserAuthAndUserToOperate : boolean
+
     constructor(req : Request, res : Response) { super(req, res) }
 
     abstract Operation() : void
@@ -20,11 +22,14 @@ abstract class ClientService extends Service
     /**
      * Collects UserAuthId info on request.
      * Requires call upon restricted level services.
+     * @sendHeaders Parâmetro especial para a classe ServerClientService
      */
     async AuthenticateRequestor
     (
         userIdToOperate : number | null = null,
         level : PermissionLevelEnum = PermissionLevelEnum.Member,
+        allowDifferentUserAuthAndUserToOperate : boolean = false,
+        sendHeaders : boolean = true
     )
     {
         const userAuthId = this.CheckUserAuthId()
@@ -37,11 +42,13 @@ abstract class ClientService extends Service
                 .catch(ex => {
                     if ((ex as Error).message === "Nenhum usuário encontrado.")
                     {
-                        Send.NotFound(this.RES, "Usuário requeridor não encontrado.", this.Action)
+                        if (sendHeaders)
+                            Send.NotFound(this.RES, "Usuário requeridor não encontrado.", this.Action)
                         throw new Error("Usuário requeridor não encontrado.")
                     }
 
-                    Send.Error(this.RES, (ex as Error).message, this.Action)
+                    if (sendHeaders)
+                        Send.Error(this.RES, (ex as Error).message, this.Action)
                     throw new Error((ex as Error).message)
                 })
 
@@ -53,29 +60,33 @@ abstract class ClientService extends Service
 
         if (!IsUndNull(userIdToOperate))
         {
-            if
-            (
-                this.USER_auth?.Id != userIdToOperate &&
-                this.USER_auth?.PermissionLevel?.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
-            )
+            if (this.USER_auth.Id != userIdToOperate)
             {
-                Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
-                throw new Error("Usuário não autorizado para tal ação.")
+                this.SameUserAuthAndUserToOperate = false
+                if
+                (
+                    this.USER_auth?.PermissionLevel?.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm) &&
+                    !allowDifferentUserAuthAndUserToOperate
+                )
+                {
+                    if (sendHeaders)
+                        Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
+                    throw new Error("Usuário não autorizado para tal ação.")
+                }
+                return
             }
+            this.SameUserAuthAndUserToOperate = true
         }
     }
 
     private CheckUserAuthId() : number
     {
-        const userIdInBody  = this.REQ.body.UserAuthId
-        if (!IsUndNull(userIdInBody))
-            return userIdInBody
+        const userAuthId = this.GetAutentications().UserAuthId
 
-        const userIdInQuery = Number.parseInt(this.REQ.query.UserAuthId as string)
-        if (!IsUndNull(userIdInQuery))
-            return userIdInQuery
-        
-        throw new Error("Usuário requeridor não encontrado na requisição.")
+        if (IsUndNull(userAuthId))
+            throw new Error("Usuário requeridor não encontrado na requisição.")
+
+        return Number.parseInt(userAuthId!)
     }
 }
 

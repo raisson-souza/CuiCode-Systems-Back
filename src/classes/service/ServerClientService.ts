@@ -4,33 +4,47 @@ import ClientService from "./ClientService"
 import ServerService from "./ServerService"
 import Service from "./base/Service"
 
-import IsUndNull from "../../functions/IsUndNull"
-
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 
 abstract class ServerClientService extends Service
 {
+    IsSystemRequestor : boolean
+    SameUserAuthAndUserToOperate : boolean
+
     constructor(req : Request, res : Response) { super(req, res) }
 
     abstract Operation() : void
 
     /**
-     * Upon call, if there is PermissionLevel, runs ClientService, otherwise runs ServerService.
-     * At all ServerClientService services, pass UserAuthPermissionLevel or null.
+     * Primeiramente tenta autenticar o sistema, caso não seja o sistema o requeridor, autenticará o usuário.
+     * @sendHeaders Parâmetro especial para a classe ServerClientService
      */
-    async AuthenticateRequestor(userIdToOperate : number | null = null, level : PermissionLevelEnum | null = PermissionLevelEnum.Member)
+    async AuthenticateRequestor
+    (
+        userIdToOperate : number | null = null,
+        level : PermissionLevelEnum = PermissionLevelEnum.Member,
+        allowDifferentUserAuthAndUserToOperate : boolean = false
+    )
     {
-        if (IsUndNull(level))
+        try
         {
             const serverServiceClass = ServerService
             serverServiceClass.prototype.REQ = this.REQ
-            return serverServiceClass.prototype.AuthenticateRequestor()
+            serverServiceClass.prototype.AuthenticateRequestor(null, null, false)
+            this.SameUserAuthAndUserToOperate = false
+            this.IsSystemRequestor = true
+            this.USER_auth = null
         }
-
-        const clientServiceClass = ClientService
-        clientServiceClass.prototype.REQ = this.REQ
-        clientServiceClass.prototype.DB_connection = this.DB_connection
-        return await clientServiceClass.prototype.AuthenticateRequestor(userIdToOperate, level!)
+        catch
+        {
+            this.IsSystemRequestor = false
+            const clientServiceClass = ClientService
+            clientServiceClass.prototype.REQ = this.REQ
+            clientServiceClass.prototype.DB_connection = this.DB_connection
+            await clientServiceClass.prototype.AuthenticateRequestor(userIdToOperate, level, allowDifferentUserAuthAndUserToOperate, false)
+            this.USER_auth = clientServiceClass.prototype.USER_auth
+            this.SameUserAuthAndUserToOperate = clientServiceClass.prototype.SameUserAuthAndUserToOperate
+        }
     }
 }
 

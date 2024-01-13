@@ -11,15 +11,16 @@ async function QueryUser
 (
     db_connection : Client,
     userId : number | null,
+    nonPrivateQuery : boolean = false
 )
 : Promise<User>
 {
     try
     {
         if (IsUndNull(userId))
-            throw new Error("Id de usuário deve ser informado.");
+            throw new Error("Id de usuário deve ser informado.")
 
-        const query = `SELECT * FROM users WHERE id = ${ userId }`;
+        const query = BuildQuery(nonPrivateQuery, userId!)
 
         return await db_connection.query(query)
             .then(result => {
@@ -38,6 +39,13 @@ async function QueryUser
     {
         throw new Error((ex as Error).message);
     }
+}
+
+function BuildQuery(nonPrivateQuery : boolean, userId : number)
+{
+    return !nonPrivateQuery
+        ? `SELECT * FROM users WHERE id = ${ userId }`
+        : `SELECT id, username, birthdate, sex, photo_base_64, permission_level, created_date, active, deleted FROM users WHERE id = ${ userId }`
 }
 
 export default QueryUser

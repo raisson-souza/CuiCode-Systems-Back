@@ -8,6 +8,8 @@ import EncryptPassword from "../../functions/EncryptPassword"
 import IsUndNull from "../../functions/IsUndNull"
 import Send from "../../functions/system/Send"
 
+import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
+
 abstract class ServerService extends Service
 {
     constructor(req : Request, res : Response) { super(req, res) }
@@ -18,17 +20,21 @@ abstract class ServerService extends Service
      * Performs system authentication.
      * Needs to be called.
      */
-    AuthenticateRequestor()
+    AuthenticateRequestor
+    (
+        _ : number | null = null,
+        __ : PermissionLevelEnum | null = null,
+        sendHeaders : boolean = true
+    )
     {
-        const key : string = this.REQ.method === "GET"
-            ? this.REQ.query["SystemKey"]
-            : this.REQ.body["SystemKey"]
+        const key = this.GetAutentications().SystemKey
 
-        const encryptedKey = EncryptPassword(IsUndNull(key) ? "" : key)
+        const encryptedKey = EncryptPassword(IsUndNull(key) ? "" : key!)
 
         if (encryptedKey != Env.SystemUserKey)
         {
-            Send.Unauthorized(this.RES, "Sistema não autenticado.", this.Action)
+            if (sendHeaders)
+                Send.Unauthorized(this.RES, "Sistema não autenticado.", this.Action)
             throw new Error("Sistema não autenticado.")
         }
 

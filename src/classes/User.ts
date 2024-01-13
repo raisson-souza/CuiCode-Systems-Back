@@ -68,7 +68,7 @@ class User extends Entity
         this.PhotoBase64 = body[!isSQL ? "PhotoBase64" : "photo_base_64"]
         this.PermissionLevel = this.ConvertLevelEnum(body, isSQL)
         this.Sex = this.ConvertSexEnum(body, isSQL)
-        this.EmailAproved = body[!isSQL ? "EmailAproved" : "email_aproved"]
+        this.EmailAproved = body[!isSQL ? "EmailAproved" : "email_approved"]
         this.Active = body[!isSQL ? "Active" : "active"]
         this.CreatedDate = body[!isSQL ? "CreatedDate" : "created_date"]
         this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
