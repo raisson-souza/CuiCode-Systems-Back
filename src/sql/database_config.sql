@@ -1,5 +1,0 @@
-CREATE SCHEMA production
-
-CREATE SCHEMA staging
-
-CREATE SCHEMA testing

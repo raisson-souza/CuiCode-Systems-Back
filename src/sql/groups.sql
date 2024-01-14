@@ -1,5 +1,3 @@
--- CUIDAR SCHEMA
-
 CREATE TABLE IF NOT EXISTS "groups"(
 	id SERIAL,
 	"name" varchar(100),
