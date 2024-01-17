@@ -1,16 +1,16 @@
 import PermissionLevel from "../../enums/PermissionLevelEnum"
 
-function PermissionLevelToNumber(permissionLevel : PermissionLevel | string)
+function PermissionLevelToNumber(permissionLevel : PermissionLevel)
 {
     switch (permissionLevel)
     {
-        case "Root":
+        case PermissionLevel.Root:
             return 4
-        case "Adm":
+        case PermissionLevel.Adm:
             return 3
-        case "Member":
+        case PermissionLevel.Member:
             return 2
-        case "Guest":
+        case PermissionLevel.Guest:
             return 1
         default:
             return 1

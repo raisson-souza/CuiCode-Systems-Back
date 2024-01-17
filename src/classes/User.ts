@@ -5,7 +5,6 @@ import IUserInSql from "../interfaces/IUserInSql"
 
 import FormatIdNumber from "../functions/FormatIdNumber"
 import IsUndNull from "../functions/IsUndNull"
-import PermissionLevelToNumber from "../functions/enums/PermissionLevelToNumber"
 
 import PermissionLevel from "../enums/PermissionLevelEnum"
 import Sex from "../enums/SexEnum"
@@ -29,6 +28,11 @@ class User extends Entity
     PermissionLevel: Label | null
     Sex: Label | null
     EmailAproved : boolean
+
+    // Informações de registro
+    CreatedDate : Date
+    Modified : Date | null
+    ModifiedBy : number | null
 
     constructor(
         body : any,
@@ -72,6 +76,8 @@ class User extends Entity
         this.Active = body[!isSQL ? "Active" : "active"]
         this.CreatedDate = body[!isSQL ? "CreatedDate" : "created_date"]
         this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
+        this.Modified = body[!isSQL ? "Modified" : "modified"]
+        this.ModifiedBy = body[!isSQL ? "ModifiedBy" : "modified_by"]
     }
 
     /**
@@ -235,9 +241,7 @@ class User extends Entity
         if (IsUndNull(this.PermissionLevel?.Value))
             throw new Error("Nível de permissão de usuário não encontrado.")
 
-        const userLevel = PermissionLevelToNumber(PermissionLevel[this.PermissionLevel?.Value!])
-
-        if (userLevel < levelRequired)
+        if (this.PermissionLevel?.Value! < levelRequired)
             throw new Error("Ação não autorizada para o usuário.")
     }
 

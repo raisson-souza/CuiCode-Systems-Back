@@ -15,9 +15,12 @@ CREATE TABLE IF NOT EXISTS users(
 	created_date timestamp NOT NULL DEFAULT now(),
 	active boolean NOT NULL DEFAULT TRUE,
 	deleted boolean NOT NULL DEFAULT FALSE,
+    modified timestamp DEFAULT NULL,
+    modified_by int DEFAULT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (sex) REFERENCES sexs (id),
-	FOREIGN KEY (permission_level) REFERENCES permission_levels (id)
+	FOREIGN KEY (permission_level) REFERENCES permission_levels (id),
+    FOREIGN KEY (modified_by) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS permission_levels(
@@ -40,6 +43,16 @@ INSERT INTO sexs VALUES
 (1, 'Masculino'),
 (2, 'Feminino'),
 (3, 'Outro');
+
+CREATE TABLE users_logs(  
+    id SERIAL,
+    user_id int NOT NULL,
+    "change" jsonb NOT NULL,
+    "date" timestamp DEFAULT NOW(),
+    adm_change BOOL DEFAULT FALSE,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+)
 
 /*
 CHAT

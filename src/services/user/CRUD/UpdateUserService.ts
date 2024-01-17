@@ -1,10 +1,13 @@
+import { Client } from "pg"
+
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
+import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
 import ValidateUser from "../utilities/ValidateUser"
 
+import { EntityLog } from "../../../DTOs/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
 import Operation from "../../../classes/Operation"
-import SqlLabel from "../../../classes/SqlLabel"
 import User from "../../../classes/User"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
@@ -54,7 +57,7 @@ class UpdateUserService extends ClientService
 
             await ValidateUser(DB_connection, user, false)
 
-            await Promise.resolve(new UpdateUserOperation(user, DB_connection).PerformOperation())
+            await Promise.resolve(new UpdateUserOperation(user, DB_connection, this.SameUserAuthAndUserToOperate, this.USER_auth?.Id!).PerformOperation())
                 .then(() => {
                     Send.Ok(RES, `Usuário editado com sucesso.`, Action)
                 })
@@ -75,6 +78,22 @@ class UpdateUserService extends ClientService
 
 class UpdateUserOperation extends Operation
 {
+    SameUserAuthAndUserToOperate : boolean
+    ModifiedById : number
+
+    constructor
+    (
+        user : User | null,
+        db_connection : Client,
+        sameUserAuthAndUserToOperate : boolean,
+        modifiedById : number
+    )
+    {
+        super(user, db_connection)
+        this.SameUserAuthAndUserToOperate = sameUserAuthAndUserToOperate
+        this.ModifiedById = modifiedById
+    }
+
     async PerformOperation()
     {
         try
@@ -101,22 +120,22 @@ class UpdateUserOperation extends Operation
                     throw new Error((ex as Error).message)
                 })
 
-            let newUserProps : SqlLabel[] = []
+            let userLog : EntityLog[] = []
 
             let emailChanged = false
 
             // Serão comparadas as diferenças entre o usuário do banco com as novas alterações.
-            // Um objeto contendo o nome da coluna, o valor e o tipo do valor será criado.
             for (let prop in userDb)
             {
-                if (userDb[prop] != userInSql[prop] && prop != "id" && !IsUndNull(userInSql[prop]))
+                //  Valida se a prop do usuário do banco é diferente da prop do model do usuário, eliminando props não atualizadas (indefinidas)
+                if (userDb[prop] != userInSql[prop] && !IsUndNull(userInSql[prop]))
                 {
-                    newUserProps.push(new SqlLabel(prop, userInSql[prop]))
+                    userLog.push(new EntityLog(prop, userDb[prop], userInSql[prop]))
 
                     // Se um dos parâmetros do usuário a ser editado é o email, o novo email deve ser validado.
                     if (prop == "email")
                     {
-                        newUserProps.push(new SqlLabel("email_approved", false))
+                        userLog.push(new EntityLog("email_approved", userDb["email_approved"], false))
                         emailChanged = true
                     }
 
@@ -128,12 +147,12 @@ class UpdateUserOperation extends Operation
                 }
             }
 
-            if (newUserProps.length == 0)
+            if (userLog.length == 0)
                 throw new Error("Nenhuma edição realizada no usuário.")
 
-            const userPutQuery = `UPDATE users SET ${ this.BuildUserPutQuery(newUserProps) } WHERE id = ${ this.User!.Id }`
+            const query = `UPDATE users SET ${ this.BuildUserPutQuery(userLog) } WHERE id = ${ this.User!.Id }`
 
-            await DB_connection.query(userPutQuery)
+            await DB_connection.query(query)
                 .then(() => {})
                 .catch(ex => {
                     throw new Error((ex as Error).message)
@@ -141,10 +160,9 @@ class UpdateUserOperation extends Operation
 
             // Valida se o email foi mudado, se sim, captura as informações necessárias para a nova aprovação de email.
             if (emailChanged)
-            {
-                const userEmailAlert = this.CaptureUserEmailAlert(userDb, newUserProps)
-                await new SendApprovalEmailOperation(userEmailAlert,DB_connection).PerformOperation()
-            }
+                this.HandleEmailChange(userDb, userLog)
+
+            await new SetUserLogOperation(this.User, DB_connection, userLog, !this.SameUserAuthAndUserToOperate).PerformOperation()
         }
         catch (ex)
         {
@@ -152,36 +170,36 @@ class UpdateUserOperation extends Operation
         }
     }
 
-    private BuildUserPutQuery(newPropsList : SqlLabel[]) : string
+    /**
+     * Constrói e retorna a query de atualização do usuário baseado nos novos valores.
+     */
+    private BuildUserPutQuery(userLog : EntityLog[]) : string
     {
-        let setQuery = ""
+        let query = ""
 
-        newPropsList.forEach((prop, i) => {
-            if (!IsUndNull(prop.ColumnValue))
-            {
-                setQuery += `${ prop.ColumnName } = ${ prop.ParsePropNameToSql() }`
-                setQuery += (i < newPropsList.length - 1) ? ", " : ""
-            }
+        userLog.forEach(prop => {
+            query += `"${ prop.NewValue.SQLValue.ColumnName }" = ${ prop.NewValue.SQLValue.ParsePropNameToSql() },`
         })
 
-        return setQuery
+        query += `modified = now(), modified_by = ${ this.ModifiedById }`
+
+        return query
     }
 
     /**
      * Envia email de registro ao sistema em caso de desativação ou exclusão de usuário.
-     * @param action Ação (desativação / exclusão).
-     * @param user Usuário recém editado (novo).
-     * @param userDb Usuário no banco (antigo).
+     * @param action Excluido verdadeiro > Excluido | Excluido falso > Restaurado | Ativado verdadeiro > Ativado | Ativado falso > Desativado
      */
     private DetectUserDeactivationOrDeletion
     (
         actionName : string,
         action : boolean,
-        user : User,
+        userModel : User,
         userDb : IUserInSql
     ) : void
     {
-        let emailMessage = `Usuário ${ IsUndNull(user.Name) ? userDb["name"] : user.Name } (${ user.GenerateUserKey() }) foi `
+        const userDbConverted = new User(userDb, true)
+        let emailMessage = `Usuário (${ userModel.GenerateUserKey() } / ${ userDbConverted.GenerateUserKey() }) foi `
 
         if (actionName == "active")
         {
@@ -201,29 +219,24 @@ class UpdateUserOperation extends Operation
         new EmailSender().Internal(EmailTitlesEnum.USER_DEACTIVATED, emailMessage)
     }
 
-    private CaptureUserEmailAlert
+    /**
+     * Envia um email de aprovação de email para o novo email do usuário atualizado.
+     */
+    private async HandleEmailChange
     (
         userDb : IUserInSql,
-        newUserProps : SqlLabel[]
+        userLog : EntityLog[]
     )
-    : User
     {
-        let userName : string | null = null; let userUsername = null
-        newUserProps.forEach(prop => {
-            if (prop.ColumnName === "name") userName = prop.ColumnValue
-            if (prop.ColumnName === "username") userUsername = prop.ColumnValue
-        })
-        return new User(
+        const userModelToEmailChange = new User(
             {
-                "Id": this.User?.Id,
-                "Email": this.User!.Email,
-                "Name": IsUndNull(userName) ? userDb.username : userName,
-                "Username": IsUndNull(userUsername) ? userDb.username : userName
-            },
-            false,
-            false,
-            false
+                "Id": userDb["id"],
+                "Email": EntityLog.GetProperyValue("email", userLog).NewValue,
+                "Name": EntityLog.GetProperyValue("name", userLog).NewValue,
+                "Username": EntityLog.GetProperyValue("username", userLog).NewValue
+            }
         )
+        await new SendApprovalEmailOperation(userModelToEmailChange, this.DB_connection).PerformOperation()
     }
 }
 

@@ -65,15 +65,13 @@ abstract class ClientService extends Service
                 this.SameUserAuthAndUserToOperate = false
                 if
                 (
-                    this.USER_auth?.PermissionLevel?.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm) &&
-                    !allowDifferentUserAuthAndUserToOperate
+                    allowDifferentUserAuthAndUserToOperate ||
+                    this.USER_auth?.PermissionLevel?.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
                 )
-                {
-                    if (sendHeaders)
-                        Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
-                    throw new Error("Usuário não autorizado para tal ação.")
-                }
-                return
+                    return
+                if (sendHeaders)
+                    Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
+                throw new Error("Usuário não autorizado para tal ação.")
             }
             this.SameUserAuthAndUserToOperate = true
         }
