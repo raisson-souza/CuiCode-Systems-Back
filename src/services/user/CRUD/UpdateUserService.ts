@@ -5,7 +5,7 @@ import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
 import ValidateUser from "../utilities/ValidateUser"
 
-import { EntityLog } from "../../../DTOs/EntityLog"
+import { EntityLog } from "../../../classes/DTOs/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
 import Operation from "../../../classes/Operation"
 import User from "../../../classes/User"

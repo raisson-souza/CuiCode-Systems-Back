@@ -1,4 +1,4 @@
-import SqlLabel from "../classes/SqlLabel"
+import SqlLabel from "../SqlLabel"
 
 class EntityLog
 {
