@@ -17,7 +17,10 @@ abstract class ServerClientService extends Service
 
     /**
      * Primeiramente tenta autenticar o sistema, caso não seja o sistema o requeridor, autenticará o usuário.
-     * @sendHeaders Parâmetro especial para a classe ServerClientService
+     * @sendHeaders Parâmetro especial para a classe ServerClientService [Nulo]
+     * @userIdToOperate ID do usuário a ser operado (Valida se é diferente daquele que requer a ação) [Nulo]
+     * @level Nível mínimo permitido para o usuário requeridor realizar a ação [Membro]
+     * @allowDifferentUserAuthAndUserToOperate Permite que usuários requeridores realizem ações sobre outros sem serem adm [Falso]
      */
     async AuthenticateRequestor
     (

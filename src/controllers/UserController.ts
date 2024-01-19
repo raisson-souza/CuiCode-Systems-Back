@@ -2,6 +2,7 @@ import { Express } from "express"
 
 import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
+import GetUserLogsService from "../services/user/services/log/GetUserLogsService"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
@@ -42,6 +43,10 @@ function UsersController(app : Express)
 
     app.post('/email/approval/send', AuthMiddleware, (req, res) => {
         new SendManualEmailApprovalService(req, res).Operation()
+    })
+
+    app.get('/user/logs', AuthMiddleware, (req, res) => {
+        new GetUserLogsService(req, res).Operation()
     })
 }
 
