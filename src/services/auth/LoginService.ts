@@ -42,7 +42,7 @@ class LoginService extends ClientService
                 .then(user => { return user })
                 .catch(ex => { throw new Error(ex) })
 
-            if (this.USER_auth?.Password != userDb.Password)
+            if (this.USER_auth!.Password != userDb.Password)
                 throw new Error("Senha de usuário incorreta.")
 
             const token = sign(
@@ -69,7 +69,7 @@ class LoginService extends ClientService
     {
         try
         {
-            let query = `SELECT * FROM users WHERE email = '${ this.USER_auth?.Email }'`
+            let query = `SELECT * FROM users WHERE email = '${ this.USER_auth!.Email }'`
 
             return await this.DB_connection.query(query)
                 .then(result => {

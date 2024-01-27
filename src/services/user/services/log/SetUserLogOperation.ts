@@ -24,7 +24,7 @@ class SetUserLogOperation extends Operation
 
     async PerformOperation()
     {
-        const query = `INSERT INTO users_logs ("user_id", "change", "adm_change") VALUES (${ this.User?.Id }, '${ EntityLog.ConvertJsonToString(this.UserLog) }', '${ this.AdmChange }')`
+        const query = `INSERT INTO users_logs ("user_id", "change", "adm_change") VALUES (${ this.User!.Id }, '${ EntityLog.ConvertJsonToString(this.UserLog) }', '${ this.AdmChange }')`
 
         await this.DB_connection.query(query)
             .then(() => {})

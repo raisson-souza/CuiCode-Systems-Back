@@ -39,7 +39,7 @@ async function AuthMiddleware
             if (IsUndNull(authorization))
                 throw new Error("Usuário não autenticado.")
 
-            const token = authorization?.split(" ")[1]!
+            const token = authorization!.split(" ")[1]!
 
             const decoded = verify(token,  Env.JWT_key)
             const id = (decoded as any)["id"]

@@ -87,8 +87,8 @@ class GetUserService extends ServerClientService
         if
         (
             this.SameUserAuthAndUserToOperate ||
-            this.USER_auth?.PermissionLevel?.Value == PermissionLevelEnum.Root ||
-            this.USER_auth?.PermissionLevel?.Value == PermissionLevelEnum.Adm
+            this.USER_auth!.PermissionLevel!.Value == PermissionLevelEnum.Root ||
+            this.USER_auth!.PermissionLevel!.Value == PermissionLevelEnum.Adm
         )
             return false
 

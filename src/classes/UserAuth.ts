@@ -33,7 +33,7 @@ class UserAuth extends User
             if (IsUndNull(authorization))
                 this.Token = null
 
-            const token = authorization?.split(" ")[1]!
+            const token = authorization!.split(" ")[1]!
             this.Token = token
         }
         catch

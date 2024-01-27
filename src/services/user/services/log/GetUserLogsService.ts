@@ -139,18 +139,18 @@ class GetUserLogsOperation extends Operation
 
     private BuildQuery()
     {
-        const baseQuery = `SELECT id, "change", "date", "adm_change" FROM users_logs WHERE user_id = ${ this.User?.Id } `
+        const baseQuery = `SELECT id, "change", "date", "adm_change" FROM users_logs WHERE user_id = ${ this.User!.Id } `
 
         if (IsUndNull(this.StartDate) && IsUndNull(this.FinalDate))
             return baseQuery
 
         else if (!IsUndNull(this.StartDate))
-            return baseQuery + `AND "date" > '${ this.StartDate?.toSqlComparison() }'`
+            return baseQuery + `AND "date" > '${ this.StartDate!.toSqlComparison() }'`
 
         else if (!IsUndNull(this.FinalDate))
-            return baseQuery + `AND "date" < '${ this.FinalDate?.toSqlComparison() }'`
+            return baseQuery + `AND "date" < '${ this.FinalDate!.toSqlComparison() }'`
 
-        return baseQuery + `AND "date" > '${ this.StartDate?.toSqlComparison() }' AND "date" < '${ this.FinalDate?.toSqlComparison() }'`
+        return baseQuery + `AND "date" > '${ this.StartDate!.toSqlComparison() }' AND "date" < '${ this.FinalDate!.toSqlComparison() }'`
     }
 }
 

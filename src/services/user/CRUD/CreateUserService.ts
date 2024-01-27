@@ -101,7 +101,7 @@ class CreateUserOperation extends Operation
                     '${ User!.Password }',
                     '${ User!.PasswordHint }',
                     '${ User!.PhotoBase64 }',
-                    ${ User!.Sex?.Value }
+                    ${ User!.Sex!.Value }
                 )
             `
 

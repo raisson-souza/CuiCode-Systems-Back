@@ -238,10 +238,10 @@ class User extends Entity
      */
     CheckUserPermission(levelRequired : PermissionLevel)
     {
-        if (IsUndNull(this.PermissionLevel?.Value))
+        if (IsUndNull(this.PermissionLevel!.Value))
             throw new Error("Nível de permissão de usuário não encontrado.")
 
-        if (this.PermissionLevel?.Value! < levelRequired)
+        if (this.PermissionLevel!.Value! < levelRequired)
             throw new Error("Ação não autorizada para o usuário.")
     }
 

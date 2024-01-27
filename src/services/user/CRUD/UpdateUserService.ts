@@ -60,7 +60,7 @@ class UpdateUserService extends ClientService
 
             await ValidateUser(DB_connection, user, false)
 
-            await Promise.resolve(new UpdateUserOperation(user, DB_connection, this.SameUserAuthAndUserToOperate, this.USER_auth?.Id!).PerformOperation())
+            await Promise.resolve(new UpdateUserOperation(user, DB_connection, this.SameUserAuthAndUserToOperate, this.USER_auth!.Id!).PerformOperation())
                 .then(() => {
                     Send.Ok(RES, `Usuário editado com sucesso.`, Action)
                 })
