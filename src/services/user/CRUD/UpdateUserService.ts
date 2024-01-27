@@ -26,8 +26,10 @@ class UpdateUserService extends ClientService
 {
     Action = "Edição de usuário."
 
-    CheckBody(body : any) : User
+    CheckBody() : User
     {
+        const body = this.REQ.body as any
+
         if (IsUndNull(body))
             throw new Error("Corpo da requisição inválido.")
 
@@ -52,7 +54,7 @@ class UpdateUserService extends ClientService
                 Action
             } = this
 
-            const user = this.CheckBody(REQ.body)
+            const user = this.CheckBody()
 
             await this.AuthenticateRequestor()
 

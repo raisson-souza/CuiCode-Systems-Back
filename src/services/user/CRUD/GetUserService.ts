@@ -16,8 +16,10 @@ class GetUserService extends ServerClientService
 
     CheckBody() { throw new Error("Method not implemented.") }
 
-    CheckQuery(query : any) : number
+    CheckQuery() : number
     {
+        const query = this.REQ.query as any
+
         if (IsUndNull(query.UserId))
             throw new Error("Id de usuário não encontrado na URL.");
 
@@ -40,7 +42,7 @@ class GetUserService extends ServerClientService
                 Action
             } = this
 
-            const userId = this.CheckQuery(REQ.query)
+            const userId = this.CheckQuery()
 
             this.ValidateRequestor(PermissionLevelEnum.Member, userId, true)
 

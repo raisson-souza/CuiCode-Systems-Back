@@ -12,9 +12,11 @@ class ApproveUserEmailService extends ClientService
 
     CheckBody() { throw new Error("Method not implemented.") }
 
-    CheckQuery(query : any)
+    CheckQuery()
     : { email : string, userId : number }
     {
+        const query = this.REQ.query as any
+
         if (IsUndNull(query.email))
             throw new Error("Email de usuário não encontrado na requisição.")
 
@@ -35,7 +37,7 @@ class ApproveUserEmailService extends ClientService
                 Action
             } = this
 
-            const userInfoApproval = this.CheckQuery(REQ.query)
+            const userInfoApproval = this.CheckQuery()
 
             const {
                 email,

@@ -16,7 +16,7 @@ class GetUserLogsService extends ServerClientService
 
     CheckBody() { throw new Error("Method not implemented.") }
 
-    CheckQuery(query : any)
+    CheckQuery()
     : {
         UserId : number,
         StartDate : DateCustom | null,
@@ -25,14 +25,16 @@ class GetUserLogsService extends ServerClientService
     {
         try
         {
+            const query = this.REQ.query as any
+
             let startDate = null; let finalDate = null;
 
             if (IsUndNull(query.userId))
                 throw new Error("ID de usuário não encontrado.")
-    
+
             if (!IsUndNull(query.startDate))
                 startDate = new DateCustom(query.startDate)
-    
+
             if (!IsUndNull(query.finalDate))
                 finalDate = new DateCustom(query.finalDate)
 
@@ -61,7 +63,7 @@ class GetUserLogsService extends ServerClientService
 
             await this.AuthenticateRequestor()
 
-            const filterProps = this.CheckQuery(REQ.query)
+            const filterProps = this.CheckQuery()
 
             const user = new User({ Id: filterProps.UserId })
 

@@ -14,8 +14,10 @@ class ListUsersService extends ServerService
 
     CheckBody() { throw new Error("Method not implemented.") }
 
-    CheckQuery(query : any) : Array<string>
+    CheckQuery() : Array<string>
     {
+        const query = this.REQ.query as any
+
         if (IsUndNull(query.RequiredInfo))
             throw new Error("Informações requeridas dos usuários não encontradas na URL.")
 
@@ -40,7 +42,7 @@ class ListUsersService extends ServerService
             this.AuthenticateRequestor()
 
             // O FRONT-END DEVE ENVIAR AS INFORMAÇÕES JÁ CONVERTIDAS PARA OS MESMOS CAMPOS DO BANCO
-            const userRequiredInfo = this.CheckQuery(REQ.query)
+            const userRequiredInfo = this.CheckQuery()
 
             await Promise.resolve(QueryUsersInfo(DB_connection, userRequiredInfo))
                 .then(userInfos => {

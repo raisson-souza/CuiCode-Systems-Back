@@ -22,8 +22,10 @@ class CreateUserService extends ServerService
     // A criação de usuário não necessita de um usuário requeridor.
     Action : string = "Criação de Usuário."
 
-    CheckBody(body : any) : User
+    CheckBody() : User
     {
+        const body = this.REQ.body as any
+
         if (IsUndNull(body))
             throw new Error("Corpo da requisição inválido.")
 
@@ -43,7 +45,7 @@ class CreateUserService extends ServerService
                 Action
             } = this
 
-            const user = this.CheckBody(REQ.body)
+            const user = this.CheckBody()
 
             await Promise.resolve(ValidateUser(DB_connection, user, true))
                 .then(async () => {

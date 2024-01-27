@@ -33,9 +33,9 @@ abstract class Service implements IService
         this.PerformConnection()
     }
 
-    abstract CheckBody(_ : any) : any
+    abstract CheckBody() : any
     
-    abstract CheckQuery(_ : any) : any
+    abstract CheckQuery() : any
     
     abstract Operation() : void
 
