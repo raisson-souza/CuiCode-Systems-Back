@@ -60,6 +60,8 @@ class UpdateUserService extends ClientService
 
             this.ValidateRequestor(PermissionLevelEnum.Member, user.Id)
 
+            this.ValidateUpdate(user)
+
             await ValidateUser(DB_connection, user, false)
 
             await Promise.resolve(new UpdateUserOperation(user, DB_connection, this.SameUserAuthAndUserToOperate, this.USER_auth!.Id!).PerformOperation())
@@ -77,6 +79,34 @@ class UpdateUserService extends ClientService
         finally
         {
             this.DB_connection.end()
+        }
+    }
+
+    private ValidateUpdate(newUser : User)
+    {
+        if
+        (
+            !IsUndNull(newUser.EmailAproved) ||
+            !IsUndNull(newUser.Created) ||
+            !IsUndNull(newUser.Active) ||
+            !IsUndNull(newUser.Deleted) ||
+            !IsUndNull(newUser.Modified) ||
+            !IsUndNull(newUser.ModifiedBy)
+        )
+            throw new Error("Uma ou mais propriedades não podem ser editadas.")
+
+        if (!IsUndNull(newUser.PermissionLevel))
+        {
+            const newLevel = newUser.PermissionLevel!.Value
+
+            if (newLevel === 4)
+                throw new Error("Um usuário não pode se tornar ROOT.")
+
+            if (newLevel === 1)
+                throw new Error("Um usuário não pode se tornar convidado.")
+
+            if (newLevel === 2 || newLevel === 3)
+                this.USER_auth!.CheckUserPermission(PermissionLevelEnum.Root)
         }
     }
 }
