@@ -2,7 +2,7 @@ interface IEntity
 {
     Id : number
     Active : boolean
-    CreatedDate : Date
+    Created : Date
     Deleted : boolean
 }
 

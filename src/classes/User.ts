@@ -29,11 +29,6 @@ class User extends Entity
     Sex: Label | null
     EmailAproved : boolean
 
-    // Informações de registro
-    CreatedDate : Date
-    Modified : Date | null
-    ModifiedBy : number | null
-
     constructor(
         body : any,
         isBodySQL = false,
@@ -74,7 +69,7 @@ class User extends Entity
         this.Sex = this.ConvertSexEnum(body, isSQL)
         this.EmailAproved = body[!isSQL ? "EmailAproved" : "email_approved"]
         this.Active = body[!isSQL ? "Active" : "active"]
-        this.CreatedDate = body[!isSQL ? "CreatedDate" : "created_date"]
+        this.Created = body[!isSQL ? "Created" : "created"]
         this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
         this.Modified = body[!isSQL ? "Modified" : "modified"]
         this.ModifiedBy = body[!isSQL ? "ModifiedBy" : "modified_by"]
@@ -262,7 +257,7 @@ class User extends Entity
             "sex": this.Sex,
             "email_approved" : this.EmailAproved,
             "active": this.Active,
-            "created_date": this.CreatedDate,
+            "created": this.Created,
             "deleted": this.Deleted
         }
 

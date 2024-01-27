@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users(
 	email_approved bool DEFAULT FALSE,
 	photo_base_64 TEXT DEFAULT NULL,
 	permission_level int NOT NULL DEFAULT 2,
-	created_date timestamp NOT NULL DEFAULT now(),
+	created timestamp NOT NULL DEFAULT now(),
 	active boolean NOT NULL DEFAULT TRUE,
 	deleted boolean NOT NULL DEFAULT FALSE,
     modified timestamp DEFAULT NULL,

@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "groups"(
 	"name" varchar(100),
 	creator_id int,
 	"type" int,
-	created_date DATE,
+	created DATE,
 	active boolean,
 	deleted_date DATE,
 	deleted DATE,

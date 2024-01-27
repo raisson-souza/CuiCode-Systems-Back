@@ -45,7 +45,7 @@ function BuildQuery(nonPrivateQuery : boolean, userId : number)
 {
     return !nonPrivateQuery
         ? `SELECT * FROM users WHERE id = ${ userId }`
-        : `SELECT id, username, birthdate, sex, photo_base_64, permission_level, created_date, active, deleted FROM users WHERE id = ${ userId }`
+        : `SELECT id, username, birthdate, sex, photo_base_64, permission_level, created, active, deleted FROM users WHERE id = ${ userId }`
 }
 
 export default QueryUser
