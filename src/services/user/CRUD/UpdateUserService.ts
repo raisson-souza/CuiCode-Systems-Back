@@ -17,6 +17,7 @@ import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
 
 import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
+import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
 
 /**
  * Updates a user
@@ -53,7 +54,9 @@ class UpdateUserService extends ClientService
 
             const user = this.CheckBody(REQ.body)
 
-            await this.AuthenticateRequestor(user.Id)
+            await this.AuthenticateRequestor()
+
+            this.ValidateRequestor(PermissionLevelEnum.Member, user.Id)
 
             await ValidateUser(DB_connection, user, false)
 

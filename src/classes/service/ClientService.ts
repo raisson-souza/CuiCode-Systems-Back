@@ -1,5 +1,3 @@
-import { Request, Response } from "express"
-
 import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
@@ -15,22 +13,13 @@ abstract class ClientService extends Service
 {
     SameUserAuthAndUserToOperate : boolean
 
-    constructor(req : Request, res : Response) { super(req, res) }
-
     abstract Operation() : void
 
     /**
-     * Collects UserAuthId info on request.
-     * Requires call upon restricted level services.
-     * @sendHeaders Parâmetro especial para a classe ServerClientService
+     * Realiza a autenticação do usuário.
+     * É necessário ser chamado em fluxos que exigem autenticação.
      */
-    async AuthenticateRequestor
-    (
-        userIdToOperate : number | null = null,
-        level : PermissionLevelEnum = PermissionLevelEnum.Member,
-        allowDifferentUserAuthAndUserToOperate : boolean = false,
-        sendHeaders : boolean = true
-    )
+    async AuthenticateRequestor()
     {
         const userAuthId = this.CheckUserAuthId()
 
@@ -42,35 +31,42 @@ abstract class ClientService extends Service
                 .catch(ex => {
                     if ((ex as Error).message === "Nenhum usuário encontrado.")
                     {
-                        if (sendHeaders)
-                            Send.NotFound(this.RES, "Usuário requeridor não encontrado.", this.Action)
+                        Send.NotFound(this.RES, "Usuário requeridor não encontrado.", this.Action)
                         throw new Error("Usuário requeridor não encontrado.")
                     }
 
-                    if (sendHeaders)
-                        Send.Error(this.RES, (ex as Error).message, this.Action)
                     throw new Error((ex as Error).message)
                 })
 
         user.CheckUserValidity()
 
-        user.CheckUserPermission(level)
-
         this.USER_auth = user
+    }
+
+    /**
+     * Realiza a validação do usuário autenticado.
+     */
+    ValidateRequestor
+    (
+        level : PermissionLevelEnum = PermissionLevelEnum.Member,
+        userIdToOperate : number | null = null,
+        allowDifferentUserAuthAndUserToOperate : boolean = false
+    )
+    {
+        this.USER_auth!.CheckUserPermission(level)
 
         if (!IsUndNull(userIdToOperate))
         {
-            if (this.USER_auth.Id != userIdToOperate)
+            if (this.USER_auth!.Id != userIdToOperate)
             {
                 this.SameUserAuthAndUserToOperate = false
                 if
                 (
                     allowDifferentUserAuthAndUserToOperate ||
-                    this.USER_auth?.PermissionLevel?.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
+                    this.USER_auth!.PermissionLevel!.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
                 )
                     return
-                if (sendHeaders)
-                    Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
+                Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
                 throw new Error("Usuário não autorizado para tal ação.")
             }
             this.SameUserAuthAndUserToOperate = true

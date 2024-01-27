@@ -59,11 +59,13 @@ class GetUserLogsService extends ServerClientService
                 Action
             } = this
 
+            await this.AuthenticateRequestor()
+
             const filterProps = this.CheckQuery(REQ.query)
 
             const user = new User({ Id: filterProps.UserId })
 
-            await this.AuthenticateRequestor(user.Id, PermissionLevelEnum.Adm)
+            this.ValidateRequestor(PermissionLevelEnum.Member, user.Id, true)
 
             await Promise.resolve(new GetUserLogsOperation(user, DB_connection, filterProps.StartDate, filterProps.FinalDate).PerformOperation())
                 .then(result => {

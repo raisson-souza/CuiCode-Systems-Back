@@ -10,8 +10,6 @@ import IService from "../../../interfaces/IService"
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
 
-import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
-
 /**
  * Contains all necessary params for all endpoints
  */
@@ -21,7 +19,7 @@ abstract class Service implements IService
     RES : Response
     DB_connection : Client
     USER_auth : UserAuth | null
-    Action : string = ""
+    Action : string
 
     constructor
     (
@@ -36,12 +34,14 @@ abstract class Service implements IService
     }
 
     abstract CheckBody(_ : any) : any
-
+    
     abstract CheckQuery(_ : any) : any
-
+    
     abstract Operation() : void
 
-    abstract AuthenticateRequestor(_ : PermissionLevelEnum, __ : number) : void
+    abstract AuthenticateRequestor() : void
+
+    abstract ValidateRequestor() : void
 
     private async PerformConnection()
     {

@@ -15,12 +15,25 @@ class DatabaseService extends ServerService
 
     async Operation()
     {
-        this.AuthenticateRequestor()
-
-        return await this.DB_connection.query(`SELECT sql_commands_created FROM parameters`)
-            .then(result => {
-                if (result.rows[0]["sql_commands_created"] == false)
-                {
+        try
+        {
+            this.AuthenticateRequestor()
+    
+            return await this.DB_connection.query(`SELECT sql_commands_created FROM parameters`)
+                .then(result => {
+                    if (result.rows[0]["sql_commands_created"] == false)
+                    {
+                        return this.FoundCuiCodeSystemsDatabase()
+                            .then(() => {
+                                Send.Created(this.RES, "Banco de dados configurado com sucesso.", this.Action)
+                            })
+                            .catch(ex => {
+                                Send.Error(this.RES, `Houve um erro ao configurar o banco de dados. Erro: ${ (ex as Error).message }`, this.Action)
+                            })
+                    }
+                    return Send.Ok(this.RES, "Banco de dados já configurado.", this.Action)
+                })
+                .catch(async () => {
                     return this.FoundCuiCodeSystemsDatabase()
                         .then(() => {
                             Send.Created(this.RES, "Banco de dados configurado com sucesso.", this.Action)
@@ -28,18 +41,12 @@ class DatabaseService extends ServerService
                         .catch(ex => {
                             Send.Error(this.RES, `Houve um erro ao configurar o banco de dados. Erro: ${ (ex as Error).message }`, this.Action)
                         })
-                }
-                return Send.Ok(this.RES, "Banco de dados já configurado.", this.Action)
-            })
-            .catch(async () => {
-                return this.FoundCuiCodeSystemsDatabase()
-                    .then(() => {
-                        Send.Created(this.RES, "Banco de dados configurado com sucesso.", this.Action)
-                    })
-                    .catch(ex => {
-                        Send.Error(this.RES, `Houve um erro ao configurar o banco de dados. Erro: ${ (ex as Error).message }`, this.Action)
-                    })
-            })
+                })
+        }
+        catch (ex)
+        {
+            Send.Error(this.RES, `Houve um erro ao configurar o banco. Erro: ${ (ex as Error).message }`, this.Action)
+        }
     }
 
     private async FoundCuiCodeSystemsDatabase()

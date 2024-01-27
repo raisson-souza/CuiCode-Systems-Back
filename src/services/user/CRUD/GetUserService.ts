@@ -31,6 +31,8 @@ class GetUserService extends ServerClientService
     {
         try
         {
+            await this.AuthenticateRequestor()
+
             const {
                 REQ,
                 RES,
@@ -40,7 +42,7 @@ class GetUserService extends ServerClientService
 
             const userId = this.CheckQuery(REQ.query)
 
-            await this.AuthenticateRequestor(userId, PermissionLevelEnum.Guest, true)
+            this.ValidateRequestor(PermissionLevelEnum.Member, userId, true)
 
             const nonPrivateLevelQuery = this.ResolveNonPrivateLevelQuery()
 

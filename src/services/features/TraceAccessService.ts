@@ -15,10 +15,10 @@ class TraceAccessService extends ServerService
 
     Operation()
     {
-        this.AuthenticateRequestor()
-
         try
         {
+            this.AuthenticateRequestor()
+
             const emailBody = this.CheckBody()
 
             new EmailSender()
