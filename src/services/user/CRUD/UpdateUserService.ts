@@ -33,7 +33,7 @@ class UpdateUserService extends ClientService
         if (IsUndNull(body))
             throw new Error("Corpo da requisição inválido.")
 
-        const user = new User(body, false, false, true)
+        const user = new User(body, false, true)
 
         if (IsUndNull(user.Id))
             throw new Error("Id de usuário a ser atualizado não encontrado.")

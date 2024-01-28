@@ -31,14 +31,13 @@ class User extends Entity
 
     constructor(
         body : any,
-        isBodySQL = false,
         isCreation : boolean = false,
         isUpdate : boolean = false
     ) {
         super()
         try
         {
-            this.ConvertBody(body, isBodySQL)
+            this.ConvertBody(body)
             if (isCreation || isUpdate)
                 this.ValidateUserInfo(isUpdate)
         }
@@ -53,26 +52,26 @@ class User extends Entity
      * @param body Body object to convert.
      * @param isSQL Is the body in SQL form of user.
      */
-    private ConvertBody(body : any, isSQL = false) : void
+    private ConvertBody(body : any) : void
     {
-        this.Id = body[!isSQL ? "Id" : "id"]
-        this.Username = body[!isSQL ? "Username" : "username"]
-        this.Name = body[!isSQL ? "Name" : "name"]
-        this.BirthDate = body[!isSQL ? "BirthDate" : "birthdate"]
-        this.Email = body[!isSQL ? "Email" : "email"]
-        this.RecoveryEmail = body[!isSQL ? "RecoveryEmail" : "recovery_email"]
-        this.Phone = body[!isSQL ? "Phone" : "phone"]
-        this.Password = body[!isSQL ? "Password" : "password"]
-        this.PasswordHint = body[!isSQL ? "PasswordHint" : "password_hint"]
-        this.PhotoBase64 = body[!isSQL ? "PhotoBase64" : "photo_base_64"]
-        this.PermissionLevel = this.ConvertLevelEnum(body, isSQL)
-        this.Sex = this.ConvertSexEnum(body, isSQL)
-        this.EmailAproved = body[!isSQL ? "EmailAproved" : "email_approved"]
-        this.Active = body[!isSQL ? "Active" : "active"]
-        this.Created = body[!isSQL ? "Created" : "created"]
-        this.Deleted = body[!isSQL ? "Deleted" : "deleted"]
-        this.Modified = body[!isSQL ? "Modified" : "modified"]
-        this.ModifiedBy = body[!isSQL ? "ModifiedBy" : "modified_by"]
+        this.Id = !IsUndNull(body["Id"]) ? body["Id"] : body["id"]
+        this.Username = !IsUndNull(body["Username"]) ? body["Username"] : body["username"]
+        this.Name = !IsUndNull(body["Name"]) ? body["Name"] : body["name"]
+        this.BirthDate = !IsUndNull(body["BirthDate"]) ? body["BirthDate"] : body["birthdate"]
+        this.Email = !IsUndNull(body["Email"]) ? body["Email"] : body["email"]
+        this.RecoveryEmail = !IsUndNull(body["RecoveryEmail"]) ? body["RecoveryEmail"] : body["recovery_email"]
+        this.Phone = !IsUndNull(body["Phone"]) ? body["Phone"] : body["phone"]
+        this.Password = !IsUndNull(body["Password"]) ? body["Password"] : body["password"]
+        this.PasswordHint = !IsUndNull(body["PasswordHint"]) ? body["PasswordHint"] : body["password_hint"]
+        this.PhotoBase64 = !IsUndNull(body["PhotoBase64"]) ? body["PhotoBase64"] : body["photo_base_64"]
+        this.PermissionLevel = this.ConvertLevelEnum(!IsUndNull(body["PermissionLevel"]) ? body["PermissionLevel"] : body["permission_level"])
+        this.Sex = this.ConvertSexEnum(!IsUndNull(body["Sex"]) ? body["Sex"] : body["sex"])
+        this.EmailAproved = !IsUndNull(body["EmailAproved"]) ? body["EmailAproved"] : body["email_approved"]
+        this.Active = !IsUndNull(body["Active"]) ? body["Active"] : body["active"]
+        this.Created = !IsUndNull(body["Created"]) ? body["Created"] : body["created"]
+        this.Deleted = !IsUndNull(body["Deleted"]) ? body["Deleted"] : body["deleted"]
+        this.Modified = !IsUndNull(body["Modified"]) ? body["Modified"] : body["modified"]
+        this.ModifiedBy = !IsUndNull(body["ModifiedBy"]) ? body["ModifiedBy"] : body["modified_by"]
     }
 
     /**
@@ -200,31 +199,27 @@ class User extends Entity
     /**
      * Converts sex into sex enum
      */
-    private ConvertSexEnum(body : any, isBodySQL : boolean)
+    private ConvertSexEnum(prop : any)
     {
-        const bodyProp = !isBodySQL ? "Sex" : "sex"
+        if (prop instanceof Label)
+            return prop
 
-        if (typeof body[bodyProp] === "object") // TODO: Validar body[bodyProp] instanceof Label
-            return body[bodyProp]
-
-        return IsUndNull(body[bodyProp])
+        return IsUndNull(prop)
             ? null
-            : new Label(Sex, body[bodyProp], "Sex")
+            : new Label(Sex, prop, "Sex")
     }
 
     /**
      * Converts permission level into permission level enum
      */
-    private ConvertLevelEnum(body : any, isBodySQL : boolean)
+    private ConvertLevelEnum(prop : any)
     {
-        const bodyProp = !isBodySQL ? "PermissionLevel" : "permission_level"
+        if (prop instanceof Label)
+            return prop
 
-        if (typeof body[bodyProp] === "object")
-            return body[bodyProp]
-
-        return IsUndNull(body[bodyProp])
+        return IsUndNull(prop)
             ? null
-            : new Label(PermissionLevel, body[bodyProp], "PermissionLevel")
+            : new Label(PermissionLevel, prop, "PermissionLevel")
     }
 
     /**

@@ -27,7 +27,7 @@ class LoginService extends ClientService
         if (IsUndNull(email) || IsUndNull(password))
             throw new Error("Um ou mais dados de autenticação estão ausentes.")
 
-        this.USER_auth = new UserAuth({ "Email": email, "Password": password }, false, this.REQ.headers)
+        this.USER_auth = new UserAuth({ "Email": email, "Password": password }, this.REQ.headers)
     }
 
     CheckQuery() { throw new Error("Method not implemented.") }
@@ -69,14 +69,14 @@ class LoginService extends ClientService
     {
         try
         {
-            let query = `SELECT * FROM users WHERE email = '${ this.USER_auth!.Email }'`
+            let query = `SELECT * FROM users WHERE email = '${ this.USER_auth!.Email }' AND password = '${ this.USER_auth!.Password }'`
 
             return await this.DB_connection.query(query)
                 .then(result => {
                     if (result.rowCount == 0)
                         throw new Error("Usuário não encontrado.")
 
-                    return new User(result.rows[0], true, false, false)
+                    return new User(result.rows[0], false, false)
                 })
                 .catch(ex => {
                     throw new Error(ex.message)

@@ -10,14 +10,13 @@ class UserAuth extends User
     constructor
     (
         user_props : any,
-        isUserPropsSql : boolean = false,
         headers : any = null
     )
     {
         if (user_props instanceof User)
-            super({ ...user_props }, isUserPropsSql, false, false)
+            super({ ...user_props }, false, false)
         else
-            super(user_props, isUserPropsSql, false, false)
+            super(user_props, false, false)
 
         this.ExtractToken(headers)
 
@@ -31,7 +30,10 @@ class UserAuth extends User
             const { authorization } = headers
 
             if (IsUndNull(authorization))
+            {
                 this.Token = null
+                return
+            }
 
             const token = authorization!.split(" ")[1]!
             this.Token = token

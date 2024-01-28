@@ -78,7 +78,7 @@ abstract class ServerClientService extends Service
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, Number.parseInt(userAuthId!)))
                 .then(user => {
-                    return new UserAuth(user, false, this.REQ.headers)
+                    return new UserAuth(user, this.REQ.headers)
                 })
                 .catch(ex => {
                     if ((ex as Error).message === "Nenhum usuário encontrado.")
