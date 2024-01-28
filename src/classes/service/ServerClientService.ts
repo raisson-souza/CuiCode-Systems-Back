@@ -3,7 +3,7 @@ import Env from "../../config/environment"
 import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
-import UserAuth from "../UserAuth"
+import UserAuth from "../entities/user/UserAuth"
 
 import EncryptPassword from "../../functions/EncryptPassword"
 import IsUndNull from "../../functions/IsUndNull"

@@ -1,8 +1,8 @@
 import { Client } from "pg"
 
-import { EntityLog } from "../../../../classes/DTOs/EntityLog"
-import Operation from "../../../../classes/Operation"
-import User from "../../../../classes/User"
+import { EntityLog } from "../../../../classes/DTOs/base/EntityLog"
+import Operation from "../../../../classes/service/base/Operation"
+import User from "../../../../classes/entities/user/User"
 
 class SetUserLogOperation extends Operation
 {

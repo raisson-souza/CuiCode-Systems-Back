@@ -5,10 +5,10 @@ import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
 import ValidateUser from "../utilities/ValidateUser"
 
-import { EntityLog } from "../../../classes/DTOs/EntityLog"
+import { EntityLog } from "../../../classes/DTOs/base/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
-import Operation from "../../../classes/Operation"
-import User from "../../../classes/User"
+import Operation from "../../../classes/service/base/Operation"
+import User from "../../../classes/entities/user/User"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
 

@@ -1,4 +1,4 @@
-import IEntity from "../interfaces/IEntity"
+import IEntity from "../../../interfaces/IEntity"
 
 abstract class Entity implements IEntity
 {

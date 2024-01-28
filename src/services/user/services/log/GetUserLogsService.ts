@@ -1,9 +1,9 @@
 import { Client } from "pg"
 
 import DateCustom from "../../../../classes/custom/DateCustom"
-import Operation from "../../../../classes/Operation"
+import Operation from "../../../../classes/service/base/Operation"
 import ServerClientService from "../../../../classes/service/ServerClientService"
-import User from "../../../../classes/User"
+import User from "../../../../classes/entities/user/User"
 
 import IsUndNull from "../../../../functions/IsUndNull"
 import Send from "../../../../functions/system/Send"

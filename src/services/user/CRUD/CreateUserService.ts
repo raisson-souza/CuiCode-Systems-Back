@@ -2,9 +2,9 @@ import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailO
 
 import ValidateUser from "../utilities/ValidateUser"
 
-import Operation from "../../../classes/Operation"
+import Operation from "../../../classes/service/base/Operation"
 import ServerService from "../../../classes/service/ServerService"
-import User from "../../../classes/User"
+import User from "../../../classes/entities/user/User"
 
 import EmailSender from "../../../functions/system/EmailSender"
 import EncryptPassword from "../../../functions/EncryptPassword"

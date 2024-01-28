@@ -1,4 +1,4 @@
-import { EmailApprovalSql } from "../../../../classes/EmailApproval"
+import { EmailApprovalSql } from "../../../../classes/DTOs/EmailApproval"
 
 import ClientService from "../../../../classes/service/ClientService"
 

@@ -1,8 +1,8 @@
 import { Client } from "pg"
 
-import User from "./User"
+import User from "../../entities/user/User"
 
-import IOperation from "../interfaces/IOperation"
+import IOperation from "../../../interfaces/IOperation"
 
 /**
  * Contains all basic info for a operation.

@@ -1,13 +1,13 @@
-import Entity from "./Entity"
-import Label from "./Label"
+import Entity from "../base/Entity"
+import Label from "../base/Label"
 
-import IUserInSql from "../interfaces/IUserInSql"
+import IUserInSql from "../../../interfaces/IUserInSql"
 
-import FormatIdNumber from "../functions/FormatIdNumber"
-import IsUndNull from "../functions/IsUndNull"
+import FormatIdNumber from "../../../functions/FormatIdNumber"
+import IsUndNull from "../../../functions/IsUndNull"
 
-import PermissionLevel from "../enums/PermissionLevelEnum"
-import Sex from "../enums/SexEnum"
+import PermissionLevel from "../../../enums/PermissionLevelEnum"
+import Sex from "../../../enums/SexEnum"
 
 class User extends Entity
 {

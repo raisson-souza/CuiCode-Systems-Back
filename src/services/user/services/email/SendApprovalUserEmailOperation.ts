@@ -1,6 +1,6 @@
 import Env from "../../../../config/environment"
 
-import Operation from "../../../../classes/Operation"
+import Operation from "../../../../classes/service/base/Operation"
 
 import EmailSender from "../../../../functions/system/EmailSender"
 import IsUndNull from "../../../../functions/IsUndNull"

@@ -1,7 +1,7 @@
 import User from "./User"
 
-import EncryptPassword from "../functions/EncryptPassword"
-import IsUndNull from "../functions/IsUndNull"
+import EncryptPassword from "../../../functions/EncryptPassword"
+import IsUndNull from "../../../functions/IsUndNull"
 
 class UserAuth extends User
 {

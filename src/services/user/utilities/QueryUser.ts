@@ -1,6 +1,6 @@
 import { Client } from "pg"
 
-import User from "../../../classes/User"
+import User from "../../../classes/entities/user/User"
 
 import IsUndNull from "../../../functions/IsUndNull"
 

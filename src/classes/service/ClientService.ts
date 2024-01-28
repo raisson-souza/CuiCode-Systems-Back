@@ -1,7 +1,7 @@
 import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
-import UserAuth from "../UserAuth"
+import UserAuth from "../entities/user/UserAuth"
 
 import IsUndNull from "../../functions/IsUndNull"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"

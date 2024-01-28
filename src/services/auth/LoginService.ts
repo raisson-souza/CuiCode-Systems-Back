@@ -4,8 +4,8 @@ import Env from "../../config/environment"
 
 import ClientService from "../../classes/service/ClientService"
 
-import User from "../../classes/User"
-import UserAuth from "../../classes/UserAuth"
+import User from "../../classes/entities/user/User"
+import UserAuth from "../../classes/entities/user/UserAuth"
 
 import IsUndNull from "../../functions/IsUndNull"
 import Send from "../../functions/system/Send"
