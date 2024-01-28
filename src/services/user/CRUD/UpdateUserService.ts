@@ -8,7 +8,7 @@ import UserRepository from "../../../classes/entities/user/UserRepository"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
 
-import EmailSender from "../../../functions/system/EmailSender"
+import EmailSender from "../../../classes/entities/email/EmailSender"
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
 
@@ -234,7 +234,7 @@ class UpdateUserService extends ClientService
 
         emailMessage += "no sistema."
 
-        new EmailSender().Internal(EmailTitlesEnum.USER_DEACTIVATED, emailMessage)
+        EmailSender.Internal(EmailTitlesEnum.USER_DEACTIVATED, emailMessage)
     }
 
     /**

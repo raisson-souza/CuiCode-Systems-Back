@@ -5,7 +5,7 @@ import ServerService from "../../../classes/service/ServerService"
 import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../classes/entities/user/UserRepository"
 
-import EmailSender from "../../../functions/system/EmailSender"
+import EmailSender from "../../../classes/entities/email/EmailSender"
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
@@ -52,7 +52,7 @@ class CreateUserService extends ServerService
 
             Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, Action)
 
-            new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
+            EmailSender.Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
 
             await new SendApprovalEmailOperation(user, DB_connection).PerformOperation(true)
         }

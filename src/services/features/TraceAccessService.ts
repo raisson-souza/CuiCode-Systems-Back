@@ -1,6 +1,6 @@
 import ServerService from "../../classes/service/ServerService"
 
-import EmailSender from "../../functions/system/EmailSender"
+import EmailSender from "../../classes/entities/email/EmailSender"
 import Send from "../../functions/system/Send"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
@@ -21,11 +21,10 @@ class TraceAccessService extends ServerService
 
             const emailBody = this.CheckBody()
 
-            new EmailSender()
-                .Internal(
-                    EmailTitlesEnum.TRACE_ACTION,
-                    JSON.stringify(emailBody)
-                )
+            EmailSender.Internal(
+                EmailTitlesEnum.TRACE_ACTION,
+                JSON.stringify(emailBody)
+            )
 
             Send.Ok(this.RES, "Ação de rastreio realizada com sucesso.", this.Action)
         }

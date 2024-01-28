@@ -1,12 +1,12 @@
 import nodemailer from "nodemailer"
 
-import CaseUndNull from "../CaseUndNull"
+import CaseUndNull from "../../../functions/CaseUndNull"
 
-import EmailTitles from "../../enums/EmailTitlesEnum"
+import EmailTitles from "../../../enums/EmailTitlesEnum"
 
-class EmailSender
+abstract class EmailSender
 {
-    private Transporter = nodemailer.createTransport(
+    private static Transporter = nodemailer.createTransport(
         {
             service: 'gmail',
             auth: {
@@ -16,7 +16,7 @@ class EmailSender
         }
     )
 
-    Internal
+    static Internal
     (
         title : EmailTitles,
         emailBody : string | null = null
@@ -30,7 +30,7 @@ class EmailSender
         )
     }
 
-    External
+    static External
     (
         title : EmailTitles,
         emailBody : string | null = null,
@@ -46,7 +46,7 @@ class EmailSender
         )
     }
 
-    private BuildEmailTransporter
+    private static BuildEmailTransporter
     (
         title : EmailTitles,
         emailBody : string | null = null,

@@ -1,4 +1,4 @@
-import EmailSender from "../system/EmailSender"
+import EmailSender from "../../classes/entities/email/EmailSender"
 
 import EmailTitles from "../../enums/EmailTitlesEnum"
 
@@ -9,7 +9,7 @@ function SqlInjectionVerifier(param : string)
 {
     if (param.toUpperCase().includes("OR"))
     {
-        new EmailSender().Internal(EmailTitles.SYSTEM_RISK, `Risco de SQL injection detectado, SQL: ${ param }`)
+        EmailSender.Internal(EmailTitles.SYSTEM_RISK, `Risco de SQL injection detectado, SQL: ${ param }`)
         throw new Error("Injeção de SQL verificada, operação interrompida.")
     }
 }

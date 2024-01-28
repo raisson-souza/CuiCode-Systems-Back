@@ -2,7 +2,7 @@ import Env from "../../../../config/environment"
 
 import Operation from "../../../../classes/service/base/Operation"
 
-import EmailSender from "../../../../functions/system/EmailSender"
+import EmailSender from "../../../../classes/entities/email/EmailSender"
 import IsUndNull from "../../../../functions/IsUndNull"
 import QueryDbRowByProperty from "../../../../functions/SQL/QueryDbRowByProperty"
 
@@ -37,7 +37,7 @@ class SendApprovalEmailOperation extends Operation
             .then(() => {
                 const emailBody = `${ saudation } Acesse esse link para aprovar seu email no ERP:\n${ this.GenerateEndpoint(User!.Id, User!.Email) }.`
 
-                new EmailSender().External(EmailTitles.EMAIL_APPROVAL_REQUEST, emailBody, User!.Email)
+                EmailSender.External(EmailTitles.EMAIL_APPROVAL_REQUEST, emailBody, User!.Email)
 
                 return true
             })
@@ -45,9 +45,9 @@ class SendApprovalEmailOperation extends Operation
                 let emailBody = `${ saudation } Houve um erro ao criar o seu pedido de aprovação de email, por favor realize a operação novamente manualmente no ERP:\n`
                 emailBody += `${ Env.Front_URL }/userProfile`
 
-                new EmailSender().External(EmailTitles.EMAIL_APPROVAL_REQUEST, emailBody, User!.Email)
+                EmailSender.External(EmailTitles.EMAIL_APPROVAL_REQUEST, emailBody, User!.Email)
 
-                new EmailSender().Internal(EmailTitles.EMAIL_APPROVAL_ERROR, (ex as Error).message)
+                EmailSender.Internal(EmailTitles.EMAIL_APPROVAL_ERROR, (ex as Error).message)
 
                 return false
             })
