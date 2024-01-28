@@ -1,11 +1,8 @@
-import { Client } from "pg"
-
+import ClientService from "../../../classes/service/ClientService"
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
 import { EntityLog } from "../../../classes/DTOs/base/EntityLog"
-import ClientService from "../../../classes/service/ClientService"
-import Operation from "../../../classes/service/base/Operation"
 import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../classes/entities/user/UserRepository"
 
@@ -62,13 +59,9 @@ class UpdateUserService extends ClientService
 
             this.ValidateUpdate(user)
 
-            await Promise.resolve(new UpdateUserOperation(user, DB_connection, this.SameUserAuthAndUserToOperate, this.USER_auth!.Id!).PerformOperation())
-                .then(() => {
-                    Send.Ok(RES, `Usuário editado com sucesso.`, Action)
-                })
-                .catch(ex => {
-                    throw new Error((ex as Error).message)
-                })
+            await this.PersistUserUpdate(user)
+
+            Send.Ok(RES, `Usuário editado com sucesso.`, Action)
         }
         catch (ex)
         {
@@ -96,83 +89,25 @@ class UpdateUserService extends ClientService
                 UserRepository.ValidateUserPermission(this.USER_auth!, PermissionLevelEnum.Root)
         }
     }
-}
 
-class UpdateUserOperation extends Operation
-{
-    SameUserAuthAndUserToOperate : boolean
-    ModifiedById : number
-
-    constructor
-    (
-        user : User | null,
-        db_connection : Client,
-        sameUserAuthAndUserToOperate : boolean,
-        modifiedById : number
-    )
-    {
-        super(user, db_connection)
-        this.SameUserAuthAndUserToOperate = sameUserAuthAndUserToOperate
-        this.ModifiedById = modifiedById
-    }
-
-    async PerformOperation()
+    async PersistUserUpdate(user : User)
     {
         try
         {
             const { DB_connection } = this
 
-            if (IsUndNull(this.User!.Id))
+            if (IsUndNull(user!.Id))
                 throw new Error("Id do usuário a ser editado deve ser informado.")
 
-            const userInSql = this.User!.ConvertUserToSqlObject()
+            const userLogProps = await this.GatherUserLog(user)
 
-            const checkUserExistenceQuery = `SELECT * FROM users WHERE id = ${ this.User!.Id }`
+            const {
+                userDb,
+                userLog,
+                emailChanged
+            } = userLogProps
 
-            const userDb = await DB_connection.query(checkUserExistenceQuery)
-                .then(result => {
-                    if (result.rowCount == 0)
-                        throw new Error(`Usuário ${ this.User!.GenerateUserKey() } não encontrado.`)
-
-                    // userDb assume o tipo de userInSql que utiliza de assinatura de índice
-                    // na qual permite acesso as chaves por qualquer string.
-                    return result.rows[0] as IUserInSql
-                })
-                .catch(ex => {
-                    throw new Error((ex as Error).message)
-                })
-
-            let userLog : EntityLog[] = []
-
-            let emailChanged = false
-
-            // Serão comparadas as diferenças entre o usuário do banco com as novas alterações.
-            for (let prop in userDb)
-            {
-                //  Valida se a prop do usuário do banco é diferente da prop do model do usuário, eliminando props não atualizadas (indefinidas)
-                if (userDb[prop] != userInSql[prop] && !IsUndNull(userInSql[prop]))
-                {
-                    userLog.push(new EntityLog(prop, userDb[prop], userInSql[prop]))
-
-                    // Se um dos parâmetros do usuário a ser editado é o email, o novo email deve ser validado.
-                    if (prop == "email")
-                    {
-                        userLog.push(new EntityLog("email_approved", userDb["email_approved"], false))
-                        emailChanged = true
-                    }
-
-                    if (prop == "username" && userDb["email_approved"] == false)
-                        throw new Error("Para editar o username é necessário aprovar o email.")
-
-                    if (prop == "active" || prop == "deleted")
-                        this.DetectUserDeactivationOrDeletion(prop, userInSql[prop], this.User!, userDb)
-                }
-            }
-
-            if (userLog.length == 0)
-                throw new Error("Nenhuma edição realizada no usuário.")
-
-            const query = `UPDATE users SET ${ this.BuildUserPutQuery(userLog) } WHERE id = ${ this.User!.Id }`
+            const query = `UPDATE users SET ${ this.BuildUserPutQuery(userLog) } WHERE id = ${ user!.Id }`
 
             await DB_connection.query(query)
                 .then(() => {})
@@ -184,11 +119,72 @@ class UpdateUserOperation extends Operation
             if (emailChanged)
                 this.HandleEmailChange(userDb, userLog)
 
-            await new SetUserLogOperation(this.User, DB_connection, userLog, !this.SameUserAuthAndUserToOperate).PerformOperation()
+            await new SetUserLogOperation(user, DB_connection, userLog, !this.SameUserAuthAndUserToOperate).PerformOperation()
         }
         catch (ex)
         {
             throw new Error((ex as Error).message)
+        }
+    }
+
+    private async GatherUserLog(user : User)
+    : Promise<{
+        userDb : IUserInSql,
+        userLog : EntityLog[],
+        emailChanged : boolean
+    }>
+    {
+        const userModelInSQL = user!.ConvertUserToSqlObject()
+
+        const userDbQuery = `SELECT * FROM users WHERE id = ${ user!.Id }`
+
+        const userDb = await this.DB_connection.query(userDbQuery)
+            .then(result => {
+                if (result.rowCount == 0)
+                    throw new Error(`Usuário ${ user!.GenerateUserKey() } não encontrado.`)
+
+                // userDb assume o tipo de userInSql que utiliza de assinatura de índice
+                // na qual permite acesso as chaves por qualquer string.
+                return result.rows[0] as IUserInSql
+            })
+            .catch(ex => {
+                throw new Error((ex as Error).message)
+            })
+
+        let userLog : EntityLog[] = []
+
+        let emailChanged = false
+
+        // Serão comparadas as diferenças entre o usuário do banco com as novas alterações.
+        for (let prop in userDb)
+        {
+            //  Valida se a prop do usuário do banco é diferente da prop do model do usuário, eliminando props não atualizadas (indefinidas)
+            if (userDb[prop] != userModelInSQL[prop] && !IsUndNull(userModelInSQL[prop]))
+            {
+                userLog.push(new EntityLog(prop, userDb[prop], userModelInSQL[prop]))
+
+                // Se um dos parâmetros do usuário a ser editado é o email, o novo email deve ser validado.
+                if (prop == "email")
+                {
+                    userLog.push(new EntityLog("email_approved", userDb["email_approved"], false))
+                    emailChanged = true
+                }
+
+                if (prop == "username" && userDb["email_approved"] == false)
+                    throw new Error("Para editar o username é necessário aprovar o email.")
+
+                if (prop == "active" || prop == "deleted")
+                    this.DetectUserDeactivationOrDeletion(prop, userModelInSQL[prop], user!, userDb)
+            }
+        }
+
+        if (userLog.length == 0)
+            throw new Error("Nenhuma edição realizada no usuário.")
+
+        return {
+            userDb: userDb,
+            userLog: userLog,
+            emailChanged: emailChanged
         }
     }
 
@@ -203,7 +199,7 @@ class UpdateUserOperation extends Operation
             query += `"${ prop.NewValue.SQLValue.ColumnName }" = ${ prop.NewValue.SQLValue.ParsePropNameToSql() },`
         })
 
-        query += `modified = now(), modified_by = ${ this.ModifiedById }`
+        query += `modified = now(), modified_by = ${ this.USER_auth!.Id }`
 
         return query
     }
