@@ -1,6 +1,5 @@
 import User from "./User"
 
-import EncryptPassword from "../../../functions/EncryptPassword"
 import IsUndNull from "../../../functions/IsUndNull"
 
 class UserAuth extends User
@@ -14,13 +13,11 @@ class UserAuth extends User
     )
     {
         if (user_props instanceof User)
-            super({ ...user_props }, false, false)
+            super({ ...user_props })
         else
-            super(user_props, false, false)
+            super(user_props)
 
         this.ExtractToken(headers)
-
-        this.Password = EncryptPassword(this.Password)
     }
 
     private ExtractToken(headers : any)

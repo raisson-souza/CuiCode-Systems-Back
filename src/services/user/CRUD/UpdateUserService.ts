@@ -3,12 +3,11 @@ import { Client } from "pg"
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
-import ValidateUser from "../utilities/ValidateUser"
-
 import { EntityLog } from "../../../classes/DTOs/base/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
 import Operation from "../../../classes/service/base/Operation"
 import User from "../../../classes/entities/user/User"
+import UserRepository from "../../../classes/entities/user/UserRepository"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
 
@@ -33,7 +32,7 @@ class UpdateUserService extends ClientService
         if (IsUndNull(body))
             throw new Error("Corpo da requisição inválido.")
 
-        const user = new User(body, false, true)
+        const user = new User(body)
 
         if (IsUndNull(user.Id))
             throw new Error("Id de usuário a ser atualizado não encontrado.")
@@ -48,7 +47,6 @@ class UpdateUserService extends ClientService
         try
         {
             const {
-                REQ,
                 RES,
                 DB_connection,
                 Action
@@ -60,9 +58,9 @@ class UpdateUserService extends ClientService
 
             this.ValidateRequestor(PermissionLevelEnum.Member, user.Id)
 
-            this.ValidateUpdate(user)
+            await UserRepository.ValidateUpdate(user, DB_connection)
 
-            await ValidateUser(DB_connection, user, false)
+            this.ValidateUpdate(user)
 
             await Promise.resolve(new UpdateUserOperation(user, DB_connection, this.SameUserAuthAndUserToOperate, this.USER_auth!.Id!).PerformOperation())
                 .then(() => {
@@ -84,17 +82,6 @@ class UpdateUserService extends ClientService
 
     private ValidateUpdate(newUser : User)
     {
-        if
-        (
-            !IsUndNull(newUser.EmailAproved) ||
-            !IsUndNull(newUser.Created) ||
-            !IsUndNull(newUser.Active) ||
-            !IsUndNull(newUser.Deleted) ||
-            !IsUndNull(newUser.Modified) ||
-            !IsUndNull(newUser.ModifiedBy)
-        )
-            throw new Error("Uma ou mais propriedades não podem ser editadas.")
-
         if (!IsUndNull(newUser.PermissionLevel))
         {
             const newLevel = newUser.PermissionLevel!.Value
@@ -106,7 +93,7 @@ class UpdateUserService extends ClientService
                 throw new Error("Um usuário não pode se tornar convidado.")
 
             if (newLevel === 2 || newLevel === 3)
-                this.USER_auth!.CheckUserPermission(PermissionLevelEnum.Root)
+                UserRepository.ValidateUserPermission(this.USER_auth!, PermissionLevelEnum.Root)
         }
     }
 }
@@ -233,7 +220,7 @@ class UpdateUserOperation extends Operation
         userDb : IUserInSql
     ) : void
     {
-        const userDbConverted = new User(userDb, true)
+        const userDbConverted = new User(userDb)
         let emailMessage = `Usuário (${ userModel.GenerateUserKey() } / ${ userDbConverted.GenerateUserKey() }) foi `
 
         if (actionName == "active")

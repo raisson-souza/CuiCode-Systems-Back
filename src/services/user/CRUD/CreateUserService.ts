@@ -1,10 +1,9 @@
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
-import ValidateUser from "../utilities/ValidateUser"
-
 import Operation from "../../../classes/service/base/Operation"
 import ServerService from "../../../classes/service/ServerService"
 import User from "../../../classes/entities/user/User"
+import UserRepository from "../../../classes/entities/user/UserRepository"
 
 import EmailSender from "../../../functions/system/EmailSender"
 import EncryptPassword from "../../../functions/EncryptPassword"
@@ -29,7 +28,7 @@ class CreateUserService extends ServerService
         if (IsUndNull(body))
             throw new Error("Corpo da requisição inválido.")
 
-        return new User(body, false, true)
+        return new User(body)
     }
 
     CheckQuery() { throw new Error("Method not implemented.") }
@@ -39,7 +38,6 @@ class CreateUserService extends ServerService
         try
         {
             const {
-                REQ,
                 RES,
                 DB_connection,
                 Action
@@ -47,21 +45,16 @@ class CreateUserService extends ServerService
 
             const user = this.CheckBody()
 
-            await Promise.resolve(ValidateUser(DB_connection, user, true))
-                .then(async () => {
-                    await Promise.resolve(new CreateUserOperation(user, DB_connection).PerformOperation())
-                        .then(async () => {
-                            Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, Action)
-                            new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
-                            await new SendApprovalEmailOperation(user, DB_connection).PerformOperation(true)
-                        })
-                        .catch(ex => {
-                            Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, Action)
-                        })
-                })
-                .catch(ex => {
-                    Send.Error(RES, `Houve um erro ao criar o usuário. Erro: ${ ex.message }`, Action)
-                })
+            await UserRepository.ValidateCreation(user, DB_connection)
+
+            const userOperation = new CreateUserOperation(user, DB_connection)
+            await userOperation.PerformOperation()
+
+            Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, Action)
+
+            new EmailSender().Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
+
+            await new SendApprovalEmailOperation(user, DB_connection).PerformOperation(true)
         }
         catch (ex)
         {

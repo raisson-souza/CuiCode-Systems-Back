@@ -3,7 +3,9 @@ import Env from "../../config/environment"
 import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
+
 import UserAuth from "../entities/user/UserAuth"
+import UserRepository from "../entities/user/UserRepository"
 
 import EncryptPassword from "../../functions/EncryptPassword"
 import IsUndNull from "../../functions/IsUndNull"
@@ -90,7 +92,7 @@ abstract class ServerClientService extends Service
                     throw new Error((ex as Error).message)
                 })
 
-        user.CheckUserValidity()
+        UserRepository.ValidateUserValidity(user)
 
         this.USER_auth = user
         this.IsSystemRequestor = false
@@ -109,7 +111,7 @@ abstract class ServerClientService extends Service
         if (this.IsSystemRequestor)
             return
 
-        this.USER_auth!.CheckUserPermission(level)
+        UserRepository.ValidateUserPermission(this.USER_auth!, level)
 
         if (!IsUndNull(userIdToOperate))
         {

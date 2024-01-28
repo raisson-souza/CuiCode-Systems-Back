@@ -76,7 +76,7 @@ class LoginService extends ClientService
                     if (result.rowCount == 0)
                         throw new Error("Usuário não encontrado.")
 
-                    return new User(result.rows[0], false, false)
+                    return new User(result.rows[0])
                 })
                 .catch(ex => {
                     throw new Error(ex.message)

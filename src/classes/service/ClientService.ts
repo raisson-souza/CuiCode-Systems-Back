@@ -1,6 +1,8 @@
 import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
+
+import UserRepository from "../entities/user/UserRepository"
 import UserAuth from "../entities/user/UserAuth"
 
 import IsUndNull from "../../functions/IsUndNull"
@@ -38,7 +40,7 @@ abstract class ClientService extends Service
                     throw new Error((ex as Error).message)
                 })
 
-        user.CheckUserValidity()
+        UserRepository.ValidateUserValidity(user)
 
         this.USER_auth = user
     }
@@ -53,7 +55,7 @@ abstract class ClientService extends Service
         allowDifferentUserAuthAndUserToOperate : boolean = false
     )
     {
-        this.USER_auth!.CheckUserPermission(level)
+        UserRepository.ValidateUserPermission(this.USER_auth!, level)
 
         if (!IsUndNull(userIdToOperate))
         {

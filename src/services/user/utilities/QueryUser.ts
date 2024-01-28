@@ -28,7 +28,7 @@ async function QueryUser
                 if (result.rowCount == 0)
                     throw new Error("Nenhum usuário encontrado.")
 
-                const user = new User(result.rows[0], true)
+                const user = new User(result.rows[0])
                 return user
             })
             .catch(ex => {
