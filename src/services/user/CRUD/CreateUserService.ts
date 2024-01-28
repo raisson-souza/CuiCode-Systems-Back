@@ -1,12 +1,11 @@
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 
-import Operation from "../../../classes/service/base/Operation"
 import ServerService from "../../../classes/service/ServerService"
+
 import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../classes/entities/user/UserRepository"
 
 import EmailSender from "../../../functions/system/EmailSender"
-import EncryptPassword from "../../../functions/EncryptPassword"
 import IsUndNull from "../../../functions/IsUndNull"
 import Send from "../../../functions/system/Send"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
@@ -47,8 +46,9 @@ class CreateUserService extends ServerService
 
             await UserRepository.ValidateCreation(user, DB_connection)
 
-            const userOperation = new CreateUserOperation(user, DB_connection)
-            await userOperation.PerformOperation()
+            user.EncryptPassword()
+
+            await this.PersistUserCreation(user)
 
             Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, Action)
 
@@ -65,53 +65,33 @@ class CreateUserService extends ServerService
             this.DB_connection.end()
         }
     }
-}
 
-/**
- * Creates a user.
- */
-class CreateUserOperation extends Operation
-{
-    async PerformOperation()
+    private async PersistUserCreation(user : User)
     {
-        try
-        {
-            this.EncryptUserPassword(this.User!)
+        let query =
+        `
+            INSERT INTO users (${ this.GenerateUserFields() }) VALUES 
+            (
+                '${ user!.Username }',
+                '${ user!.Name }',
+                ${ ToSqlDate(user!.BirthDate) },
+                '${ user!.Email }',
+                '${ user!.RecoveryEmail }',
+                '${ user!.Phone }',
+                '${ user!.Password }',
+                '${ user!.PasswordHint }',
+                '${ user!.PhotoBase64 }',
+                ${ user!.Sex!.Value }
+            )
+        `
 
-            const {
-                User,
-                DB_connection
-            } = this
+        query.trim()
 
-            let query =
-            `
-                INSERT INTO users (${ this.GenerateUserFields() }) VALUES 
-                (
-                    '${ User!.Username }',
-                    '${ User!.Name }',
-                    ${ ToSqlDate(User!.BirthDate) },
-                    '${ User!.Email }',
-                    '${ User!.RecoveryEmail }',
-                    '${ User!.Phone }',
-                    '${ User!.Password }',
-                    '${ User!.PasswordHint }',
-                    '${ User!.PhotoBase64 }',
-                    ${ User!.Sex!.Value }
-                )
-            `
-
-            query.trim()
-
-            await DB_connection.query(query)
-                .then(() => {})
-                .catch(ex => {
-                    throw new Error(ex.message);
-                })
-        }
-        catch (ex)
-        {
-            throw new Error((ex as Error).message);
-        }
+        await this.DB_connection.query(query)
+            .then(() => {})
+            .catch(ex => {
+                throw new Error(ex.message);
+            })
     }
 
     private GenerateUserFields() : string
@@ -128,11 +108,6 @@ class CreateUserOperation extends Operation
             "photo_base_64",
             "sex"
         `
-    }
-
-    private EncryptUserPassword(user : User) : void
-    {
-        user.Password = EncryptPassword(user.Password)
     }
 }
 
