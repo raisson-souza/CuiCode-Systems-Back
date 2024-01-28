@@ -1,11 +1,16 @@
 import crypto from "crypto-js"
 
+import IsUndNull from "./IsUndNull"
+
 /**
  * Função de criptografia de senha baseado em criptografia MD5.
  */
-function EncryptPassword(password : string = "") : string
+function EncryptInfo(info : string | null | undefined) : string
 {
-    return crypto.MD5(password).toString()
+    if (IsUndNull(info))
+        info = ""
+
+    return crypto.MD5(info!).toString()
 }
 
-export default EncryptPassword
+export default EncryptInfo

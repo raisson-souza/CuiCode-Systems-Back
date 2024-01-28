@@ -2,8 +2,7 @@ import Env from "../../config/environment"
 
 import Service from "./base/Service"
 
-import EncryptPassword from "../../functions/EncryptPassword"
-import IsUndNull from "../../functions/IsUndNull"
+import EncryptInfo from "../../functions/EncryptPassword"
 
 abstract class ServerService extends Service
 {
@@ -16,7 +15,7 @@ abstract class ServerService extends Service
     {
         const key = this.GetAuthentications().SystemKey
 
-        const encryptedKey = EncryptPassword(IsUndNull(key) ? "" : key!)
+        const encryptedKey = EncryptInfo(key)
 
         if (encryptedKey != Env.SystemUserKey)
             throw new Error("Sistema não autenticado.")

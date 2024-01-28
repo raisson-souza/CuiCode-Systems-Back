@@ -7,7 +7,7 @@ import Service from "./base/Service"
 import UserAuth from "../entities/user/UserAuth"
 import UserRepository from "../entities/user/UserRepository"
 
-import EncryptPassword from "../../functions/EncryptPassword"
+import EncryptInfo from "../../functions/EncryptPassword"
 import IsUndNull from "../../functions/IsUndNull"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"
 import Send from "../../functions/system/Send"
@@ -54,7 +54,7 @@ abstract class ServerClientService extends Service
     */
     private AuthenticateServerRequestor(systemKey : string | null)
     {
-        const encryptedKey = EncryptPassword(IsUndNull(systemKey) ? "" : systemKey!)
+        const encryptedKey = EncryptInfo(systemKey)
 
         if (encryptedKey != Env.SystemUserKey)
             throw new Error("Sistema não autenticado.")

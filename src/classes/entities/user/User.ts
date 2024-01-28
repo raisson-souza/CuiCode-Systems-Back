@@ -3,7 +3,7 @@ import Label from "../base/Label"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
 
-import EncryptPassword from "../../../functions/EncryptPassword"
+import EncryptInfo from "../../../functions/EncryptPassword"
 import FormatIdNumber from "../../../functions/FormatIdNumber"
 import IsUndNull from "../../../functions/IsUndNull"
 
@@ -126,7 +126,7 @@ class User extends Entity
 
     EncryptPassword()
     {
-        this.Password = EncryptPassword(this.Password)
+        this.Password = EncryptInfo(this.Password)
     }
 }
 
