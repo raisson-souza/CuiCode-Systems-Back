@@ -53,7 +53,7 @@ abstract class Service implements IService
             })
     }
 
-    GetAutentications() : { SystemKey : string | null, UserAuthId : string | null }
+    GetAuthentications() : { SystemKey : string | null, UserAuthId : string | null }
     {
         return this.REQ.method === "GET"
             ? {

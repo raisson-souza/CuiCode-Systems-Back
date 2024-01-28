@@ -14,7 +14,7 @@ abstract class ServerService extends Service
     */
     AuthenticateRequestor()
     {
-        const key = this.GetAutentications().SystemKey
+        const key = this.GetAuthentications().SystemKey
 
         const encryptedKey = EncryptPassword(IsUndNull(key) ? "" : key!)
 

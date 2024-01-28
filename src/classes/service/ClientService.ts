@@ -77,7 +77,7 @@ abstract class ClientService extends Service
 
     private CheckUserAuthId() : number
     {
-        const userAuthId = this.GetAutentications().UserAuthId
+        const userAuthId = this.GetAuthentications().UserAuthId
 
         if (IsUndNull(userAuthId))
             throw new Error("Usuário requeridor não encontrado na requisição.")

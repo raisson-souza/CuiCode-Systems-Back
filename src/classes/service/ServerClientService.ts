@@ -28,17 +28,17 @@ abstract class ServerClientService extends Service
     {
         try
         {
-            const reqAuths = this.GetAutentications()
+            const reqAuths = this.GetAuthentications()
 
             if (!IsUndNull(reqAuths.SystemKey))
             {
-                this.AuthenticateServerRequestor()
+                this.AuthenticateServerRequestor(reqAuths.SystemKey)
                 return
             }
 
             if (!IsUndNull(reqAuths.UserAuthId))
             {
-                await this.AuthenticateUserRequestor()
+                await this.AuthenticateUserRequestor(reqAuths.UserAuthId)
                 return
             }
             throw new Error("Nenhuma autenticação encontrada.")
@@ -52,11 +52,9 @@ abstract class ServerClientService extends Service
     /**
      * Realiza a autenticação do sistema.
     */
-    private AuthenticateServerRequestor()
+    private AuthenticateServerRequestor(systemKey : string | null)
     {
-        const key = this.GetAutentications().SystemKey
-
-        const encryptedKey = EncryptPassword(IsUndNull(key) ? "" : key!)
+        const encryptedKey = EncryptPassword(IsUndNull(systemKey) ? "" : systemKey!)
 
         if (encryptedKey != Env.SystemUserKey)
             throw new Error("Sistema não autenticado.")
@@ -70,10 +68,8 @@ abstract class ServerClientService extends Service
      * Realiza a autenticação do usuário.
      * É necessário ser chamado em fluxos que exigem autenticação.
      */
-    private async AuthenticateUserRequestor()
+    private async AuthenticateUserRequestor(userAuthId : string | null)
     {
-        const userAuthId = this.GetAutentications().UserAuthId
-
         if (IsUndNull(userAuthId))
             throw new Error("Usuário requeridor não encontrado na requisição.")
 
