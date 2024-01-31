@@ -2,15 +2,16 @@ import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailO
 
 import ServerService from "../../../classes/service/ServerService"
 
+import EmailSender from "../../../classes/entities/email/EmailSender"
+import ResponseMessage from "../../../classes/DTOs/ResponseMessage"
 import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../classes/entities/user/UserRepository"
 
-import EmailSender from "../../../classes/entities/email/EmailSender"
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/system/Send"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"
+import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
 
 /**
  * Creates a user.
@@ -50,7 +51,12 @@ class CreateUserService extends ServerService
 
             await this.PersistUserCreation(user)
 
-            Send.Ok(RES, `Usuário ${ user.GenerateUserKey() } criado com sucesso.`, Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.CREATED,
+                `Usuário ${ user.GenerateUserKey() } criado com sucesso.`,
+                Action,
+                RES
+            )
 
             EmailSender.Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
 
@@ -58,7 +64,12 @@ class CreateUserService extends ServerService
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

@@ -2,12 +2,13 @@ import { Client } from "pg"
 
 import DateCustom from "../../../../classes/custom/DateCustom"
 import Operation from "../../../../classes/service/base/Operation"
+import ResponseMessage from "../../../../classes/DTOs/ResponseMessage"
 import ServerClientService from "../../../../classes/service/ServerClientService"
 import User from "../../../../classes/entities/user/User"
 
 import IsUndNull from "../../../../functions/IsUndNull"
-import Send from "../../../../functions/system/Send"
 
+import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../../../enums/PermissionLevelEnum"
 
 class GetUserLogsService extends ServerClientService
@@ -30,7 +31,10 @@ class GetUserLogsService extends ServerClientService
             let startDate = null; let finalDate = null;
 
             if (IsUndNull(query.userId))
+            {
+                ResponseMessage.SendNullField(["userId"], this.Action, this.RES)
                 throw new Error("ID de usuário não encontrado.")
+            }
 
             if (!IsUndNull(query.startDate))
                 startDate = new DateCustom(query.startDate)
@@ -55,7 +59,6 @@ class GetUserLogsService extends ServerClientService
         try
         {
             const {
-                REQ,
                 RES,
                 DB_connection,
                 Action
@@ -71,7 +74,12 @@ class GetUserLogsService extends ServerClientService
 
             await Promise.resolve(new GetUserLogsOperation(user, DB_connection, filterProps.StartDate, filterProps.FinalDate).PerformOperation())
                 .then(result => {
-                    Send.Ok(RES, result, Action)
+                    ResponseMessage.Send(
+                        HttpStatusEnum.OK,
+                        result,
+                        Action,
+                        RES
+                    )
                 })
                 .catch(ex => {
                     throw new Error((ex as Error).message)
@@ -79,7 +87,12 @@ class GetUserLogsService extends ServerClientService
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao consultar os logs do usuário. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao consultar os logs do usuário. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

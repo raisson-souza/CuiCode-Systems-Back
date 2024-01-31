@@ -1,9 +1,11 @@
 import QueryUsersInfo from "../utilities/QueryUsersInfo"
 
+import ResponseMessage from "../../../classes/DTOs/ResponseMessage"
 import ServerService from "../../../classes/service/ServerService"
 
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/system/Send"
+
+import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
 
 /**
  * Queries specific information about all users.
@@ -19,7 +21,10 @@ class ListUsersService extends ServerService
         const query = this.REQ.query as any
 
         if (IsUndNull(query.RequiredInfo))
+        {
+            ResponseMessage.SendNullField(["RequiredInfo"], this.Action, this.RES)
             throw new Error("Informações requeridas dos usuários não encontradas na URL.")
+        }
 
         const JsonConvertedQuery = JSON.parse(query.RequiredInfo)
 
@@ -33,7 +38,6 @@ class ListUsersService extends ServerService
         try
         {
             const {
-                REQ,
                 RES,
                 DB_connection,
                 Action
@@ -46,15 +50,25 @@ class ListUsersService extends ServerService
 
             await Promise.resolve(QueryUsersInfo(DB_connection, userRequiredInfo))
                 .then(userInfos => {
-                    Send.Ok(RES, userInfos, Action)
+                    ResponseMessage.Send(
+                        HttpStatusEnum.OK,
+                        userInfos,
+                        Action,
+                        RES
+                    )
                 })
                 .catch(ex => {
-                    Send.Error(RES, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ ex.message }`, Action)
+                    throw new Error((ex as Error).message)
                 })
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

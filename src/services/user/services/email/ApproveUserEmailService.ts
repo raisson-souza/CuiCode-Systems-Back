@@ -3,8 +3,10 @@ import { EmailApprovalSql } from "../../../../classes/DTOs/EmailApproval"
 import ClientService from "../../../../classes/service/ClientService"
 
 import IsUndNull from "../../../../functions/IsUndNull"
-import Send from "../../../../functions/system/Send"
+import Send from "../../../../classes/system/Send"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
+import ResponseMessage from "../../../../classes/DTOs/ResponseMessage"
+import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
 
 class ApproveUserEmailService extends ClientService
 {
@@ -18,10 +20,16 @@ class ApproveUserEmailService extends ClientService
         const query = this.REQ.query as any
 
         if (IsUndNull(query.email))
+        {
+            ResponseMessage.SendNullField(["email"], this.Action, this.RES)
             throw new Error("Email de usuário não encontrado na requisição.")
+        }
 
         if (IsUndNull(query.userId))
+        {
+            ResponseMessage.SendNullField(["userId"], this.Action, this.RES)
             throw new Error("Id de usuário não encontrado na requisição.")
+        }
 
         return { email : query.email, userId : query.userId }
     }
@@ -31,7 +39,6 @@ class ApproveUserEmailService extends ClientService
         try
         {
             const {
-                REQ,
                 RES,
                 DB_connection,
                 Action
@@ -86,11 +93,21 @@ class ApproveUserEmailService extends ClientService
                     throw new Error(ex.message)
                 })
 
-            Send.Ok(RES, "Email aprovado com sucesso!", Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.OK,
+                "Email aprovado com sucesso!",
+                Action,
+                RES
+            )
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao aprovar o email. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao aprovar o email. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

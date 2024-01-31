@@ -3,12 +3,13 @@ import { sign } from "jsonwebtoken"
 import Env from "../../config/environment"
 
 import ClientService from "../../classes/service/ClientService"
-
+import ResponseMessage from "../../classes/DTOs/ResponseMessage"
 import User from "../../classes/entities/user/User"
 import UserAuth from "../../classes/entities/user/UserAuth"
 
 import IsUndNull from "../../functions/IsUndNull"
-import Send from "../../functions/system/Send"
+
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 /**
  * Realiza o login e autenticação de um usuário.
@@ -25,9 +26,13 @@ class LoginService extends ClientService
         } = this.REQ.body
 
         if (IsUndNull(email) || IsUndNull(password))
+        {
+            ResponseMessage.SendNullField(["email", "password"], this.Action, this.RES)
             throw new Error("Um ou mais dados de autenticação estão ausentes.")
+        }
 
         this.USER_auth = new UserAuth({ "Email": email, "Password": password }, this.REQ.headers)
+        this.USER_auth.EncryptPassword()
     }
 
     CheckQuery() { throw new Error("Method not implemented.") }
@@ -38,9 +43,7 @@ class LoginService extends ClientService
         {
             this.CheckBody()
 
-            const userDb = await Promise.resolve(this.FindUser())
-                .then(user => { return user })
-                .catch(ex => { throw new Error(ex) })
+            const userDb = await this.FindUser()
 
             if (this.USER_auth!.Password != userDb.Password)
                 throw new Error("Senha de usuário incorreta.")
@@ -50,14 +53,29 @@ class LoginService extends ClientService
                     id: userDb.Id,
                 },
                 Env.JWT_key,
-                { expiresIn: "1d" }
+                { expiresIn: "3d" }
             )
 
-            Send.Ok(this.RES, { token: token, USER_auth: userDb }, this.Action)
+            const response = {
+                token: token,
+                USER_auth: userDb
+            }
+
+            ResponseMessage.Send(
+                HttpStatusEnum.OK,
+                response,
+                this.Action,
+                this.RES
+            )
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro no login. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro no login. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

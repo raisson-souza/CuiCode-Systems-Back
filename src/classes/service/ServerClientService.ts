@@ -4,14 +4,15 @@ import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
 
+import ResponseMessage from "../DTOs/ResponseMessage"
 import UserAuth from "../entities/user/UserAuth"
 import UserRepository from "../entities/user/UserRepository"
 
 import EncryptInfo from "../../functions/EncryptPassword"
 import IsUndNull from "../../functions/IsUndNull"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"
-import Send from "../../functions/system/Send"
 
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 
 abstract class ServerClientService extends Service
@@ -41,11 +42,18 @@ abstract class ServerClientService extends Service
                 await this.AuthenticateUserRequestor(reqAuths.UserAuthId)
                 return
             }
+
+            ResponseMessage.UnauthorizedUser(this.RES, this.Action)
             throw new Error("Nenhuma autenticação encontrada.")
         }
         catch (ex)
         {
-            Send.Unauthorized(this.RES, `Ocorreu um erro na autenticação. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Ocorreu um erro na autenticação. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
     }
 
@@ -57,7 +65,10 @@ abstract class ServerClientService extends Service
         const encryptedKey = EncryptInfo(systemKey)
 
         if (encryptedKey != Env.SystemUserKey)
+        {
+            ResponseMessage.UnauthorizedUser(this.RES, this.Action)
             throw new Error("Sistema não autenticado.")
+        }
 
         this.IsSystemRequestor = true
         this.SameUserAuthAndUserToOperate = false
@@ -71,7 +82,10 @@ abstract class ServerClientService extends Service
     private async AuthenticateUserRequestor(userAuthId : string | null)
     {
         if (IsUndNull(userAuthId))
+        {
+            ResponseMessage.SendNullField(["userAuthId"], this.Action, this.RES)
             throw new Error("Usuário requeridor não encontrado na requisição.")
+        }
 
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, Number.parseInt(userAuthId!)))
@@ -81,7 +95,12 @@ abstract class ServerClientService extends Service
                 .catch(ex => {
                     if ((ex as Error).message === "Nenhum usuário encontrado.")
                     {
-                        Send.NotFound(this.RES, "Usuário requeridor não encontrado.", this.Action)
+                        ResponseMessage.Send(
+                            HttpStatusEnum.NOT_FOUND,
+                            "Usuário requeridor não encontrado.",
+                            this.Action,
+                            this.RES
+                        )
                         throw new Error("Usuário requeridor não encontrado.")
                     }
 
@@ -120,7 +139,7 @@ abstract class ServerClientService extends Service
                     this.USER_auth!.PermissionLevel!.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
                 )
                     return
-                Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
+                ResponseMessage.ProhibitedOperation(this.RES, this.Action)
                 throw new Error("Usuário não autorizado para tal ação.")
             }
             this.SameUserAuthAndUserToOperate = true

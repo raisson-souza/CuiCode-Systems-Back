@@ -2,13 +2,14 @@ import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
 
-import UserRepository from "../entities/user/UserRepository"
+import ResponseMessage from "../DTOs/ResponseMessage"
 import UserAuth from "../entities/user/UserAuth"
+import UserRepository from "../entities/user/UserRepository"
 
 import IsUndNull from "../../functions/IsUndNull"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"
-import Send from "../../functions/system/Send"
 
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 
 abstract class ClientService extends Service
@@ -33,7 +34,12 @@ abstract class ClientService extends Service
                 .catch(ex => {
                     if ((ex as Error).message === "Nenhum usuário encontrado.")
                     {
-                        Send.NotFound(this.RES, "Usuário requeridor não encontrado.", this.Action)
+                        ResponseMessage.Send(
+                            HttpStatusEnum.NOT_FOUND,
+                            "Usuário requeridor não encontrado.",
+                            this.Action,
+                            this.RES
+                        )
                         throw new Error("Usuário requeridor não encontrado.")
                     }
 
@@ -68,7 +74,7 @@ abstract class ClientService extends Service
                     this.USER_auth!.PermissionLevel!.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
                 )
                     return
-                Send.Unauthorized(this.RES, "Usuário não autorizado para tal ação.", this.Action)
+                ResponseMessage.ProhibitedOperation(this.RES, this.Action)
                 throw new Error("Usuário não autorizado para tal ação.")
             }
             this.SameUserAuthAndUserToOperate = true
@@ -80,7 +86,15 @@ abstract class ClientService extends Service
         const userAuthId = this.GetAuthentications().UserAuthId
 
         if (IsUndNull(userAuthId))
+        {
+            ResponseMessage.Send(
+                HttpStatusEnum.NOT_FOUND,
+                "Usuário requeridor não encontrado.",
+                this.Action,
+                this.RES
+            )
             throw new Error("Usuário requeridor não encontrado na requisição.")
+        }
 
         return Number.parseInt(userAuthId!)
     }

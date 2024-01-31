@@ -1,11 +1,12 @@
 import QueryUser from "../utilities/QueryUser"
 
+import ResponseMessage from "../../../classes/DTOs/ResponseMessage"
 import ServerClientService from "../../../classes/service/ServerClientService"
 
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/system/Send"
 
 import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
+import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
 
 /**
  * Queries a user.
@@ -21,10 +22,16 @@ class GetUserService extends ServerClientService
         const query = this.REQ.query as any
 
         if (IsUndNull(query.UserId))
+        {
+            ResponseMessage.SendNullField(["UserId"], this.Action, this.RES)
             throw new Error("Id de usuário não encontrado na URL.");
+        }
 
         if (query.UserId < 0)
+        {
+            ResponseMessage.SendInvalidField(["UserId"], this.Action, this.RES)
             throw new Error("Id de usuário inválido.");
+        }
 
         return Number.parseInt(query.UserId)
     }
@@ -36,7 +43,6 @@ class GetUserService extends ServerClientService
             await this.AuthenticateRequestor()
 
             const {
-                REQ,
                 RES,
                 DB_connection,
                 Action
@@ -50,15 +56,25 @@ class GetUserService extends ServerClientService
 
             await Promise.resolve(QueryUser(DB_connection, userId, nonPrivateLevelQuery))
                 .then(user => {
-                    Send.Ok(RES, user, Action)
+                    ResponseMessage.Send(
+                        HttpStatusEnum.OK,
+                        user,
+                        Action,
+                        RES
+                    )
                 })
                 .catch(ex => {
-                    Send.Error(RES, `Houve um erro ao consultar o usuário. Erro: ${ ex.message }`, Action)
+                    throw new Error((ex as Error).message)
                 })
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

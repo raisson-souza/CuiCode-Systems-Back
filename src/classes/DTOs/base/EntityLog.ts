@@ -1,3 +1,4 @@
+import Label from "../../entities/base/Label"
 import SqlLabel from "./SqlLabel"
 
 class EntityLog
@@ -54,10 +55,18 @@ class EntityLog
 
     static ConvertJsonToString(log : EntityLog[])
     {
+        function ParseValue(value : any)
+        {
+            if (value instanceof Label)
+                return value.Value
+
+            return value
+        }
+
         let json = "{"
 
         log.forEach((prop, i) => {
-            json += `"${ prop.OldValue.SQLValue.ColumnName }": ["${ prop.OldValue.ModelValue.Value }","${ prop.NewValue.ModelValue.Value }"]${ i == log.length - 1 ? "" : "," }`
+            json += `"${ prop.OldValue.SQLValue.ColumnName }": ["${ ParseValue(prop.OldValue.ModelValue.Value) }","${ ParseValue(prop.NewValue.ModelValue.Value) }"]${ i == log.length - 1 ? "" : "," }`
         })
 
         json += "}"

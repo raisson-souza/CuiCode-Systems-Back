@@ -1,8 +1,9 @@
 import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
 import ClientService from "../../../../classes/service/ClientService"
+import ResponseMessage from "../../../../classes/DTOs/ResponseMessage"
 
-import Send from "../../../../functions/system/Send"
+import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
 
 class SendManualEmailApprovalService extends ClientService
 {
@@ -28,15 +29,25 @@ class SendManualEmailApprovalService extends ClientService
 
             await Promise.resolve(new SendApprovalEmailOperation(this.USER_auth!, DB_connection).PerformOperation())
                 .then(() => {
-                    Send.Ok(RES, "Solicitação de aprovação de email realizada com sucesso.", Action)
+                    ResponseMessage.Send(
+                        HttpStatusEnum.ACCEPTED,
+                        "Solicitação de aprovação de email realizada com sucesso.",
+                        Action,
+                        RES
+                    )
                 })
                 .catch(ex => {
-                    throw new Error(ex.message)
+                    throw new Error((ex as Error).message)
                 })
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao realizar a solicitação de aprovação de email. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao realizar a solicitação de aprovação de email. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

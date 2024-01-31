@@ -3,12 +3,14 @@ import { Request, Response } from "express"
 
 import CONFIG from "../../../config/database_config.json"
 
+import ResponseMessage from "../../DTOs/ResponseMessage"
 import UserAuth from "../../entities/user/UserAuth"
 
 import IService from "../../../interfaces/IService"
 
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/system/Send"
+
+import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
 
 /**
  * Contains all necessary params for all endpoints
@@ -48,8 +50,12 @@ abstract class Service implements IService
         await this.DB_connection.connect()
             .then(() => {})
             .catch(ex => {
-                Send.Error(this.RES, `Houve um erro ao conectar no banco. Erro: ${ ex.message }`, "Conexão no banco")
-                throw new Error()
+                ResponseMessage.Send(
+                    HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                    `Houve um erro ao conectar no banco. Erro: ${ ex.message }`,
+                    this.Action,
+                    this.RES
+                )
             })
     }
 

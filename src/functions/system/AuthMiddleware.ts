@@ -6,9 +6,12 @@ import {
 import { verify } from "jsonwebtoken"
 
 import Env from "../../config/environment"
-import Send from "./Send"
+
+import ResponseMessage from "../../classes/DTOs/ResponseMessage"
 
 import IsUndNull from "../IsUndNull"
+
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 async function AuthMiddleware
 (
@@ -37,7 +40,10 @@ async function AuthMiddleware
             const { authorization } = req.headers
 
             if (IsUndNull(authorization))
+            {
+                ResponseMessage.UnauthorizedUser(res, "AuthMiddleware")
                 throw new Error("Usuário não autenticado.")
+            }
 
             const token = authorization!.split(" ")[1]!
 
@@ -66,7 +72,12 @@ async function AuthMiddleware
     }
     catch (ex)
     {
-        Send.Invalid(res, `Erro na autenticação: ${ (ex as Error).message }`, "Autenticação de usuário.")
+        ResponseMessage.Send(
+            HttpStatusEnum.INTERNAL_SERVER_ERROR,
+            `Erro na autenticação: ${ (ex as Error).message }`,
+            "AuthMiddleware",
+            res
+        )
     }
 }
 

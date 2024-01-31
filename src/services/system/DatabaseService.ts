@@ -1,6 +1,8 @@
+import ResponseMessage from "../../classes/DTOs/ResponseMessage"
+
 import ServerService from "../../classes/service/ServerService"
 
-import Send from "../../functions/system/Send"
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 /**
  * Service de configuração e validação do banco.
@@ -25,27 +27,47 @@ class DatabaseService extends ServerService
                     {
                         return this.FoundCuiCodeSystemsDatabase()
                             .then(() => {
-                                Send.Created(this.RES, "Banco de dados configurado com sucesso.", this.Action)
+                                ResponseMessage.Send(
+                                    HttpStatusEnum.CREATED,
+                                    "Banco de dados configurado com sucesso.",
+                                    this.Action,
+                                    this.RES
+                                )
                             })
                             .catch(ex => {
-                                Send.Error(this.RES, `Houve um erro ao configurar o banco de dados. Erro: ${ (ex as Error).message }`, this.Action)
+                                throw new Error((ex as Error).message)
                             })
                     }
-                    return Send.Ok(this.RES, "Banco de dados já configurado.", this.Action)
+                    return ResponseMessage.Send(
+                        HttpStatusEnum.ACCEPTED,
+                        "Banco de dados já configurado.",
+                        this.Action,
+                        this.RES
+                    )
                 })
                 .catch(async () => {
                     return this.FoundCuiCodeSystemsDatabase()
                         .then(() => {
-                            Send.Created(this.RES, "Banco de dados configurado com sucesso.", this.Action)
+                            ResponseMessage.Send(
+                                HttpStatusEnum.CREATED,
+                                "Banco de dados configurado com sucesso.",
+                                this.Action,
+                                this.RES
+                            )
                         })
                         .catch(ex => {
-                            Send.Error(this.RES, `Houve um erro ao configurar o banco de dados. Erro: ${ (ex as Error).message }`, this.Action)
+                            throw new Error((ex as Error).message)
                         })
                 })
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao configurar o banco. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao configurar o banco. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
     }
 

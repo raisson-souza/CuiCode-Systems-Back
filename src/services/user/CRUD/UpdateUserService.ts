@@ -1,18 +1,19 @@
-import ClientService from "../../../classes/service/ClientService"
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
 import { EntityLog } from "../../../classes/DTOs/base/EntityLog"
+import ClientService from "../../../classes/service/ClientService"
+import EmailSender from "../../../classes/entities/email/EmailSender"
+import ResponseMessage from "../../../classes/DTOs/ResponseMessage"
 import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../classes/entities/user/UserRepository"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
 
-import EmailSender from "../../../classes/entities/email/EmailSender"
 import IsUndNull from "../../../functions/IsUndNull"
-import Send from "../../../functions/system/Send"
 
 import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
+import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
 
 /**
@@ -32,7 +33,10 @@ class UpdateUserService extends ClientService
         const user = new User(body)
 
         if (IsUndNull(user.Id))
+        {
+            ResponseMessage.SendNullField(["Id"], this.Action, this.RES)
             throw new Error("Id de usuário a ser atualizado não encontrado.")
+        }
 
         return user
     }
@@ -61,11 +65,21 @@ class UpdateUserService extends ClientService
 
             await this.PersistUserUpdate(user)
 
-            Send.Ok(RES, `Usuário editado com sucesso.`, Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.OK,
+                "Usuário editado com sucesso.",
+                Action,
+                RES
+            )
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`, this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
         finally
         {

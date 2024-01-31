@@ -8,7 +8,8 @@ import ListUsersService from "../services/user/CRUD/ListUsersService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
-import Send from "../functions/system/Send"
+import ResponseMessage from "../classes/DTOs/ResponseMessage"
+
 import AuthMiddleware from "../functions/system/AuthMiddleware"
 
 function UsersController(app : Express)
@@ -29,11 +30,11 @@ function UsersController(app : Express)
         .get(AuthMiddleware, (req, res) => {
             new ListUsersService(req, res).Operation()
         })
-        .post(AuthMiddleware, (_, res) => {
-            Send.Invalid(res, "Operação não desenvolvida.", "Operação inválida.")
+        .post((_, res) => {
+            ResponseMessage.NotImplementedRoute(res)
         })
-        .put(AuthMiddleware, (_, res) => {
-            Send.Invalid(res, "Operação não desenvolvida.", "Operação inválida.")
+        .put((_, res) => {
+            ResponseMessage.NotImplementedRoute(res)
         })
 
     app.get('/email/approval', (req, res) => {

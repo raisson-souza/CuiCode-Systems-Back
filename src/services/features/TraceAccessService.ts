@@ -1,9 +1,10 @@
 import ServerService from "../../classes/service/ServerService"
 
 import EmailSender from "../../classes/entities/email/EmailSender"
-import Send from "../../functions/system/Send"
+import ResponseMessage from "../../classes/DTOs/ResponseMessage"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 class TraceAccessService extends ServerService
 {
@@ -26,11 +27,21 @@ class TraceAccessService extends ServerService
                 JSON.stringify(emailBody)
             )
 
-            Send.Ok(this.RES, "Ação de rastreio realizada com sucesso.", this.Action)
+            ResponseMessage.Send(
+                HttpStatusEnum.ACCEPTED,
+                "Ação de rastreio realizada com sucesso.",
+                this.Action,
+                this.RES
+            )
         }
         catch (ex)
         {
-            Send.Error(this.RES, `Houve um erro no envio do email. Erro: ${ (ex as Error).message }`, "Envio de e-mail")
+            ResponseMessage.Send(
+                HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                `Houve um erro no envio do email. Erro: ${ (ex as Error).message }`,
+                this.Action,
+                this.RES
+            )
         }
     }
 }
