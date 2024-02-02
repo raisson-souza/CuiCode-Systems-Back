@@ -130,7 +130,7 @@ abstract class UserRepository
         if (!IsUndNull(user.Username))
             this.ValidateUsername(user)
 
-        if (!IsUndNull(user.Email) && IsUndNull(user.RecoveryEmail))
+        if (!IsUndNull(user.Email) && !IsUndNull(user.RecoveryEmail))
         {
             if (user.Email.indexOf("@") == -1 || user.RecoveryEmail.indexOf("@") == -1)
                 throw new Error("Email ou email de recuperação inválido.")

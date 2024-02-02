@@ -73,6 +73,28 @@ class EntityLog
 
         return json
     }
+
+    static BuildSqlQuery(entityLog : EntityLog[])
+    {
+        let query = ""
+
+        entityLog.forEach((log, i) => {
+            query += `"${ log.NewValue.SQLValue.ColumnName }" = ${ log.NewValue.SQLValue.ParsePropNameToSql() }${ i < entityLog.length - 1 ? ", " : " "}`
+        })
+
+        return query
+    }
+
+    static RetrieveNewValuesInModel(entityLog : EntityLog[])
+    {
+        const model : any = {}
+
+        entityLog.forEach(log => {
+            model[log.NewValue.ModelValue.Property] = log.NewValue.ModelValue.Value
+        })
+
+        return model
+    }
 }
 
 class EntityProperty

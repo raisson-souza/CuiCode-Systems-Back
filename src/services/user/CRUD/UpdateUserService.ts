@@ -6,9 +6,8 @@ import ClientService from "../../../classes/service/ClientService"
 import EmailSender from "../../../classes/entities/email/EmailSender"
 import ResponseMessage from "../../../classes/DTOs/ResponseMessage"
 import User from "../../../classes/entities/user/User"
+import UserBase from "../../../classes/bases/UserBase"
 import UserRepository from "../../../classes/entities/user/UserRepository"
-
-import IUserInSql from "../../../interfaces/IUserInSql"
 
 import IsUndNull from "../../../functions/IsUndNull"
 
@@ -53,17 +52,17 @@ class UpdateUserService extends ClientService
                 Action
             } = this
 
-            const user = this.CheckBody()
+            const userModel = this.CheckBody()
 
             await this.AuthenticateRequestor()
 
-            this.ValidateRequestor(PermissionLevelEnum.Member, user.Id)
+            this.ValidateRequestor(PermissionLevelEnum.Member, userModel.Id)
 
-            await UserRepository.ValidateUpdate(user, DB_connection)
+            await UserRepository.ValidateUpdate(userModel, DB_connection)
 
-            this.ValidateUpdate(user)
+            this.ValidateUpdate(userModel)
 
-            await this.PersistUserUpdate(user)
+            await this.PersistUserUpdate(userModel)
 
             ResponseMessage.Send(
                 HttpStatusEnum.OK,
@@ -104,36 +103,30 @@ class UpdateUserService extends ClientService
         }
     }
 
-    async PersistUserUpdate(user : User)
+    async PersistUserUpdate(userModel : User)
     {
         try
         {
             const { DB_connection } = this
 
-            if (IsUndNull(user!.Id))
+            if (IsUndNull(userModel!.Id))
                 throw new Error("Id do usuário a ser editado deve ser informado.")
 
-            const userLogProps = await this.GatherUserLog(user)
+            const userLogProps = await this.GatherUserLog(userModel)
 
             const {
-                userDb,
                 userLog,
                 emailChanged
             } = userLogProps
 
-            const query = `UPDATE users SET ${ this.BuildUserPutQuery(userLog) } WHERE id = ${ user!.Id }`
+            const updatedUser = await UserBase.Update(DB_connection, userModel.Id, userLog, this.USER_auth!.Id)
 
-            await DB_connection.query(query)
-                .then(() => {})
-                .catch(ex => {
-                    throw new Error((ex as Error).message)
-                })
-
-            // Valida se o email foi mudado, se sim, captura as informações necessárias para a nova aprovação de email.
             if (emailChanged)
-                this.HandleEmailChange(userDb, userLog)
+                await new SendApprovalEmailOperation(updatedUser, this.DB_connection).PerformOperation()
 
-            await new SetUserLogOperation(user, DB_connection, userLog, !this.SameUserAuthAndUserToOperate).PerformOperation()
+            this.DetectUserDeactivationOrDeletion(userLog, updatedUser!)
+
+            await new SetUserLogOperation(userModel, DB_connection, userLog, !this.SameUserAuthAndUserToOperate).PerformOperation()
         }
         catch (ex)
         {
@@ -141,54 +134,41 @@ class UpdateUserService extends ClientService
         }
     }
 
-    private async GatherUserLog(user : User)
+    private async GatherUserLog(userModel : User)
     : Promise<{
-        userDb : IUserInSql,
         userLog : EntityLog[],
         emailChanged : boolean
     }>
     {
-        const userModelInSQL = user!.ConvertUserToSqlObject()
+        const userDb = await UserBase.Get(this.DB_connection, userModel.Id)
 
-        const userDbQuery = `SELECT * FROM users WHERE id = ${ user!.Id }`
-
-        const userDb = await this.DB_connection.query(userDbQuery)
-            .then(result => {
-                if (result.rowCount == 0)
-                    throw new Error(`Usuário ${ user!.GenerateUserKey() } não encontrado.`)
-
-                // userDb assume o tipo de userInSql que utiliza de assinatura de índice
-                // na qual permite acesso as chaves por qualquer string.
-                return result.rows[0] as IUserInSql
-            })
-            .catch(ex => {
-                throw new Error((ex as Error).message)
-            })
+        if (IsUndNull(userDb))
+            throw new Error(`Usuário ${ userModel!.GenerateUserKey() } não encontrado.`)
 
         let userLog : EntityLog[] = []
 
         let emailChanged = false
 
-        // Serão comparadas as diferenças entre o usuário do banco com as novas alterações.
-        for (let prop in userDb)
+        const userModelSql = userModel.ConvertUserToSqlObject()
+        const userDbSql = userDb!.ConvertUserToSqlObject()
+
+        // Serão comparadas as diferenças entre o usuário do banco com o usuário modelo.
+        for (let prop in userDbSql)
         {
             //  Valida se a prop do usuário do banco é diferente da prop do model do usuário, eliminando props não atualizadas (indefinidas)
-            if (userDb[prop] != userModelInSQL[prop] && !IsUndNull(userModelInSQL[prop]))
+            if (userDbSql[prop] != userModelSql[prop] && !IsUndNull(userModelSql[prop]))
             {
-                userLog.push(new EntityLog(prop, userDb[prop], userModelInSQL[prop]))
+                userLog.push(new EntityLog(prop, userDbSql[prop], userModelSql[prop]))
 
                 // Se um dos parâmetros do usuário a ser editado é o email, o novo email deve ser validado.
                 if (prop == "email")
                 {
-                    userLog.push(new EntityLog("email_approved", userDb["email_approved"], false))
+                    userLog.push(new EntityLog("email_approved", userDbSql["email_approved"], false))
                     emailChanged = true
                 }
 
-                if (prop == "username" && userDb["email_approved"] == false)
+                if (prop == "username" && userDbSql["email_approved"] == false)
                     throw new Error("Para editar o username é necessário aprovar o email.")
-
-                if (prop == "active" || prop == "deleted")
-                    this.DetectUserDeactivationOrDeletion(prop, userModelInSQL[prop], user!, userDb)
             }
         }
 
@@ -196,79 +176,43 @@ class UpdateUserService extends ClientService
             throw new Error("Nenhuma edição realizada no usuário.")
 
         return {
-            userDb: userDb,
             userLog: userLog,
             emailChanged: emailChanged
         }
     }
 
     /**
-     * Constrói e retorna a query de atualização do usuário baseado nos novos valores.
-     */
-    private BuildUserPutQuery(userLog : EntityLog[]) : string
-    {
-        let query = ""
-
-        userLog.forEach(prop => {
-            query += `"${ prop.NewValue.SQLValue.ColumnName }" = ${ prop.NewValue.SQLValue.ParsePropNameToSql() },`
-        })
-
-        query += `modified = now(), modified_by = ${ this.USER_auth!.Id }`
-
-        return query
-    }
-
-    /**
      * Envia email de registro ao sistema em caso de desativação ou exclusão de usuário.
-     * @param action Excluido verdadeiro > Excluido | Excluido falso > Restaurado | Ativado verdadeiro > Ativado | Ativado falso > Desativado
      */
     private DetectUserDeactivationOrDeletion
     (
-        actionName : string,
-        action : boolean,
-        userModel : User,
-        userDb : IUserInSql
-    ) : void
+        userLog : EntityLog[],
+        updatedUser : User
+    )
     {
-        const userDbConverted = new User(userDb)
-        let emailMessage = `Usuário (${ userModel.GenerateUserKey() } / ${ userDbConverted.GenerateUserKey() }) foi `
+        let emailMessage = `Usuário ${ updatedUser.GenerateUserKey() } foi `
 
-        if (actionName == "active")
+        const deleted = EntityLog.GetProperyValue('deleted', userLog)
+
+        if (!IsUndNull(deleted.NewValue))
         {
-            emailMessage += action
-                ? "ativado(a) "
-                : "desativado(a) "
+            emailMessage += deleted.NewValue
+                ? "deletado(a)"
+                : "restaurado(a)"
         }
-        else
+
+        const active = EntityLog.GetProperyValue('active', userLog)
+
+        if (!IsUndNull(active.NewValue))
         {
-            emailMessage += action
-                ? "excluído(a) "
-                : "restaurado(a) "
+            emailMessage += active.NewValue
+                ? "ativado(a)"
+                : "desativado(a)"
         }
 
         emailMessage += "no sistema."
 
         EmailSender.Internal(EmailTitlesEnum.USER_DEACTIVATED, emailMessage)
-    }
-
-    /**
-     * Envia um email de aprovação de email para o novo email do usuário atualizado.
-     */
-    private async HandleEmailChange
-    (
-        userDb : IUserInSql,
-        userLog : EntityLog[]
-    )
-    {
-        const userModelToEmailChange = new User(
-            {
-                "Id": userDb["id"],
-                "Email": EntityLog.GetProperyValue("email", userLog).NewValue,
-                "Name": EntityLog.GetProperyValue("name", userLog).NewValue,
-                "Username": EntityLog.GetProperyValue("username", userLog).NewValue
-            }
-        )
-        await new SendApprovalEmailOperation(userModelToEmailChange, this.DB_connection).PerformOperation()
     }
 }
 
