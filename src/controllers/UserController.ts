@@ -4,6 +4,7 @@ import { Multer } from "multer"
 import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserLogsService from "../services/user/services/log/GetUserLogsService"
+import GetUserPhoto from "../services/user/services/photo/GetUserPhoto"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
 import RegistryUserPhoto from "../services/user/services/photo/RegistryUserPhoto"
@@ -59,6 +60,10 @@ function UsersController(app : Express, upload : Multer)
         .put(AuthMiddleware, (req, res) => {
             new RegistryUserPhoto(req, res).Operation()
         })
+
+    app.get('/user/:user_id/photo', AuthMiddleware, (req, res) => {
+        new GetUserPhoto(req, res).Operation()
+    })
 }
 
 export default UsersController
