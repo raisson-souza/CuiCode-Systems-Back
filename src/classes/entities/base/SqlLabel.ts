@@ -1,4 +1,4 @@
-import Label from "../../entities/base/Label"
+import Label from "./Label"
 
 /**
  * Armazena o nome da coluna, o valor da mesma e o tipo.

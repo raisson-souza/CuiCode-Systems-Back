@@ -1,7 +1,7 @@
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
 import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
-import { EntityLog } from "../../../classes/DTOs/base/EntityLog"
+import { EntityLog } from "../../../classes/entities/base/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
 import EmailSender from "../../../classes/entities/email/EmailSender"
 import ResponseMessage from "../../../classes/system/ResponseMessage"

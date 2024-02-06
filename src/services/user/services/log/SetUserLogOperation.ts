@@ -1,6 +1,6 @@
 import { Client } from "pg"
 
-import { EntityLog } from "../../../../classes/DTOs/base/EntityLog"
+import { EntityLog } from "../../../../classes/entities/base/EntityLog"
 import Operation from "../../../../classes/service/base/Operation"
 import User from "../../../../classes/entities/user/User"
 

@@ -2,9 +2,9 @@ import { Client } from "pg"
 
 import QueryUser from "../../services/user/utilities/QueryUser"
 
-import { EntityLog } from "../DTOs/base/EntityLog"
+import { EntityLog } from "../entities/base/EntityLog"
 import EntityBase from "./base/EntityBase"
-import SqlLabel from "../DTOs/base/SqlLabel"
+import SqlLabel from "../entities/base/SqlLabel"
 import User from "../entities/user/User"
 import UserPhoto from "../DTOs/UserPhoto"
 

@@ -1,4 +1,4 @@
-import Label from "../../entities/base/Label"
+import Label from "./Label"
 import SqlLabel from "./SqlLabel"
 
 class EntityLog

@@ -1,6 +1,6 @@
 import { Client } from "pg"
 
-import SqlLabel from "../../classes/DTOs/base/SqlLabel"
+import SqlLabel from "../../classes/entities/base/SqlLabel"
 
 import IsUndNull from "../IsUndNull"
 
