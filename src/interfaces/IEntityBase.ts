@@ -1,9 +1,36 @@
+import { Client } from "pg"
+
+import { EntityLog } from "../classes/entities/base/EntityLog"
+import Entity from "../classes/entities/base/Entity"
+
 interface IEntityBase
 {
-    Get(db : any, id : any) : any
-    Update(db : any, id : any, model : any, modifierId : number) : any
-    UpdateByModel(db : any, userId : number, model : any, modifierId : number) : any
-    Create(db : any, model : any) : any
+    Get
+    (
+        db : Client,
+        id : number
+    ) : any
+
+    UpdateByLog
+    (
+        db : Client,
+        entityId : number,
+        model : EntityLog[],
+        modifiedBy : number
+    ) : any
+
+    UpdateByModel
+    (
+        db : Client,
+        model : Entity,
+        modifiedBy : number
+    ) : any
+
+    Create
+    (
+        db : Client,
+        model : Entity
+    ) : any
 }
 
 export default IEntityBase

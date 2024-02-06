@@ -3,15 +3,17 @@ import { Client } from "pg"
 import QueryUser from "../../services/user/utilities/QueryUser"
 
 import { EntityLog } from "../entities/base/EntityLog"
-import EntityBase from "./base/EntityBase"
 import SqlLabel from "../entities/base/SqlLabel"
 import User from "../entities/user/User"
 import UserPhoto from "../DTOs/UserPhoto"
 
 import IsUndNull from "../../functions/IsUndNull"
+import IEntityBase from "../../interfaces/IEntityBase"
+import Entity from "../entities/base/Entity"
 
-abstract class UserBase extends EntityBase
+abstract class UserBase implements IEntityBase
 {
+    Get(db: Client, id: number) { }
     static async Get(db : Client, id : number) : Promise<User | null>
     {
         try
@@ -24,11 +26,12 @@ abstract class UserBase extends EntityBase
         }
     }
 
-    static async Update(db : Client, userId : number, log : EntityLog[], modifierId : number) : Promise<User | null>
+    UpdateByLog(db: Client, entityId: number, model: EntityLog[], modifiedBy: number) { }
+    static async Update(db : Client, userId : number, log : EntityLog[], modifiedBy : number) : Promise<User | null>
     {
         try
         {
-            const query = `UPDATE users SET ${ EntityLog.BuildSqlQuery(log) }, modified = now(), modified_by = ${ modifierId } WHERE id = ${ userId }`
+            const query = `UPDATE users SET ${ EntityLog.BuildSqlQuery(log) }, modified = now(), modified_by = ${ modifiedBy } WHERE id = ${ userId }`
             await db.query(query)
             return UserBase.Get(db, userId)
         }
@@ -38,21 +41,22 @@ abstract class UserBase extends EntityBase
         }
     }
 
-    static async UpdateByModel(db : Client, model : User, modifierId : number) : Promise<User | null>
+    UpdateByModel(db: Client, model: Entity, modifiedBy: number) { }
+    static async UpdateByModel(db : Client, model : User, modifiedBy : number) : Promise<User | null>
     {
         try
         {
             let query = "UPDATE users SET "
             const formattedUserModel = model.ConvertUserToSqlObject()
             const formattedUserModelEntries = Object.entries(formattedUserModel)
-
+            
             formattedUserModelEntries.forEach((prop, i) => {
                 if (!IsUndNull(prop[1]))
-                    query += `"${ prop[0] }" = ${ SqlLabel.ParsePropNameToSql(typeof prop[1], prop[1]) }${ i < formattedUserModelEntries.length - 1 ? ", " : "" }`
-            })
-
-            query += ` modified = now(), modified_by = ${ modifierId } WHERE id = ${ model.Id }`
-            await db.query(query)
+                query += `"${ prop[0] }" = ${ SqlLabel.ParsePropNameToSql(typeof prop[1], prop[1]) }${ i < formattedUserModelEntries.length - 1 ? ", " : "" }`
+        })
+        
+        query += ` modified = now(), modified_by = ${ modifiedBy } WHERE id = ${ model.Id }`
+        await db.query(query)
             return await UserBase.Get(db, model.Id)
         }
         catch (ex)
@@ -61,21 +65,22 @@ abstract class UserBase extends EntityBase
         }
     }
 
+    Create(db: Client, model: Entity) { }
     static async Create(db : Client, model : User) { }
-
+    
     static async GetPhoto(db : Client, userId : number)
     {
         const query = `SELECT * FROM users_photos WHERE user_id = ${ userId }`
-
+        
         return await db.query(query)
             .then(result => {
                 if (result.rowCount === 0)
-                    return null
-                return new UserPhoto(result.rows[0])
-            })
-            .catch(ex => {
-                throw new Error(ex.message)
-            })
+                        return null
+                    return new UserPhoto(result.rows[0])
+                })
+                .catch(ex => {
+                    throw new Error(ex.message)
+                })
     }
 
     static async CreateOrUpdatePhoto(db : Client, userId : number, photo : string)
