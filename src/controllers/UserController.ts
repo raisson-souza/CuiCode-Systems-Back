@@ -11,7 +11,7 @@ import RegistryUserPhoto from "../services/user/services/photo/RegistryUserPhoto
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
-import ResponseMessage from "../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../classes/system/ResponseMessage"
 
 import AuthMiddleware from "../functions/system/AuthMiddleware"
 

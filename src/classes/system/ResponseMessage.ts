@@ -2,7 +2,7 @@ import { Response } from "express"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
-import Send from "../system/Send"
+import Send from "./Send"
 
 abstract class ResponseMessage
 {

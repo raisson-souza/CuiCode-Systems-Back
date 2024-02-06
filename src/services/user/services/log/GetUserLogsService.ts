@@ -2,7 +2,7 @@ import { Client } from "pg"
 
 import DateCustom from "../../../../classes/custom/DateCustom"
 import Operation from "../../../../classes/service/base/Operation"
-import ResponseMessage from "../../../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import ServerClientService from "../../../../classes/service/ServerClientService"
 import User from "../../../../classes/entities/user/User"
 

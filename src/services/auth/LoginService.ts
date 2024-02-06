@@ -3,7 +3,7 @@ import { sign } from "jsonwebtoken"
 import Env from "../../config/environment"
 
 import ClientService from "../../classes/service/ClientService"
-import ResponseMessage from "../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../classes/system/ResponseMessage"
 import User from "../../classes/entities/user/User"
 import UserAuth from "../../classes/entities/user/UserAuth"
 

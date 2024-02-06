@@ -5,7 +5,7 @@ import ClientService from "../../../../classes/service/ClientService"
 import IsUndNull from "../../../../functions/IsUndNull"
 import Send from "../../../../classes/system/Send"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
-import ResponseMessage from "../../../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
 
 class ApproveUserEmailService extends ClientService

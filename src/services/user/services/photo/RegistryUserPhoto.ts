@@ -1,5 +1,5 @@
 import ClientService from "../../../../classes/service/ClientService"
-import ResponseMessage from "../../../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import UserBase from "../../../../classes/bases/UserBase"
 
 import IsUndNull from "../../../../functions/IsUndNull"

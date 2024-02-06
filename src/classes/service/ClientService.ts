@@ -2,7 +2,7 @@ import QueryUser from "../../services/user/utilities/QueryUser"
 
 import Service from "./base/Service"
 
-import ResponseMessage from "../DTOs/ResponseMessage"
+import ResponseMessage from "../system/ResponseMessage"
 import UserAuth from "../entities/user/UserAuth"
 import UserRepository from "../entities/user/UserRepository"
 

@@ -1,6 +1,6 @@
 import QueryUser from "../utilities/QueryUser"
 
-import ResponseMessage from "../../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../../classes/system/ResponseMessage"
 import ServerClientService from "../../../classes/service/ServerClientService"
 
 import IsUndNull from "../../../functions/IsUndNull"

@@ -1,6 +1,6 @@
 import Env from "../../config/environment"
 
-import ResponseMessage from "../DTOs/ResponseMessage"
+import ResponseMessage from "../system/ResponseMessage"
 import Service from "./base/Service"
 
 import EncryptInfo from "../../functions/EncryptPassword"

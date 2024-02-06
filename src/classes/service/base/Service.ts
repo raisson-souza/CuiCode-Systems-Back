@@ -3,7 +3,7 @@ import { Request, Response } from "express"
 
 import CONFIG from "../../../config/database_config.json"
 
-import ResponseMessage from "../../DTOs/ResponseMessage"
+import ResponseMessage from "../../system/ResponseMessage"
 import UserAuth from "../../entities/user/UserAuth"
 
 import IService from "../../../interfaces/IService"

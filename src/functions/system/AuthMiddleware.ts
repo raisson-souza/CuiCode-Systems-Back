@@ -7,7 +7,7 @@ import { verify } from "jsonwebtoken"
 
 import Env from "../../config/environment"
 
-import ResponseMessage from "../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../classes/system/ResponseMessage"
 
 import IsUndNull from "../IsUndNull"
 

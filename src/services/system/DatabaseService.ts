@@ -1,4 +1,4 @@
-import ResponseMessage from "../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../classes/system/ResponseMessage"
 
 import ServerService from "../../classes/service/ServerService"
 

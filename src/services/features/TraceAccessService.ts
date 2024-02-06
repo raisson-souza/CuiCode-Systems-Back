@@ -1,7 +1,7 @@
 import ServerService from "../../classes/service/ServerService"
 
 import EmailSender from "../../classes/entities/email/EmailSender"
-import ResponseMessage from "../../classes/DTOs/ResponseMessage"
+import ResponseMessage from "../../classes/system/ResponseMessage"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
