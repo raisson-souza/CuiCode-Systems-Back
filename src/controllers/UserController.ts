@@ -6,7 +6,7 @@ import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserLogsService from "../services/user/services/log/GetUserLogsService"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
-import RegistryUserPhoto from "../services/user/services/others/RegistryUserPhoto"
+import RegistryUserPhoto from "../services/user/services/photo/RegistryUserPhoto"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
