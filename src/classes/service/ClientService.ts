@@ -4,7 +4,7 @@ import Service from "./base/Service"
 
 import ResponseMessage from "../system/ResponseMessage"
 import UserAuth from "../entities/user/UserAuth"
-import UserRepository from "../entities/user/UserRepository"
+import UserRepository from "../../repositories/UserRepository"
 
 import IsUndNull from "../../functions/IsUndNull"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"

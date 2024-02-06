@@ -1,11 +1,11 @@
 import { Client } from "pg"
 
-import EntityRepository from "../base/EntityRepository"
-import User from "./User"
+import EntityRepository from "./EntityRepository"
+import User from "../classes/entities/user/User"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../functions/IsUndNull"
 
-import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
+import PermissionLevelEnum from "../enums/PermissionLevelEnum"
 
 abstract class UserRepository
 {

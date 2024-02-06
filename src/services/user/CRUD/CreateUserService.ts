@@ -5,7 +5,7 @@ import ServerService from "../../../classes/service/ServerService"
 import EmailSender from "../../../classes/entities/email/EmailSender"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import User from "../../../classes/entities/user/User"
-import UserRepository from "../../../classes/entities/user/UserRepository"
+import UserRepository from "../../../repositories/UserRepository"
 
 import IsUndNull from "../../../functions/IsUndNull"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
