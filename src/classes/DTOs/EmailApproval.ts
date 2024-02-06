@@ -14,7 +14,7 @@ class EmailApproval extends Entity
         approved : boolean
     )
     {
-        super()
+        super({})
         this.Id = id
         this.UserId = user_id
         this.Email = email

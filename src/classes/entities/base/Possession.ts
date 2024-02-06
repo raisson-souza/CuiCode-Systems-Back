@@ -11,7 +11,7 @@ abstract class Possession implements IPossession
     Modified : Date | null
     ModifiedBy : number | null
 
-    Construct(body : any)
+    constructor(body : any)
     {
         this.Id = !IsUndNull(body["Id"]) ? body["Id"] : body["id"]
         this.Active = !IsUndNull(body["Active"]) ? body["Active"] : body["active"]

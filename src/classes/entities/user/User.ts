@@ -34,7 +34,7 @@ class User extends Entity
     {
         try
         {
-            super()
+            super(body)
             this.ConvertBody(body)
         }
         catch (ex)
@@ -50,7 +50,6 @@ class User extends Entity
      */
     private ConvertBody(body : any) : void
     {
-        this.Id = !IsUndNull(body["Id"]) ? body["Id"] : body["id"]
         this.Username = !IsUndNull(body["Username"]) ? body["Username"] : body["username"]
         this.Name = !IsUndNull(body["Name"]) ? body["Name"] : body["name"]
         this.BirthDate = !IsUndNull(body["BirthDate"]) ? body["BirthDate"] : body["birthdate"]
@@ -63,11 +62,6 @@ class User extends Entity
         this.PermissionLevel = this.ConvertEnum(!IsUndNull(body["PermissionLevel"]) ? body["PermissionLevel"] : body["permission_level"], PermissionLevel, "PermissionLevel")
         this.Sex = this.ConvertEnum(!IsUndNull(body["Sex"]) ? body["Sex"] : body["sex"], Sex, "Sex")
         this.EmailAproved = !IsUndNull(body["EmailAproved"]) ? body["EmailAproved"] : body["email_approved"]
-        this.Active = !IsUndNull(body["Active"]) ? body["Active"] : body["active"]
-        this.Created = !IsUndNull(body["Created"]) ? body["Created"] : body["created"]
-        this.Deleted = !IsUndNull(body["Deleted"]) ? body["Deleted"] : body["deleted"]
-        this.Modified = !IsUndNull(body["Modified"]) ? body["Modified"] : body["modified"]
-        this.ModifiedBy = !IsUndNull(body["ModifiedBy"]) ? body["ModifiedBy"] : body["modified_by"]
     }
 
     /**

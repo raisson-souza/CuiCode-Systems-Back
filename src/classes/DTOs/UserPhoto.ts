@@ -15,8 +15,7 @@ class UserPhoto extends Possession
 
     constructor(body : any)
     {
-        super()
-        super.Construct(body)
+        super(body)
         this.UserId = !IsUndNull(body["UserId"]) ? body["UserId"] : body["user_id"]
         this.Base64 = !IsUndNull(body["Base64"]) ? body["Base64"] : body["base_64"]
     }
