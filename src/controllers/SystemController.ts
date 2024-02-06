@@ -2,7 +2,7 @@ import { Express } from "express"
 
 import DatabaseService from "../services/system/DatabaseService"
 
-import AuthMiddleware from "../functions/system/AuthMiddleware"
+import AuthMiddleware from "../middlewares/AuthMiddleware"
 
 function SystemController(app : Express)
 {

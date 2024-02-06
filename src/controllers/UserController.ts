@@ -13,7 +13,7 @@ import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
 import ResponseMessage from "../classes/system/ResponseMessage"
 
-import AuthMiddleware from "../functions/system/AuthMiddleware"
+import AuthMiddleware from "../middlewares/AuthMiddleware"
 
 function UsersController(app : Express, upload : Multer)
 {

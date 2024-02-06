@@ -2,7 +2,7 @@ import { Express } from "express"
 
 import TraceAccessService from "../services/features/TraceAccessService"
 
-import AuthMiddleware from "../functions/system/AuthMiddleware"
+import AuthMiddleware from "../middlewares/AuthMiddleware"
 
 function FeaturesController(app : Express)
 {

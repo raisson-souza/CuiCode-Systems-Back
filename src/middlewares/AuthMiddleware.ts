@@ -5,13 +5,13 @@ import {
 } from "express"
 import { verify } from "jsonwebtoken"
 
-import Env from "../../config/environment"
+import Env from "../config/environment"
 
-import ResponseMessage from "../../classes/system/ResponseMessage"
+import ResponseMessage from "../classes/system/ResponseMessage"
 
-import IsUndNull from "../IsUndNull"
+import IsUndNull from "../functions/IsUndNull"
 
-import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
+import HttpStatusEnum from "../enums/system/HttpStatusEnum"
 
 async function AuthMiddleware
 (
