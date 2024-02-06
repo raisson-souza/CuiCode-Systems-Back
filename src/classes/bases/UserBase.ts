@@ -7,7 +7,7 @@ import SqlLabel from "../entities/base/SqlLabel"
 import User from "../entities/user/User"
 import UserPhoto from "../DTOs/UserPhoto"
 
-import IsUndNull from "../../functions/IsUndNull"
+import IsUndNull from "../../functions/logic/IsUndNull"
 import IEntityBase from "../../interfaces/IEntityBase"
 import Entity from "../entities/base/Entity"
 

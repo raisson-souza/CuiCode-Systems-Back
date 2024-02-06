@@ -3,9 +3,9 @@ import Label from "../base/Label"
 
 import IUserInSql from "../../../interfaces/IUserInSql"
 
-import EncryptInfo from "../../../functions/EncryptPassword"
-import FormatIdNumber from "../../../functions/FormatIdNumber"
-import IsUndNull from "../../../functions/IsUndNull"
+import EncryptInfo from "../../../functions/security/EncryptPassword"
+import FormatIdNumber from "../../../functions/formatting/FormatIdNumber"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import PermissionLevel from "../../../enums/PermissionLevelEnum"
 import Sex from "../../../enums/SexEnum"

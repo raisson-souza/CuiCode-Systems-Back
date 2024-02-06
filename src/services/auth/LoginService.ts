@@ -7,7 +7,7 @@ import ResponseMessage from "../../classes/system/ResponseMessage"
 import User from "../../classes/entities/user/User"
 import UserAuth from "../../classes/entities/user/UserAuth"
 
-import IsUndNull from "../../functions/IsUndNull"
+import IsUndNull from "../../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 

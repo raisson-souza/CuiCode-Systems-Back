@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-import CaseUndNull from "../../../functions/CaseUndNull"
+import CaseUndNull from "../../../functions/logic/CaseUndNull"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"
 

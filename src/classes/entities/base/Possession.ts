@@ -1,6 +1,6 @@
 import IPossession from "../../../interfaces/IPossession"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 abstract class Possession implements IPossession
 {

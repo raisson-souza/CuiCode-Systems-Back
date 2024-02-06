@@ -2,7 +2,7 @@ import { Client } from "pg"
 
 import SqlLabel from "../../classes/entities/base/SqlLabel"
 
-import IsUndNull from "../IsUndNull"
+import IsUndNull from "../logic/IsUndNull"
 
 /**
  * Queries a user by a property.

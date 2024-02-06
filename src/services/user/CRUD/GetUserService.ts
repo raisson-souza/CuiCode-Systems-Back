@@ -3,7 +3,7 @@ import QueryUser from "../utilities/QueryUser"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import ServerClientService from "../../../classes/service/ServerClientService"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
 import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"

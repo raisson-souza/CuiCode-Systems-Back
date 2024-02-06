@@ -1,6 +1,6 @@
 import User from "./User"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 class UserAuth extends User
 {

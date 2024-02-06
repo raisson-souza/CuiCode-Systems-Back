@@ -1,6 +1,6 @@
 import IEntity from "../../../interfaces/IEntity"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 abstract class Entity implements IEntity
 {

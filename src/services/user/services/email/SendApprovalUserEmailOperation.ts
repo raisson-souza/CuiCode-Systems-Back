@@ -3,7 +3,7 @@ import Env from "../../../../config/environment"
 import Operation from "../../../../classes/service/base/Operation"
 
 import EmailSender from "../../../../classes/entities/email/EmailSender"
-import IsUndNull from "../../../../functions/IsUndNull"
+import IsUndNull from "../../../../functions/logic/IsUndNull"
 import QueryDbRowByProperty from "../../../../functions/SQL/QueryDbRowByProperty"
 
 import EmailTitles from "../../../../enums/EmailTitlesEnum"

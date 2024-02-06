@@ -1,4 +1,4 @@
-import IsUndNull from "../functions/IsUndNull";
+import IsUndNull from "../functions/logic/IsUndNull";
 
 abstract class EntityRepository
 {

@@ -8,7 +8,7 @@ import UserAuth from "../../entities/user/UserAuth"
 
 import IService from "../../../interfaces/IService"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
 

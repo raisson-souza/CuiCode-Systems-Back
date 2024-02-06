@@ -6,7 +6,7 @@ import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import ServerClientService from "../../../../classes/service/ServerClientService"
 import User from "../../../../classes/entities/user/User"
 
-import IsUndNull from "../../../../functions/IsUndNull"
+import IsUndNull from "../../../../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../../../enums/PermissionLevelEnum"

@@ -3,7 +3,7 @@ import Env from "../../config/environment"
 import ResponseMessage from "../system/ResponseMessage"
 import Service from "./base/Service"
 
-import EncryptInfo from "../../functions/EncryptPassword"
+import EncryptInfo from "../../functions/security/EncryptPassword"
 
 abstract class ServerService extends Service
 {

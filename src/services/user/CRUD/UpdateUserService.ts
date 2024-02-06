@@ -9,7 +9,7 @@ import User from "../../../classes/entities/user/User"
 import UserBase from "../../../classes/bases/UserBase"
 import UserRepository from "../../../repositories/UserRepository"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
 import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"

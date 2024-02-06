@@ -8,8 +8,8 @@ import ResponseMessage from "../system/ResponseMessage"
 import UserAuth from "../entities/user/UserAuth"
 import UserRepository from "../../repositories/UserRepository"
 
-import EncryptInfo from "../../functions/EncryptPassword"
-import IsUndNull from "../../functions/IsUndNull"
+import EncryptInfo from "../../functions/security/EncryptPassword"
+import IsUndNull from "../../functions/logic/IsUndNull"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"

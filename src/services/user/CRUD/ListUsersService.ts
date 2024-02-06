@@ -3,7 +3,7 @@ import QueryUsersInfo from "../utilities/QueryUsersInfo"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import ServerService from "../../../classes/service/ServerService"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
 

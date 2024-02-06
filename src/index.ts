@@ -7,7 +7,7 @@ import FeaturesController from "./controllers/FeaturesController"
 import SystemController from "./controllers/SystemController"
 import UsersController from "./controllers/UserController"
 
-import MegaByteCalc from "./functions/MegaByteCalc"
+import MegaByteCalc from "./functions/math/MegaByteCalc"
 
 const app = express()
 const upload = multer(

@@ -1,6 +1,6 @@
 import crypto from "crypto-js"
 
-import IsUndNull from "./IsUndNull"
+import IsUndNull from "../logic/IsUndNull"
 
 /**
  * Função de criptografia de senha baseado em criptografia MD5.

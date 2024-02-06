@@ -3,7 +3,7 @@ import { Client } from "pg"
 import Possession from "../entities/base/Possession"
 import UserBase from "../bases/UserBase"
 
-import IsUndNull from "../../functions/IsUndNull"
+import IsUndNull from "../../functions/logic/IsUndNull"
 
 class UserPhoto extends Possession
 {

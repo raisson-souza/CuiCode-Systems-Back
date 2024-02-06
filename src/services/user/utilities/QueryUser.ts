@@ -2,7 +2,7 @@ import { Client } from "pg"
 
 import User from "../../../classes/entities/user/User"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 /**
  * Queries information about a user.

@@ -6,7 +6,7 @@ import ResponseMessage from "../system/ResponseMessage"
 import UserAuth from "../entities/user/UserAuth"
 import UserRepository from "../../repositories/UserRepository"
 
-import IsUndNull from "../../functions/IsUndNull"
+import IsUndNull from "../../functions/logic/IsUndNull"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"

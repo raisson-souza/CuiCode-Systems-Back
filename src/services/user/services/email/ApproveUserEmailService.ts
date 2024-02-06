@@ -2,7 +2,7 @@ import { EmailApprovalSql } from "../../../../classes/DTOs/EmailApproval"
 
 import ClientService from "../../../../classes/service/ClientService"
 
-import IsUndNull from "../../../../functions/IsUndNull"
+import IsUndNull from "../../../../functions/logic/IsUndNull"
 import Send from "../../../../classes/system/Send"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
 import ResponseMessage from "../../../../classes/system/ResponseMessage"

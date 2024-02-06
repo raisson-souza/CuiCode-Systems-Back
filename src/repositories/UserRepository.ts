@@ -3,7 +3,7 @@ import { Client } from "pg"
 import EntityRepository from "./EntityRepository"
 import User from "../classes/entities/user/User"
 
-import IsUndNull from "../functions/IsUndNull"
+import IsUndNull from "../functions/logic/IsUndNull"
 
 import PermissionLevelEnum from "../enums/PermissionLevelEnum"
 

@@ -7,7 +7,7 @@ import ResponseMessage from "../../../classes/system/ResponseMessage"
 import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../repositories/UserRepository"
 
-import IsUndNull from "../../../functions/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"
