@@ -188,7 +188,7 @@ class DatabaseService extends ServerService
                 END;
                 $$;
 
-                CREATE TABLE "users_logs"(  
+                CREATE TABLE IF NOT EXISTS "users_logs"(  
                     id SERIAL,
                     user_id int NOT NULL,
                     "change" jsonb NOT NULL,
@@ -197,6 +197,15 @@ class DatabaseService extends ServerService
                     PRIMARY KEY (id),
                     FOREIGN KEY (user_id) REFERENCES "users" (id)
                 );
+
+                CREATE TABLE IF NOT EXISTS users_photos(
+                    id SERIAL PRIMARY KEY,
+                    user_id INT NOT NULL UNIQUE,
+                    base_64 TEXT DEFAULT NULL,
+                    created timestamp NOT NULL DEFAULT now(),
+                    modified timestamp DEFAULT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )
             `)
         } catch { }
     }

@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS users(
 	"password" varchar(100) NOT NULL,
 	password_hint varchar(100) NOT NULL,
 	email_approved bool DEFAULT FALSE,
-	photo_base_64 TEXT DEFAULT NULL,
 	permission_level int NOT NULL DEFAULT 2,
 	created timestamp NOT NULL DEFAULT now(),
 	active boolean NOT NULL DEFAULT TRUE,
@@ -51,6 +50,15 @@ CREATE TABLE users_logs(
     "date" timestamp DEFAULT NOW(),
     adm_change BOOL DEFAULT FALSE,
     PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
+)
+
+CREATE TABLE IF NOT EXISTS users_photos(
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    base_64 TEXT DEFAULT NULL,
+    created timestamp NOT NULL DEFAULT now(),
+    modified timestamp DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
 )
 

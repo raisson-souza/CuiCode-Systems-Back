@@ -192,6 +192,34 @@ abstract class ResponseMessage
             res
         )
     }
+
+    static InvalidRequest
+    (
+        res : Response,
+        logMessage : string
+    )
+    {
+        this.Send(
+            HttpStatusEnum.INVALID,
+            "Corpo da requisição inválido.",
+            logMessage,
+            res
+        )
+    }
+
+    static NotFoundUser
+    (
+        res : Response,
+        logMessage : string
+    )
+    {
+        this.Send(
+            HttpStatusEnum.NOT_FOUND,
+            "Usuário não encontrado.",
+            logMessage,
+            res
+        )
+    }
 }
 
 export default ResponseMessage

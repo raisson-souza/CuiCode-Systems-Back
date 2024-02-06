@@ -1,10 +1,12 @@
 import { Express } from "express"
+import { Multer } from "multer"
 
 import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserLogsService from "../services/user/services/log/GetUserLogsService"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
+import RegistryUserPhoto from "../services/user/services/others/RegistryUserPhoto"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
@@ -12,7 +14,7 @@ import ResponseMessage from "../classes/DTOs/ResponseMessage"
 
 import AuthMiddleware from "../functions/system/AuthMiddleware"
 
-function UsersController(app : Express)
+function UsersController(app : Express, upload : Multer)
 {
     app.route("/user")
         .get(AuthMiddleware, (req, res) => {
@@ -49,6 +51,14 @@ function UsersController(app : Express)
     app.get('/user/logs', AuthMiddleware, (req, res) => {
         new GetUserLogsService(req, res).Operation()
     })
+
+    app.route('/user/:user_id/photo')
+        .post(AuthMiddleware, (req, res) => {
+            new RegistryUserPhoto(req, res).Operation()
+        })
+        .put(AuthMiddleware, (req, res) => {
+            new RegistryUserPhoto(req, res).Operation()
+        })
 }
 
 export default UsersController

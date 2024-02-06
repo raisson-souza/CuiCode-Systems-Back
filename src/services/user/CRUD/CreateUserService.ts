@@ -91,7 +91,6 @@ class CreateUserService extends ServerService
                 '${ user!.Phone }',
                 '${ user!.Password }',
                 '${ user!.PasswordHint }',
-                '${ user!.PhotoBase64 }',
                 ${ user!.Sex!.Value }
             )
         `
@@ -116,7 +115,6 @@ class CreateUserService extends ServerService
             "phone",
             "password",
             "password_hint",
-            "photo_base_64",
             "sex"
         `
     }

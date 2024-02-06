@@ -13,9 +13,10 @@ abstract class Send
     )
     {
         if (!res.headersSent)
+        {
             res.status(status).send(responseMessage)
-
-        console.log(`| STATUS ${ status } | ${ logMessage }`)
+            console.log(`| STATUS ${ status } | ${ logMessage }`)
+        }
     }
 
     static OK(res: Response, responseMessage: any, logMessage: string)

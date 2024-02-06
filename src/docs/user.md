@@ -85,3 +85,22 @@ URL = /user/logs?userId={ ID DE USUÁRIO }&initialDate={ DATA }&finalDate={ DATA
 - initialDate e finalDate são opcionais.
     - Se apenas initialDate: Todos os logs APÓS essa data;
     - Se apenas finalDate: Todos os logs ANTES dessa data.
+
+## GET DE FOTO DE USUÁRIO
+> GET
+- Necessita autenticação.
+
+URL = http://localhost:3000/user/{ ID DE USUÁRIO }/photo
+
+## CADASTRO DE FOTO DE USUÁRIO
+> POST | PUT
+- Necessita autenticação.
+
+URL = http://localhost:3000/user/{ ID DE USUÁRIO }/photo
+
+BODY =
+```
+{
+    "photo": { BASE 64 }
+}
+```

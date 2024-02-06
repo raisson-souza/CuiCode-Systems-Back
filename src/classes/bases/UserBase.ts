@@ -6,6 +6,9 @@ import { EntityLog } from "../DTOs/base/EntityLog"
 import EntityBase from "./base/EntityBase"
 import SqlLabel from "../DTOs/base/SqlLabel"
 import User from "../entities/user/User"
+import UserPhoto from "../DTOs/UserPhoto"
+
+import IsUndNull from "../../functions/IsUndNull"
 
 abstract class UserBase extends EntityBase
 {
@@ -13,7 +16,7 @@ abstract class UserBase extends EntityBase
     {
         try
         {
-            return QueryUser(db, id)
+            return await QueryUser(db, id)
         }
         catch
         {
@@ -44,20 +47,51 @@ abstract class UserBase extends EntityBase
             const formattedUserModelEntries = Object.entries(formattedUserModel)
 
             formattedUserModelEntries.forEach((prop, i) => {
-                query += `"${ prop[0] }" = ${ SqlLabel.ParsePropNameToSql(typeof prop[1], prop[1]) }${ i < formattedUserModelEntries.length - 1 ? ", " : "" }`
+                if (!IsUndNull(prop[1]))
+                    query += `"${ prop[0] }" = ${ SqlLabel.ParsePropNameToSql(typeof prop[1], prop[1]) }${ i < formattedUserModelEntries.length - 1 ? ", " : "" }`
             })
 
-            query += `, modified = now(), modified_by = ${ modifierId } WHERE id = ${ model.Id }`
+            query += ` modified = now(), modified_by = ${ modifierId } WHERE id = ${ model.Id }`
             await db.query(query)
             return await UserBase.Get(db, model.Id)
         }
-        catch
+        catch (ex)
         {
-            return null
+            throw new Error((ex as Error).message)
         }
     }
 
     static async Create(db : Client, model : User) { }
+
+    static async GetPhoto(db : Client, userId : number)
+    {
+        const query = `SELECT * FROM users_photos WHERE user_id = ${ userId }`
+
+        return await db.query(query)
+            .then(result => {
+                if (result.rowCount === 0)
+                    return null
+                return new UserPhoto(result.rows[0])
+            })
+            .catch(ex => {
+                throw new Error(ex.message)
+            })
+    }
+
+    static async CreateOrUpdatePhoto(db : Client, userId : number, photo : string)
+    {
+        const userPhotoRegistry = await UserBase.GetPhoto(db, userId)
+        let query : string
+
+        if (IsUndNull(userPhotoRegistry))
+            query = `INSERT INTO users_photos (user_id, base_64) VALUES (${ userId }, '${ photo }')`
+        else
+            query = `UPDATE users_photos SET base_64 = '${ photo }', modified = now()  WHERE "user_id" = '${ userId }'`
+
+        await db.query(query)
+
+        return await UserBase.GetPhoto(db, userId)
+    }
 }
 
 export default UserBase
