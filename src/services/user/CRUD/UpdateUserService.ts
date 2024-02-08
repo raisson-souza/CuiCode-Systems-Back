@@ -4,6 +4,7 @@ import SetUserLogOperation from "../services/log/SetUserLogOperation"
 import { EntityLog } from "../../../classes/entities/base/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
 import EmailSender from "../../../classes/entities/email/EmailSender"
+import Exception from "../../../classes/custom/Exception"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import User from "../../../classes/entities/user/User"
 import UserBase from "../../../classes/bases/UserBase"
@@ -32,10 +33,7 @@ class UpdateUserService extends ClientService
         const user = new User(body)
 
         if (IsUndNull(user.Id))
-        {
             ResponseMessage.SendNullField(["Id"], this.Action, this.RES)
-            throw new Error("Id de usuário a ser atualizado não encontrado.")
-        }
 
         return user
     }
@@ -79,6 +77,7 @@ class UpdateUserService extends ClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

@@ -1,11 +1,12 @@
 import { EmailApprovalSql } from "../../../../classes/DTOs/EmailApproval"
 
 import ClientService from "../../../../classes/service/ClientService"
+import Exception from "../../../../classes/custom/Exception"
+import ResponseMessage from "../../../../classes/system/ResponseMessage"
 
 import IsUndNull from "../../../../functions/logic/IsUndNull"
-import Send from "../../../../classes/system/Send"
 import SqlInjectionVerifier from "../../../../functions/SQL/SqlInjectionVerifier"
-import ResponseMessage from "../../../../classes/system/ResponseMessage"
+
 import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
 
 class ApproveUserEmailService extends ClientService
@@ -20,16 +21,10 @@ class ApproveUserEmailService extends ClientService
         const query = this.REQ.query as any
 
         if (IsUndNull(query.email))
-        {
             ResponseMessage.SendNullField(["email"], this.Action, this.RES)
-            throw new Error("Email de usuário não encontrado na requisição.")
-        }
 
         if (IsUndNull(query.userId))
-        {
             ResponseMessage.SendNullField(["userId"], this.Action, this.RES)
-            throw new Error("Id de usuário não encontrado na requisição.")
-        }
 
         return { email : query.email, userId : query.userId }
     }
@@ -108,6 +103,7 @@ class ApproveUserEmailService extends ClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

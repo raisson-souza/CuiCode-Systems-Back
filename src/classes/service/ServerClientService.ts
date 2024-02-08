@@ -44,7 +44,6 @@ abstract class ServerClientService extends Service
             }
 
             ResponseMessage.UnauthorizedUser(this.RES, this.Action)
-            throw new Error("Nenhuma autenticação encontrada.")
         }
         catch (ex)
         {
@@ -65,10 +64,7 @@ abstract class ServerClientService extends Service
         const encryptedKey = EncryptInfo(systemKey)
 
         if (encryptedKey != Env.SystemUserKey)
-        {
             ResponseMessage.UnauthorizedUser(this.RES, this.Action)
-            throw new Error("Sistema não autenticado.")
-        }
 
         this.IsSystemRequestor = true
         this.SameUserAuthAndUserToOperate = false
@@ -82,10 +78,7 @@ abstract class ServerClientService extends Service
     private async AuthenticateUserRequestor(userAuthId : string | null)
     {
         if (IsUndNull(userAuthId))
-        {
             ResponseMessage.SendNullField(["userAuthId"], this.Action, this.RES)
-            throw new Error("Usuário requeridor não encontrado na requisição.")
-        }
 
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, Number.parseInt(userAuthId!)))
@@ -101,7 +94,6 @@ abstract class ServerClientService extends Service
                             this.Action,
                             this.RES
                         )
-                        throw new Error("Usuário requeridor não encontrado.")
                     }
 
                     throw new Error((ex as Error).message)
@@ -140,7 +132,6 @@ abstract class ServerClientService extends Service
                 )
                     return
                 ResponseMessage.ProhibitedOperation(this.RES, this.Action)
-                throw new Error("Usuário não autorizado para tal ação.")
             }
             this.SameUserAuthAndUserToOperate = true
         }

@@ -1,5 +1,6 @@
 import QueryUsersInfo from "../utilities/QueryUsersInfo"
 
+import Exception from "../../../classes/custom/Exception"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import ServerService from "../../../classes/service/ServerService"
 
@@ -21,10 +22,7 @@ class ListUsersService extends ServerService
         const query = this.REQ.query as any
 
         if (IsUndNull(query.RequiredInfo))
-        {
             ResponseMessage.SendNullField(["RequiredInfo"], this.Action, this.RES)
-            throw new Error("Informações requeridas dos usuários não encontradas na URL.")
-        }
 
         const JsonConvertedQuery = JSON.parse(query.RequiredInfo)
 
@@ -69,6 +67,7 @@ class ListUsersService extends ServerService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

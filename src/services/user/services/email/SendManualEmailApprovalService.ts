@@ -1,6 +1,7 @@
 import SendApprovalEmailOperation from "./SendApprovalUserEmailOperation"
 
 import ClientService from "../../../../classes/service/ClientService"
+import Exception from "../../../../classes/custom/Exception"
 import ResponseMessage from "../../../../classes/system/ResponseMessage"
 
 import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
@@ -48,6 +49,7 @@ class SendManualEmailApprovalService extends ClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

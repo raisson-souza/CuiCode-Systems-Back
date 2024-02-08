@@ -1,5 +1,6 @@
 import QueryUser from "../utilities/QueryUser"
 
+import Exception from "../../../classes/custom/Exception"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import ServerClientService from "../../../classes/service/ServerClientService"
 
@@ -19,21 +20,15 @@ class GetUserService extends ServerClientService
 
     CheckQuery() : number
     {
-        const query = this.REQ.query as any
+        const userId = Number.parseInt(this.REQ.query.UserId as string)
 
-        if (IsUndNull(query.UserId))
-        {
+        if (IsUndNull(userId))
             ResponseMessage.SendNullField(["UserId"], this.Action, this.RES)
-            throw new Error("Id de usuário não encontrado na URL.");
-        }
 
-        if (query.UserId < 0)
-        {
+        if (userId < 0)
             ResponseMessage.SendInvalidField(["UserId"], this.Action, this.RES)
-            throw new Error("Id de usuário inválido.");
-        }
 
-        return Number.parseInt(query.UserId)
+        return userId
     }
 
     async Operation()
@@ -75,6 +70,7 @@ class GetUserService extends ServerClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

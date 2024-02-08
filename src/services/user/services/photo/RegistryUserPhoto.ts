@@ -1,4 +1,5 @@
 import ClientService from "../../../../classes/service/ClientService"
+import Exception from "../../../../classes/custom/Exception"
 import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import UserBase from "../../../../classes/bases/UserBase"
 
@@ -25,16 +26,10 @@ class RegistryUserPhoto extends ClientService
         const userbase64Photo = REQ.body["photo"]
 
         if (IsUndNull(userId))
-        {
             ResponseMessage.SendInvalidField(['user_id'], Action, RES)
-            throw new Error("ID de usuário não encontrado.")
-        }
 
         if (IsUndNull(userbase64Photo))
-        {
             ResponseMessage.SendNullField(["photo"], Action, RES)
-            throw new Error("Request inválida.")
-        }
 
         return {
             userPhoto: userbase64Photo,
@@ -56,10 +51,7 @@ class RegistryUserPhoto extends ClientService
             const user = await UserBase.Get(this.DB_connection, userId)
 
             if (IsUndNull(user))
-            {
                 ResponseMessage.NotFoundUser(this.RES, this.Action)
-                throw new Error("Usuário não encontrado.")
-            }
 
             await this.AuthenticateRequestor()
             this.ValidateRequestor(PermissionLevelEnum.Member, user!.Id)
@@ -81,6 +73,7 @@ class RegistryUserPhoto extends ClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

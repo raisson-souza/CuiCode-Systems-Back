@@ -1,4 +1,5 @@
 import ClientService from "../../../../classes/service/ClientService"
+import Exception from "../../../../classes/custom/Exception"
 import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import UserBase from "../../../../classes/bases/UserBase"
 
@@ -21,10 +22,7 @@ class GetUserPhoto extends ClientService
         const userId = this.REQ.params.user_id
 
         if (IsUndNull(userId))
-        {
             ResponseMessage.SendNullField(["UserId"], this.Action, this.RES)
-            throw new Error("Id de usuário não encontrado na URL.");
-        }
 
         return Number.parseInt(userId as string)
     }
@@ -42,10 +40,7 @@ class GetUserPhoto extends ClientService
             this.ValidateRequestor(PermissionLevelEnum.Member, userId)
 
             if (IsUndNull(user))
-            {
                 ResponseMessage.NotFoundUser(this.RES, this.Action)
-                throw new Error("Usuário não encontrado.")
-            }
 
             const userPhoto = await UserBase.GetPhoto(this.DB_connection, user!.Id)
 
@@ -76,6 +71,7 @@ class GetUserPhoto extends ClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

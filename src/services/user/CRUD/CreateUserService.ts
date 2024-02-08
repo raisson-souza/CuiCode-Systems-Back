@@ -3,6 +3,7 @@ import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailO
 import ServerService from "../../../classes/service/ServerService"
 
 import EmailSender from "../../../classes/entities/email/EmailSender"
+import Exception from "../../../classes/custom/Exception"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../repositories/UserRepository"
@@ -26,7 +27,7 @@ class CreateUserService extends ServerService
         const body = this.REQ.body as any
 
         if (IsUndNull(body))
-            throw new Error("Corpo da requisição inválido.")
+            ResponseMessage.InvalidRequest(this.RES, this.Action)
 
         return new User(body)
     }
@@ -70,6 +71,7 @@ class CreateUserService extends ServerService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

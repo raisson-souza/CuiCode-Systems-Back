@@ -1,6 +1,7 @@
 import ServerService from "../../classes/service/ServerService"
 
 import EmailSender from "../../classes/entities/email/EmailSender"
+import Exception from "../../classes/custom/Exception"
 import ResponseMessage from "../../classes/system/ResponseMessage"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
@@ -42,6 +43,7 @@ class TraceAccessService extends ServerService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
     }
 }

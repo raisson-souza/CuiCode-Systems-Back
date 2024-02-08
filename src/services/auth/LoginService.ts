@@ -3,6 +3,7 @@ import { sign } from "jsonwebtoken"
 import Env from "../../config/environment"
 
 import ClientService from "../../classes/service/ClientService"
+import Exception from "../../classes/custom/Exception"
 import ResponseMessage from "../../classes/system/ResponseMessage"
 import User from "../../classes/entities/user/User"
 import UserAuth from "../../classes/entities/user/UserAuth"
@@ -26,10 +27,7 @@ class LoginService extends ClientService
         } = this.REQ.body
 
         if (IsUndNull(email) || IsUndNull(password))
-        {
             ResponseMessage.SendNullField(["email", "password"], this.Action, this.RES)
-            throw new Error("Um ou mais dados de autenticação estão ausentes.")
-        }
 
         this.USER_auth = new UserAuth({ "Email": email, "Password": password }, this.REQ.headers)
         this.USER_auth.EncryptPassword()
@@ -76,6 +74,7 @@ class LoginService extends ClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

@@ -7,6 +7,7 @@ import { verify } from "jsonwebtoken"
 
 import Env from "../config/environment"
 
+import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import IsUndNull from "../functions/logic/IsUndNull"
@@ -40,10 +41,7 @@ async function AuthMiddleware
             const { authorization } = req.headers
 
             if (IsUndNull(authorization))
-            {
                 ResponseMessage.UnauthorizedUser(res, "AuthMiddleware")
-                throw new Error("Usuário não autenticado.")
-            }
 
             const token = authorization!.split(" ")[1]!
 
@@ -78,6 +76,7 @@ async function AuthMiddleware
             "AuthMiddleware",
             res
         )
+        Exception.UnexpectedError((ex as Error).message, "AuthMiddleware")
     }
 }
 

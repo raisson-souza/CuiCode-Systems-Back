@@ -1,5 +1,6 @@
 import ResponseMessage from "../../classes/system/ResponseMessage"
 
+import Exception from "../../classes/custom/Exception"
 import ServerService from "../../classes/service/ServerService"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
@@ -68,6 +69,7 @@ class DatabaseService extends ServerService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
     }
 

@@ -19,10 +19,7 @@ abstract class ServerService extends Service
         const encryptedKey = EncryptInfo(key)
 
         if (encryptedKey != Env.SystemUserKey)
-        {
             ResponseMessage.UnauthorizedUser(this.RES, this.Action)
-            throw new Error("Sistema não autenticado.")
-        }
 
         this.USER_auth = null
     }

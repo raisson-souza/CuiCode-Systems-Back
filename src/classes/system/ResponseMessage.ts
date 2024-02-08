@@ -1,8 +1,9 @@
 import { Response } from "express"
 
-import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
-
+import Exception from "../custom/Exception"
 import Send from "./Send"
+
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 abstract class ResponseMessage
 {
@@ -36,28 +37,36 @@ abstract class ResponseMessage
                 return Send.CREATED(res, response, logMessage)
 
             case HttpStatusEnum.INVALID:
-                return Send.INVALID(res, response, logMessage)
+                Send.INVALID(res, response, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
 
             case HttpStatusEnum.UNAUTHORIZED:
-                return Send.UNAUTHORIZED(res, response, logMessage)
+                Send.UNAUTHORIZED(res, response, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
 
             case HttpStatusEnum.PROHIBITED:
-                return Send.PROHIBITED(res, response, logMessage)
+                Send.PROHIBITED(res, response, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
 
             case HttpStatusEnum.NOT_FOUND:
-                return Send.NOT_FOUND(res, response, logMessage)
+                Send.NOT_FOUND(res, response, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
 
             case HttpStatusEnum.INTERNAL_SERVER_ERROR:
-                return Send.INTERNAL_SERVER_ERROR(res, response, logMessage)
+                Send.INTERNAL_SERVER_ERROR(res, response, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
 
             case HttpStatusEnum.NOT_IMPLEMENTED:
-                return Send.NOT_IMPLEMENTED(res, response, logMessage)
+                Send.NOT_IMPLEMENTED(res, response, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
 
             case HttpStatusEnum.UNAVAIALBLE:
-                return Send.UNAVAIALBLE(res, response, logMessage)
+                Send.UNAVAIALBLE(res, response, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
 
             default:
-                return Send.INTERNAL_SERVER_ERROR(res, null, logMessage)
+                Send.INTERNAL_SERVER_ERROR(res, null, logMessage)
+                return Exception.UnexpectedError(data, logMessage)
         }
     }
 
@@ -132,6 +141,11 @@ abstract class ResponseMessage
             logMessage,
             res
         )
+
+        Exception.Error(
+            "Campo inválido.",
+            logMessage
+        )
     }
 
     static SendNullField
@@ -149,6 +163,11 @@ abstract class ResponseMessage
             logMessage,
             res
         )
+
+        Exception.Error(
+            "Campo nulo.",
+            logMessage
+        )
     }
 
     static NotImplementedRoute
@@ -162,6 +181,11 @@ abstract class ResponseMessage
             log,
             log,
             res
+        )
+
+        Exception.Error(
+            "Rota não implementada.",
+            log
         )
     }
 
@@ -177,6 +201,11 @@ abstract class ResponseMessage
             logMessage,
             res
         )
+
+        Exception.Error(
+            "Usuário não-autorizado.",
+            logMessage
+        )
     }
 
     static ProhibitedOperation
@@ -190,6 +219,11 @@ abstract class ResponseMessage
             "Ação não disponível para usuário.",
             logMessage,
             res
+        )
+
+        Exception.Error(
+            "Operação proibida.",
+            logMessage
         )
     }
 
@@ -205,6 +239,11 @@ abstract class ResponseMessage
             logMessage,
             res
         )
+
+        Exception.Error(
+            "Request inválida.",
+            logMessage
+        )
     }
 
     static NotFoundUser
@@ -218,6 +257,11 @@ abstract class ResponseMessage
             "Usuário não encontrado.",
             logMessage,
             res
+        )
+
+        Exception.Error(
+            "Usuário não encontrado.",
+            logMessage
         )
     }
 }

@@ -1,6 +1,7 @@
 import { Client } from "pg"
 
 import DateCustom from "../../../../classes/custom/DateCustom"
+import Exception from "../../../../classes/custom/Exception"
 import Operation from "../../../../classes/service/base/Operation"
 import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import ServerClientService from "../../../../classes/service/ServerClientService"
@@ -31,10 +32,7 @@ class GetUserLogsService extends ServerClientService
             let startDate = null; let finalDate = null;
 
             if (IsUndNull(query.userId))
-            {
                 ResponseMessage.SendNullField(["userId"], this.Action, this.RES)
-                throw new Error("ID de usuário não encontrado.")
-            }
 
             if (!IsUndNull(query.startDate))
                 startDate = new DateCustom(query.startDate)
@@ -93,6 +91,7 @@ class GetUserLogsService extends ServerClientService
                 this.Action,
                 this.RES
             )
+            Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
         {

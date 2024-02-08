@@ -40,7 +40,6 @@ abstract class ClientService extends Service
                             this.Action,
                             this.RES
                         )
-                        throw new Error("Usuário requeridor não encontrado.")
                     }
 
                     throw new Error((ex as Error).message)
@@ -75,7 +74,6 @@ abstract class ClientService extends Service
                 )
                     return
                 ResponseMessage.ProhibitedOperation(this.RES, this.Action)
-                throw new Error("Usuário não autorizado para tal ação.")
             }
             this.SameUserAuthAndUserToOperate = true
         }
@@ -93,7 +91,6 @@ abstract class ClientService extends Service
                 this.Action,
                 this.RES
             )
-            throw new Error("Usuário requeridor não encontrado na requisição.")
         }
 
         return Number.parseInt(userAuthId!)
