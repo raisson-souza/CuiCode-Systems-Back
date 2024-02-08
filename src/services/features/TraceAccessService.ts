@@ -45,6 +45,10 @@ class TraceAccessService extends ServerService
             )
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
+        finally
+        {
+            this.DB_connection.end()
+        }
     }
 }
 
