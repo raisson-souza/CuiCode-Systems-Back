@@ -4,10 +4,10 @@ import { Multer } from "multer"
 import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserLogsService from "../services/user/services/log/GetUserLogsService"
-import GetUserPhoto from "../services/user/services/photo/GetUserPhoto"
+import GetUserPhotoService from "../services/user/services/photo/GetUserPhotoService"
 import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
-import RegistryUserPhoto from "../services/user/services/photo/RegistryUserPhoto"
+import RegistryUserPhotoService from "../services/user/services/photo/RegistryUserPhotoService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
@@ -55,14 +55,14 @@ function UsersController(app : Express, upload : Multer)
 
     app.route('/user/:user_id/photo')
         .post(AuthMiddleware, (req, res) => {
-            new RegistryUserPhoto(req, res).Operation()
+            new RegistryUserPhotoService(req, res).Operation()
         })
         .put(AuthMiddleware, (req, res) => {
-            new RegistryUserPhoto(req, res).Operation()
+            new RegistryUserPhotoService(req, res).Operation()
         })
 
     app.get('/user/:user_id/photo', AuthMiddleware, (req, res) => {
-        new GetUserPhoto(req, res).Operation()
+        new GetUserPhotoService(req, res).Operation()
     })
 }
 
