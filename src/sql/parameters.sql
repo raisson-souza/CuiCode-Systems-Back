@@ -1,10 +1,7 @@
 CREATE TABLE IF NOT EXISTS parameters(
     id SERIAL PRIMARY KEY,
-    sql_commands_created boolean NOT NULL,
-    system_under_maintence boolean NOT NULL
+    sql_commands_created boolean NOT NULL DEFAULT TRUE,
+    system_under_maintence boolean NOT NULL DEFAULT FALSE
 );
 
-INSERT INTO parametes
-(id, sql_commands_created, system_under_maintence)
-VALUES
-(1, true, false);
+INSERT INTO parameters (id) VALUES (1);
