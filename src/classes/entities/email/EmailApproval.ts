@@ -1,4 +1,4 @@
-import Entity from "../entities/base/Entity"
+import Entity from "../base/Entity"
 
 class EmailApproval extends Entity
 {

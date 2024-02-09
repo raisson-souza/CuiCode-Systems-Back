@@ -5,7 +5,7 @@ import QueryUser from "../../services/user/utilities/QueryUser"
 import { EntityLog } from "../entities/base/EntityLog"
 import SqlLabel from "../entities/base/SqlLabel"
 import User from "../entities/user/User"
-import UserPhoto from "../DTOs/UserPhoto"
+import UserPhoto from "../entities/user/UserPhoto"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
 import IEntityBase from "../../interfaces/IEntityBase"

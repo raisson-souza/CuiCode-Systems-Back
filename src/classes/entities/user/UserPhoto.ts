@@ -1,9 +1,9 @@
 import { Client } from "pg"
 
-import Possession from "../entities/base/Possession"
-import UserBase from "../bases/UserBase"
+import Possession from "../base/Possession"
+import UserBase from "../../bases/UserBase"
 
-import IsUndNull from "../../functions/logic/IsUndNull"
+import IsUndNull from "../../../functions/logic/IsUndNull"
 
 class UserPhoto extends Possession
 {

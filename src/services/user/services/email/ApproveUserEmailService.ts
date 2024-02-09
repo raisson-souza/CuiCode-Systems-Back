@@ -1,4 +1,4 @@
-import { EmailApprovalSql } from "../../../../classes/DTOs/EmailApproval"
+import { EmailApprovalSql } from "../../../../classes/entities/email/EmailApproval"
 
 import ClientService from "../../../../classes/service/ClientService"
 import Exception from "../../../../classes/custom/Exception"
