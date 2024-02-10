@@ -1,15 +1,17 @@
-import IsUndNull from "../../../functions/logic/IsUndNull"
+import FindValue from "../../../functions/logic/FindValue"
+import AnySearch from "../../../interfaces/AnySearch"
+import EntityBasic from "../base/EntityBasic"
 
-class Parameters
+class Parameters extends EntityBasic
 {
-    Id : number
     SqlCommandsCreated : boolean
     SystemUnderMaintence : boolean
-
+    
     constructor(body : any )
     {
         try
         {
+            super(body)
             this.ConvertBody(body)
         }
         catch (ex)
@@ -17,12 +19,15 @@ class Parameters
             throw new Error((ex as Error).message)
         }
     }
-
-    private ConvertBody(body : any) : void
+    
+    ConvertBody(body : any) : void
     {
-        this.Id = !IsUndNull(body["Id"]) ? body["Id"] : body["id"]
-        this.SqlCommandsCreated = !IsUndNull(body["SqlCommandsCreated"]) ? body["SqlCommandsCreated"] : body["sql_commands_created"]
-        this.SystemUnderMaintence = !IsUndNull(body["SystemUnderMaintence"]) ? body["SystemUnderMaintence"] : body["system_under_maintence"]
+        this.SqlCommandsCreated = FindValue(body, ["SqlCommandsCreated", "sql_commands_created"])
+        this.SystemUnderMaintence = FindValue(body, ["SystemUnderMaintence", "system_under_maintence"])
+    }
+
+    ConvertToSqlObject(removeUndNulls: boolean): AnySearch {
+        throw new Error("Method not implemented.")
     }
 }
 

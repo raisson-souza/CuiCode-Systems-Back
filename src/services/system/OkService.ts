@@ -6,7 +6,7 @@ import ServerService from "../../classes/service/ServerService"
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 /**
- * Verifica a integridade.
+ * Verifica o estado do sistema.
  */
 class OkService extends ServerService
 {
@@ -22,7 +22,7 @@ class OkService extends ServerService
         {
             const { Action, RES } = this
 
-            await this.DB_connection.query("SELECT system_under_maintence FROM parameters")
+            await this.DB_connection.query("SELECT * FROM parameters")
                 .then(result => {
                     const parameters = new Parameters(result.rows[0])
 

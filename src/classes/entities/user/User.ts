@@ -1,7 +1,7 @@
 import Entity from "../base/Entity"
 import Label from "../base/Label"
 
-import IUserInSql from "../../../interfaces/IUserInSql"
+import IUserInSql from "../../../interfaces/AnySearch"
 
 import EncryptInfo from "../../../functions/security/EncryptPassword"
 import FormatIdNumber from "../../../functions/formatting/FormatIdNumber"
@@ -9,6 +9,7 @@ import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import PermissionLevel from "../../../enums/PermissionLevelEnum"
 import Sex from "../../../enums/SexEnum"
+import AnySearch from "../../../interfaces/AnySearch"
 
 class User extends Entity
 {
@@ -96,7 +97,7 @@ class User extends Entity
      */
     ConvertUserToSqlObject()
     {
-        const userInSql : IUserInSql = {
+        const userInSql : AnySearch = {
             "id": this.Id,
             "username": this.Username,
             "name" : this.Name,
