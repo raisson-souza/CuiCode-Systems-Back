@@ -2,8 +2,6 @@ import Label from "../base/Label"
 
 import EntityRegistry from "../base/EntityRegistry"
 
-import AnySearch from "../../../interfaces/AnySearch"
-
 import EncryptInfo from "../../../functions/security/EncryptPassword"
 import FindValue from "../../../functions/logic/FindValue"
 import FormatIdNumber from "../../../functions/formatting/FormatIdNumber"
@@ -78,33 +76,28 @@ class User extends EntityRegistry
             : new Label(_enum, prop, enumName)
     }
 
-    /**
-     * Retorna um cópia em modelo SQL do usuário.
-     */
     ConvertToSqlObject()
     {
-        const userInSql : AnySearch = {
+        return {
             "id": this.Id,
-            "username": this.Username,
-            "name" : this.Name,
-            "birthdate": this.BirthDate,
-            "email": this.Email,
-            "recovery_email": this.RecoveryEmail,
-            "phone": this.Phone,
-            "password": this.Password,
-            "password_hint": this.PasswordHint,
-            "photo_base_64" : this.PhotoBase64,
-            "permission_level": this.PermissionLevel,
-            "sex": this.Sex,
-            "email_approved" : this.EmailAproved,
             "active": this.Active,
+            "birthdate": this.BirthDate,
             "created": this.Created,
             "deleted": this.Deleted,
-            "modified": this.Modified,
+            "email_approved" : this.EmailAproved,
+            "email": this.Email,
             "modified_by": this.ModifiedBy,
+            "modified": this.Modified,
+            "name" : this.Name,
+            "password_hint": this.PasswordHint,
+            "password": this.Password,
+            "permission_level": this.PermissionLevel,
+            "phone": this.Phone,
+            "photo_base_64" : this.PhotoBase64,
+            "recovery_email": this.RecoveryEmail,
+            "sex": this.Sex,
+            "username": this.Username,
         }
-
-        return userInSql
     }
 
     EncryptPassword()

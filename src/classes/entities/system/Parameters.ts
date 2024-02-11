@@ -1,6 +1,6 @@
-import FindValue from "../../../functions/logic/FindValue"
-import AnySearch from "../../../interfaces/AnySearch"
 import EntityBasic from "../base/EntityBasic"
+
+import FindValue from "../../../functions/logic/FindValue"
 
 class Parameters extends EntityBasic
 {
@@ -26,9 +26,13 @@ class Parameters extends EntityBasic
         this.SystemUnderMaintence = FindValue(body, ["SystemUnderMaintence", "system_under_maintence"])
     }
 
-    ConvertToSqlObject() : AnySearch
+    ConvertToSqlObject()
     {
-        throw new Error("Method not implemented.")
+        return {
+            "id": this.Id,
+            "sql_commands_created": this.SqlCommandsCreated,
+            "system_under_maintence": this.SystemUnderMaintence,
+        }
     }
 }
 

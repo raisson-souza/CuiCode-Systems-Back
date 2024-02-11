@@ -10,6 +10,8 @@ import User from "../../../classes/entities/user/User"
 import UserBase from "../../../classes/bases/UserBase"
 import UserRepository from "../../../repositories/UserRepository"
 
+import AnySearch from "../../../interfaces/AnySearch"
+
 import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import EmailTitlesEnum from "../../../enums/EmailTitlesEnum"
@@ -148,8 +150,8 @@ class UpdateUserService extends ClientService
 
         let emailChanged = false
 
-        const userModelSql = userModel.ConvertToSqlObject()
-        const userDbSql = userDb!.ConvertToSqlObject()
+        const userModelSql = userModel.ConvertToSqlObject() as AnySearch
+        const userDbSql = userDb!.ConvertToSqlObject() as AnySearch
 
         // Serão comparadas as diferenças entre o usuário do banco com o usuário modelo.
         for (let prop in userDbSql)

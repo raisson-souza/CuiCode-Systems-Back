@@ -11,6 +11,7 @@ import UserPhoto from "../entities/user/UserPhoto"
 import IEntityBase from "../../interfaces/IEntityBase"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
+import AnySearch from "../../interfaces/AnySearch"
 
 abstract class UserBase implements IEntityBase
 {
@@ -48,7 +49,7 @@ abstract class UserBase implements IEntityBase
         try
         {
             let query = "UPDATE users SET "
-            const formattedUserModel = model.ConvertToSqlObject()
+            const formattedUserModel = model.ConvertToSqlObject() as AnySearch
             const formattedUserModelEntries = Object.entries(formattedUserModel)
             
             formattedUserModelEntries.forEach((prop, i) => {

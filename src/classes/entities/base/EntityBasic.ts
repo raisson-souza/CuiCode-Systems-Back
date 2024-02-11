@@ -1,4 +1,3 @@
-import AnySearch from "../../../interfaces/AnySearch"
 import IEntityBasic from "../../../interfaces/IEntityBasic"
 
 import FindValue from "../../../functions/logic/FindValue"
@@ -14,7 +13,7 @@ abstract class EntityBasic implements IEntityBasic
 
     abstract ConvertBody(body: any) : void
 
-    abstract ConvertToSqlObject() : AnySearch
+    abstract ConvertToSqlObject() : any
 }
 
 export default EntityBasic

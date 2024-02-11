@@ -1,21 +1,18 @@
 import { Client } from "pg"
 
-import UserBase from "../../bases/UserBase"
-
 import EntityBasic from "../base/EntityBasic"
 import User from "./User"
+import UserBase from "../../bases/UserBase"
 
 import FindValue from "../../../functions/logic/FindValue"
 
-import AnySearch from "../../../interfaces/AnySearch"
-
 class UserPhoto extends EntityBasic
 {
-    UserId : number
     Base64 : string
     Created : Date
     Modified : Date
     User : User
+    UserId : number
 
     constructor(body : any)
     {
@@ -25,22 +22,22 @@ class UserPhoto extends EntityBasic
 
     ConvertBody(body: any) : void
     {
-        this.UserId = FindValue(body, ["UserId", "user_id"])
         this.Base64 = FindValue(body, ["Base64", "base_64"])
         this.Created = FindValue(body, ["Created", "created"])
         this.Modified = FindValue(body, ["Modified", "modified"])
+        this.UserId = FindValue(body, ["UserId", "user_id"])
     }
 
-    ConvertToSqlObject() : AnySearch
+    ConvertToSqlObject()
     {
-        const userPhotoSql : AnySearch = {
-            "user_id": this.UserId,
+        return {
+            "id": this.Id,
             "base_64": this.Base64,
             "created": this.Created,
-            "modified": this.Modified
+            "modified": this.Modified,
+            "user_id": this.UserId,
+            "user": this.User
         }
-
-        return userPhotoSql
     }
 
     async GetUser(db : Client)
