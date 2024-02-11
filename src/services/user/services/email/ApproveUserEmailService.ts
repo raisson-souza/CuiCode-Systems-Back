@@ -1,4 +1,4 @@
-import { EmailApprovalSql } from "../../../../classes/entities/email/EmailApproval"
+import EmailApproval from "../../../../classes/entities/email/EmailApproval"
 
 import ClientService from "../../../../classes/service/ClientService"
 import Exception from "../../../../classes/custom/Exception"
@@ -68,7 +68,7 @@ class ApproveUserEmailService extends ClientService
                     if (result.rowCount == 0)
                         throw new Error("Nenhum pedido de aprovação para esse email foi encontrado.")
 
-                    const emailApproval = new EmailApprovalSql(result.rows[0])
+                    const emailApproval = new EmailApproval(result.rows[0])
 
                     if (emailApproval.Approved)
                         throw new Error("Email já aprovado.")

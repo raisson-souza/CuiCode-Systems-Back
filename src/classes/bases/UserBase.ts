@@ -3,13 +3,14 @@ import { Client } from "pg"
 import QueryUser from "../../services/user/utilities/QueryUser"
 
 import { EntityLog } from "../entities/base/EntityLog"
+import EntityBasic from "../entities/base/EntityBasic"
 import SqlLabel from "../entities/base/SqlLabel"
 import User from "../entities/user/User"
 import UserPhoto from "../entities/user/UserPhoto"
 
-import IsUndNull from "../../functions/logic/IsUndNull"
 import IEntityBase from "../../interfaces/IEntityBase"
-import Entity from "../entities/base/Entity"
+
+import IsUndNull from "../../functions/logic/IsUndNull"
 
 abstract class UserBase implements IEntityBase
 {
@@ -41,13 +42,13 @@ abstract class UserBase implements IEntityBase
         }
     }
 
-    UpdateByModel(db: Client, model: Entity, modifiedBy: number) { }
+    UpdateByModel(db: Client, model: EntityBasic, modifiedBy: number) { }
     static async UpdateByModel(db : Client, model : User, modifiedBy : number) : Promise<User | null>
     {
         try
         {
             let query = "UPDATE users SET "
-            const formattedUserModel = model.ConvertUserToSqlObject()
+            const formattedUserModel = model.ConvertToSqlObject()
             const formattedUserModelEntries = Object.entries(formattedUserModel)
             
             formattedUserModelEntries.forEach((prop, i) => {
@@ -65,7 +66,7 @@ abstract class UserBase implements IEntityBase
         }
     }
 
-    Create(db: Client, model: Entity) { }
+    Create(db: Client, model: EntityBasic) { }
     static async Create(db : Client, model : User) { }
     
     static async GetPhoto(db : Client, userId : number)

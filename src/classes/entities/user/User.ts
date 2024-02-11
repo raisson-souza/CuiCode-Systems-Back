@@ -1,68 +1,53 @@
-import Entity from "../base/Entity"
 import Label from "../base/Label"
 
-import IUserInSql from "../../../interfaces/AnySearch"
+import EntityRegistry from "../base/EntityRegistry"
+
+import AnySearch from "../../../interfaces/AnySearch"
 
 import EncryptInfo from "../../../functions/security/EncryptPassword"
+import FindValue from "../../../functions/logic/FindValue"
 import FormatIdNumber from "../../../functions/formatting/FormatIdNumber"
 import IsUndNull from "../../../functions/logic/IsUndNull"
 
 import PermissionLevel from "../../../enums/PermissionLevelEnum"
 import Sex from "../../../enums/SexEnum"
-import AnySearch from "../../../interfaces/AnySearch"
 
-class User extends Entity
+class User extends EntityRegistry
 {
-    // Identificação
-    Username: string
-    Name : string
-
-    // Dados pessoais
     BirthDate: Date
     Email: string
-    RecoveryEmail: string
-    Phone: string
+    EmailAproved : boolean
+    ModifiedBy : number
+    Name : string
     Password: string
     PasswordHint: string
-    PhotoBase64 : string
-
-    // Informações de usuário
     PermissionLevel: Label | null
+    Phone: string
+    PhotoBase64 : string
+    RecoveryEmail: string
     Sex: Label | null
-    EmailAproved : boolean
+    Username: string
 
     constructor(body : any )
     {
-        try
-        {
-            super(body)
-            this.ConvertBody(body)
-        }
-        catch (ex)
-        {
-            throw new Error((ex as Error).message)
-        }
+        super(body)
+        this.ConvertBody(body)
     }
 
-    /**
-     * Converts the body into the instantiation of User.
-     * @param body Body object to convert.
-     * @param isSQL Is the body in SQL form of user.
-     */
-    private ConvertBody(body : any) : void
+    ConvertBody(body : any) : void
     {
-        this.Username = !IsUndNull(body["Username"]) ? body["Username"] : body["username"]
-        this.Name = !IsUndNull(body["Name"]) ? body["Name"] : body["name"]
-        this.BirthDate = !IsUndNull(body["BirthDate"]) ? body["BirthDate"] : body["birthdate"]
-        this.Email = !IsUndNull(body["Email"]) ? body["Email"] : body["email"]
-        this.RecoveryEmail = !IsUndNull(body["RecoveryEmail"]) ? body["RecoveryEmail"] : body["recovery_email"]
-        this.Phone = !IsUndNull(body["Phone"]) ? body["Phone"] : body["phone"]
-        this.Password = !IsUndNull(body["Password"]) ? body["Password"] : body["password"]
-        this.PasswordHint = !IsUndNull(body["PasswordHint"]) ? body["PasswordHint"] : body["password_hint"]
-        this.PhotoBase64 = !IsUndNull(body["PhotoBase64"]) ? body["PhotoBase64"] : body["photo_base_64"]
-        this.PermissionLevel = this.ConvertEnum(!IsUndNull(body["PermissionLevel"]) ? body["PermissionLevel"] : body["permission_level"], PermissionLevel, "PermissionLevel")
-        this.Sex = this.ConvertEnum(!IsUndNull(body["Sex"]) ? body["Sex"] : body["sex"], Sex, "Sex")
-        this.EmailAproved = !IsUndNull(body["EmailAproved"]) ? body["EmailAproved"] : body["email_approved"]
+        this.BirthDate = FindValue(body, ["BirthDate", "birthdate"])
+        this.Email = FindValue(body, ["Email", "email"])
+        this.EmailAproved = FindValue(body, ["Username", "username"])
+        this.Name = FindValue(body, ["Name", "name"])
+        this.Password = FindValue(body, ["Password", "password"])
+        this.PasswordHint = FindValue(body, ["PasswordHint", "password_hint"])
+        this.PermissionLevel = this.ConvertEnum(FindValue(body, ["PermissionLevel", "permission_level"]), PermissionLevel, "PermissionLevel")
+        this.Phone = FindValue(body, ["Phone", "phone"])
+        this.PhotoBase64 = FindValue(body, ["PhotoBase64", "photo_base_64"])
+        this.RecoveryEmail = FindValue(body, ["RecoveryEmail", "recovery_email"])
+        this.Sex = this.ConvertEnum(FindValue(body, ["Sex", "sex"]), Sex, "Sex")
+        this.Username = FindValue(body, ["Username", "username"])
     }
 
     /**
@@ -95,7 +80,7 @@ class User extends Entity
     /**
      * Retorna um cópia em modelo SQL do usuário.
      */
-    ConvertUserToSqlObject()
+    ConvertToSqlObject()
     {
         const userInSql : AnySearch = {
             "id": this.Id,
@@ -113,7 +98,9 @@ class User extends Entity
             "email_approved" : this.EmailAproved,
             "active": this.Active,
             "created": this.Created,
-            "deleted": this.Deleted
+            "deleted": this.Deleted,
+            "modified": this.Modified,
+            "modified_by": this.ModifiedBy,
         }
 
         return userInSql

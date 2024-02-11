@@ -6,7 +6,7 @@ interface IEntityBasic
 
     ConvertBody(body : any) : void
 
-    ConvertToSqlObject(removeUndNulls : boolean) : AnySearch
+    ConvertToSqlObject() : AnySearch
 }
 
 export default IEntityBasic

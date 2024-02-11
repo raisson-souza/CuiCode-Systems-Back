@@ -14,7 +14,7 @@ abstract class EntityBasic implements IEntityBasic
 
     abstract ConvertBody(body: any) : void
 
-    abstract ConvertToSqlObject(removeUndNulls: boolean) : AnySearch
+    abstract ConvertToSqlObject() : AnySearch
 }
 
 export default EntityBasic

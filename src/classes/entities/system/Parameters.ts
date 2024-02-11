@@ -26,7 +26,8 @@ class Parameters extends EntityBasic
         this.SystemUnderMaintence = FindValue(body, ["SystemUnderMaintence", "system_under_maintence"])
     }
 
-    ConvertToSqlObject(removeUndNulls: boolean): AnySearch {
+    ConvertToSqlObject() : AnySearch
+    {
         throw new Error("Method not implemented.")
     }
 }

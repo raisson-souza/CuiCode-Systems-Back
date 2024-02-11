@@ -1,28 +1,53 @@
 import { Client } from "pg"
 
-import Possession from "../base/Possession"
 import UserBase from "../../bases/UserBase"
 
-import IsUndNull from "../../../functions/logic/IsUndNull"
+import EntityBasic from "../base/EntityBasic"
+import User from "./User"
 
-class UserPhoto extends Possession
+import FindValue from "../../../functions/logic/FindValue"
+
+import AnySearch from "../../../interfaces/AnySearch"
+
+class UserPhoto extends EntityBasic
 {
     UserId : number
     Base64 : string
-
-    override ModifiedBy : null
-    // Active não existe
+    Created : Date
+    Modified : Date
+    User : User
 
     constructor(body : any)
     {
         super(body)
-        this.UserId = !IsUndNull(body["UserId"]) ? body["UserId"] : body["user_id"]
-        this.Base64 = !IsUndNull(body["Base64"]) ? body["Base64"] : body["base_64"]
+        this.ConvertBody(body)
+    }
+
+    ConvertBody(body: any) : void
+    {
+        this.UserId = FindValue(body, ["UserId", "user_id"])
+        this.Base64 = FindValue(body, ["Base64", "base_64"])
+        this.Created = FindValue(body, ["Created", "created"])
+        this.Modified = FindValue(body, ["Modified", "modified"])
+    }
+
+    ConvertToSqlObject() : AnySearch
+    {
+        const userPhotoSql : AnySearch = {
+            "user_id": this.UserId,
+            "base_64": this.Base64,
+            "created": this.Created,
+            "modified": this.Modified
+        }
+
+        return userPhotoSql
     }
 
     async GetUser(db : Client)
     {
-        return await UserBase.Get(db, this.UserId)
+        const user = await UserBase.Get(db, this.UserId)
+        this.User = user!
+        return user
     }
 }
 

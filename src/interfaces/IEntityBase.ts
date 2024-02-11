@@ -1,7 +1,7 @@
 import { Client } from "pg"
 
 import { EntityLog } from "../classes/entities/base/EntityLog"
-import Entity from "../classes/entities/base/Entity"
+import EntityBasic from "../classes/entities/base/EntityBasic"
 
 interface IEntityBase
 {
@@ -22,14 +22,14 @@ interface IEntityBase
     UpdateByModel
     (
         db : Client,
-        model : Entity,
+        model : EntityBasic,
         modifiedBy : number
     ) : any
 
     Create
     (
         db : Client,
-        model : Entity
+        model : EntityBasic
     ) : any
 }
 

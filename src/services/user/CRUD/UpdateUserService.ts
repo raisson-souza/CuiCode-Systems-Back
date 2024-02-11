@@ -148,8 +148,8 @@ class UpdateUserService extends ClientService
 
         let emailChanged = false
 
-        const userModelSql = userModel.ConvertUserToSqlObject()
-        const userDbSql = userDb!.ConvertUserToSqlObject()
+        const userModelSql = userModel.ConvertToSqlObject()
+        const userDbSql = userDb!.ConvertToSqlObject()
 
         // Serão comparadas as diferenças entre o usuário do banco com o usuário modelo.
         for (let prop in userDbSql)
