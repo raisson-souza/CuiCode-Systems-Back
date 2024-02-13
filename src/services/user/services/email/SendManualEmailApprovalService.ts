@@ -17,6 +17,8 @@ class SendManualEmailApprovalService extends ClientService
 
     CheckBody() { throw new Error("Method not implemented.") }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

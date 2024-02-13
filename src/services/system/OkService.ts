@@ -16,6 +16,8 @@ class OkService extends ServerService
 
     CheckQuery() { }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

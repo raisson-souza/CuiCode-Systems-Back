@@ -42,6 +42,8 @@ class UpdateUserService extends ClientService
 
     CheckQuery() { throw new Error("Method not implemented.") }
 
+    CheckParams() { }
+
     async Operation()
     {
         try
@@ -102,6 +104,12 @@ class UpdateUserService extends ClientService
             if (newLevel === 2 || newLevel === 3)
                 UserRepository.ValidateUserPermission(this.USER_auth!, PermissionLevelEnum.Root)
         }
+
+        if (!IsUndNull(newUser.Password) || !IsUndNull(newUser.PasswordHint))
+            this.NotImplementedUpdate("A senha ou dica de senha não podem ser editadas nesta rota.")
+
+        if (!IsUndNull(newUser.PhotoBase64))
+            this.NotImplementedUpdate("A foto do usuário não pode ser editada nesta rota.")
     }
 
     async PersistUserUpdate(userModel : User)
@@ -214,6 +222,16 @@ class UpdateUserService extends ClientService
         emailMessage += "no sistema."
 
         EmailSender.Internal(EmailTitlesEnum.USER_DEACTIVATED, emailMessage)
+    }
+
+    private NotImplementedUpdate(message: string)
+    {
+        ResponseMessage.Send(
+            HttpStatusEnum.NOT_IMPLEMENTED,
+            message,
+            this.Action,
+            this.RES
+        )
     }
 }
 

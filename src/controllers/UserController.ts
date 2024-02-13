@@ -14,6 +14,7 @@ import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import AuthMiddleware from "../middlewares/AuthMiddleware"
+import UpdateUserPasswordService from "../services/user/services/others/UpdateUserPasswordService"
 
 function UsersController(app : Express, upload : Multer)
 {
@@ -63,6 +64,10 @@ function UsersController(app : Express, upload : Multer)
 
     app.get('/user/:user_id/photo', AuthMiddleware, (req, res) => {
         new GetUserPhotoService(req, res).Operation()
+    })
+
+    app.put('/user/:user_id/password', AuthMiddleware, (req, res) => {
+        new UpdateUserPasswordService(req, res).Operation()
     })
 }
 

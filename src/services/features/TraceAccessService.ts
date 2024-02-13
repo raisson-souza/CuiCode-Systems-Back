@@ -15,6 +15,8 @@ class TraceAccessService extends ServerService
 
     CheckQuery() { throw new Error("Method not implemented.") }
 
+    CheckParams() { }
+
     Operation()
     {
         try

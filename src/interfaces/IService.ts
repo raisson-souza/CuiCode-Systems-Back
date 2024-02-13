@@ -2,6 +2,7 @@ interface IService
 {
     CheckBody(body : any) : any
     CheckQuery(query : any) : any
+    CheckParams(params : any) : any
     readonly Action : string
     Operation() : any
     AuthenticateRequestor() : void

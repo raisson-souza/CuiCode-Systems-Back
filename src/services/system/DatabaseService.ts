@@ -16,6 +16,8 @@ class DatabaseService extends ServerService
 
     CheckBody() { throw new Error("Method not implemented.") }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

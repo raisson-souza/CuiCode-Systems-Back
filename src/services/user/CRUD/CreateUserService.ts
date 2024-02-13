@@ -34,6 +34,8 @@ class CreateUserService extends ServerService
 
     CheckQuery() { throw new Error("Method not implemented.") }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

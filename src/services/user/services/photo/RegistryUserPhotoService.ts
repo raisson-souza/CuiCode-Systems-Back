@@ -39,6 +39,8 @@ class RegistryUserPhoto extends ClientService
 
     CheckQuery() { }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

@@ -103,14 +103,9 @@ abstract class UserRepository
         if (user.Email.indexOf("@") == -1 || user.RecoveryEmail.indexOf("@") == -1)
             throw new Error("Email ou email de recuperação inválido.")
 
-        if (user.Password.search(/^[0-9]+$/) != -1)
-            throw new Error("A senha não pode conter apenas números.")
+        this.ValidatePassword(user.Password)
 
-        if (user.Password.search(/\d+/g) == -1)
-            throw new Error("A senha não pode conter apenas letras.")
-
-        if (user.PasswordHint.includes(user.Password))
-            throw new Error("A senha não pode estar presente na dica da senha.")
+        this.ValidatePasswordHint(user.Password, user.PasswordHint)
 
         user.Name.toLocaleLowerCase().split(" ").forEach(namePart => {
             if (user.Password.includes(namePart))
@@ -136,11 +131,11 @@ abstract class UserRepository
                 throw new Error("Email ou email de recuperação inválido.")
         }
 
-        if (!IsUndNull(user.Password))
-        {
-            if (user.Password.search(/\d+/g) == -1)
-                throw new Error("A senha não pode conter apenas letras.")
-        }
+        // if (!IsUndNull(user.Password))
+        // {
+        //     if (user.Password.search(/\d+/g) == -1)
+        //         throw new Error("A senha não pode conter apenas letras.")
+        // }
 
         // Não é possível validar se a dica de senha ou nome consta na senha por ela estar encriptografada.
     }
@@ -220,6 +215,21 @@ abstract class UserRepository
 
         if (!user.Active || user.Deleted)
             throw new Error("Usuário inapto para tal ação.")
+    }
+
+    static ValidatePassword(password : string)
+    {
+        if (password.search(/^[0-9]+$/) != -1)
+            throw new Error("A senha não pode conter apenas números.")
+
+        if (password.search(/\d+/g) == -1)
+            throw new Error("A senha não pode conter apenas letras.")
+    }
+
+    static ValidatePasswordHint(password: string, passwordHint: string)
+    {
+        if (passwordHint.includes(password))
+            throw new Error("A senha não pode estar presente na dica da senha.")
     }
 
     static ValidateUserGroupCreationLimit(user : User) { }

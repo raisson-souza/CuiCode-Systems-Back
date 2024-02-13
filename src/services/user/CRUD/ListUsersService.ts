@@ -31,6 +31,8 @@ class ListUsersService extends ServerService
         return RequiredInfoArray[0]
     }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

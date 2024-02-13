@@ -29,6 +29,8 @@ class GetStyleService extends ServerService
 
     CheckQuery() { }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

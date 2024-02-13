@@ -35,6 +35,8 @@ class LoginService extends ClientService
 
     CheckQuery() { throw new Error("Method not implemented.") }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

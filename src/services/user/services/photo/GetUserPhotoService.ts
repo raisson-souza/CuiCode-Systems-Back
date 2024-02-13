@@ -27,6 +27,8 @@ class GetUserPhoto extends ClientService
         return Number.parseInt(userId as string)
     }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

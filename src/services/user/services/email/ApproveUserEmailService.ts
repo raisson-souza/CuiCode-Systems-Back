@@ -29,6 +29,8 @@ class ApproveUserEmailService extends ClientService
         return { email : query.email, userId : query.userId }
     }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

@@ -52,6 +52,8 @@ class GetUserLogsService extends ServerClientService
         }
     }
 
+    CheckParams() { }
+
     async Operation()
     {
         try

@@ -38,6 +38,8 @@ abstract class Service implements IService
     abstract CheckBody() : any
     
     abstract CheckQuery() : any
+
+    abstract CheckParams() : any
     
     abstract Operation() : void
 
