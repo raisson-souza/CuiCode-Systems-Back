@@ -6,6 +6,9 @@ import ResponseMessage from "../../../../classes/system/ResponseMessage"
 
 import HttpStatusEnum from "../../../../enums/system/HttpStatusEnum"
 
+/**
+ * Envio manual de aprovação de email.
+ */
 class SendManualEmailApprovalService extends ClientService
 {
     Action = "Envio manual de aprovação de email de usuário."
