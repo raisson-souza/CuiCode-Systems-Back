@@ -24,6 +24,8 @@ class OkService extends ServerService
         {
             const { Action, RES } = this
 
+            // Aqui não será utilizado ParametersBase para obter-se maior precisão na busca levando
+            // em conta o propósito da OkService.
             await this.DB_connection.query("SELECT * FROM parameters")
                 .then(result => {
                     const parameters = new Parameters(result.rows[0])
