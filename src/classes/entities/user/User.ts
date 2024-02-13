@@ -7,8 +7,8 @@ import FindValue from "../../../functions/logic/FindValue"
 import FormatIdNumber from "../../../functions/formatting/FormatIdNumber"
 import IsUndNull from "../../../functions/logic/IsUndNull"
 
-import PermissionLevel from "../../../enums/PermissionLevelEnum"
-import Sex from "../../../enums/SexEnum"
+import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
+import SexEnum from "../../../enums/SexEnum"
 
 class User extends EntityRegistry
 {
@@ -41,11 +41,11 @@ class User extends EntityRegistry
         this.Name = FindValue(body, ["Name", "name"])
         this.Password = FindValue(body, ["Password", "password"])
         this.PasswordHint = FindValue(body, ["PasswordHint", "password_hint"])
-        this.PermissionLevel = this.ConvertEnum(FindValue(body, ["PermissionLevel", "permission_level"]), PermissionLevel, "PermissionLevel")
+        this.PermissionLevel = this.ConvertEnum(FindValue(body, ["PermissionLevel", "permission_level"]), PermissionLevelEnum, "PermissionLevel")
         this.Phone = FindValue(body, ["Phone", "phone"])
         this.PhotoBase64 = FindValue(body, ["PhotoBase64", "photo_base_64"])
         this.RecoveryEmail = FindValue(body, ["RecoveryEmail", "recovery_email"])
-        this.Sex = this.ConvertEnum(FindValue(body, ["Sex", "sex"]), Sex, "Sex")
+        this.Sex = this.ConvertEnum(FindValue(body, ["Sex", "sex"]), SexEnum, "Sex")
         this.Username = FindValue(body, ["Username", "username"])
     }
 
