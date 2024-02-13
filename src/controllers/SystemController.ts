@@ -1,6 +1,7 @@
 import { Express } from "express"
 
 import DatabaseService from "../services/system/DatabaseService"
+import GetStyleService from "../services/system/GetStyleService"
 import OkService from "../services/system/OkService"
 
 import AuthMiddleware from "../middlewares/AuthMiddleware"
@@ -17,6 +18,10 @@ function SystemController(app : Express)
 
     app.get('/ok', (req, res) => {
         new OkService(req, res).Operation()
+    })
+
+    app.get('/get_style', (req, res) => {
+        new GetStyleService(req, res).Operation()
     })
 }
 

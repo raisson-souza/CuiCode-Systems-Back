@@ -6,6 +6,7 @@ class Parameters extends EntityBasic
 {
     SqlCommandsCreated : boolean
     SystemUnderMaintence : boolean
+    SpecialSystemStyleOn : boolean
     
     constructor(body : any )
     {
@@ -24,6 +25,7 @@ class Parameters extends EntityBasic
     {
         this.SqlCommandsCreated = FindValue(body, ["SqlCommandsCreated", "sql_commands_created"])
         this.SystemUnderMaintence = FindValue(body, ["SystemUnderMaintence", "system_under_maintence"])
+        this.SpecialSystemStyleOn = FindValue(body, ["SpecialSystemStyleOn", "special_system_style_on"])
     }
 
     ConvertToSqlObject()
@@ -32,6 +34,7 @@ class Parameters extends EntityBasic
             "id": this.Id,
             "sql_commands_created": this.SqlCommandsCreated,
             "system_under_maintence": this.SystemUnderMaintence,
+            "special_system_style_on": this.SpecialSystemStyleOn,
         }
     }
 }
