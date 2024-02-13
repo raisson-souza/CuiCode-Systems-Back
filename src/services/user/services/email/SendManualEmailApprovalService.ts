@@ -24,7 +24,6 @@ class SendManualEmailApprovalService extends ClientService
         try
         {
             const {
-                RES,
                 DB_connection,
                 Action
             } = this
@@ -39,7 +38,7 @@ class SendManualEmailApprovalService extends ClientService
                         HttpStatusEnum.ACCEPTED,
                         "Solicitação de aprovação de email realizada com sucesso.",
                         Action,
-                        RES
+                        this.RES
                     )
                 })
                 .catch(ex => {

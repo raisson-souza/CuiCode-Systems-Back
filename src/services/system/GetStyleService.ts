@@ -35,7 +35,7 @@ class GetStyleService extends ServerService
     {
         try
         {
-            const { Action, RES } = this
+            const { Action } = this
 
             const systemStyles : SystemStyle[] = []
 
@@ -55,7 +55,7 @@ class GetStyleService extends ServerService
                 HttpStatusEnum.OK,
                 systemStyle!.FrontEndConvertedStyle(),
                 Action,
-                RES
+                this.RES
             )
         }
         catch (ex)

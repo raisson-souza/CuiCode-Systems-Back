@@ -22,7 +22,7 @@ class OkService extends ServerService
     {
         try
         {
-            const { Action, RES } = this
+            const { Action } = this
 
             // Aqui não será utilizado ParametersBase para obter-se maior precisão na busca levando
             // em conta o propósito da OkService.
@@ -35,14 +35,14 @@ class OkService extends ServerService
                             HttpStatusEnum.UNAVAIALBLE,
                             "Sistema em Manutenção.",
                             Action,
-                            RES
+                            this.RES
                         )
 
                     ResponseMessage.Send(
                         HttpStatusEnum.OK,
                         null,
                         Action,
-                        RES
+                        this.RES
                     )
                 })
         }

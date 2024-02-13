@@ -49,7 +49,6 @@ class UpdateUserService extends ClientService
         try
         {
             const {
-                RES,
                 DB_connection,
                 Action
             } = this
@@ -70,7 +69,7 @@ class UpdateUserService extends ClientService
                 HttpStatusEnum.OK,
                 "Usuário editado com sucesso.",
                 Action,
-                RES
+                this.RES
             )
         }
         catch (ex)

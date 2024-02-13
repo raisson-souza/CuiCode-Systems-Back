@@ -36,7 +36,6 @@ class ApproveUserEmailService extends ClientService
         try
         {
             const {
-                RES,
                 DB_connection,
                 Action
             } = this
@@ -94,7 +93,7 @@ class ApproveUserEmailService extends ClientService
                 HttpStatusEnum.OK,
                 "Email aprovado com sucesso!",
                 Action,
-                RES
+                this.RES
             )
         }
         catch (ex)

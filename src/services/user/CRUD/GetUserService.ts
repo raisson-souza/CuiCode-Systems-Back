@@ -40,7 +40,6 @@ class GetUserService extends ServerClientService
             await this.AuthenticateRequestor()
 
             const {
-                RES,
                 DB_connection,
                 Action
             } = this
@@ -57,7 +56,7 @@ class GetUserService extends ServerClientService
                         HttpStatusEnum.OK,
                         user,
                         Action,
-                        RES
+                        this.RES
                     )
                 })
                 .catch(ex => {

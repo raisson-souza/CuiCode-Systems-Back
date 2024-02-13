@@ -41,7 +41,6 @@ class CreateUserService extends ServerService
         try
         {
             const {
-                RES,
                 DB_connection,
                 Action
             } = this
@@ -58,7 +57,7 @@ class CreateUserService extends ServerService
                 HttpStatusEnum.CREATED,
                 `Usuário ${ user.GenerateUserKey() } criado com sucesso.`,
                 Action,
-                RES
+                this.RES
             )
 
             EmailSender.Internal(EmailTitles.NEW_USER, user.GenerateUserKey())

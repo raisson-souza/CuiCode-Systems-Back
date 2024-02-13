@@ -38,7 +38,6 @@ class ListUsersService extends ServerService
         try
         {
             const {
-                RES,
                 DB_connection,
                 Action
             } = this
@@ -54,7 +53,7 @@ class ListUsersService extends ServerService
                         HttpStatusEnum.OK,
                         userInfos,
                         Action,
-                        RES
+                        this.RES
                     )
                 })
                 .catch(ex => {
