@@ -1,19 +1,22 @@
-import PermissionLevel from "../../enums/PermissionLevelEnum"
+import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 
-function PermissionLevelToNumber(permissionLevel : PermissionLevel)
+function PermissionLevelToNumber(permissionLevel : PermissionLevelEnum)
 {
+    // Função modificada para trocar valor padrão de CONVIDADO para MEMBRO
     switch (permissionLevel)
     {
-        case PermissionLevel.Root:
+        case PermissionLevelEnum.Root:
             return 4
-        case PermissionLevel.Adm:
+        case PermissionLevelEnum.Adm:
             return 3
-        case PermissionLevel.Member:
+        case PermissionLevelEnum.Member:
             return 2
+        /*
         case PermissionLevel.Guest:
             return 1
+        */
         default:
-            return 1
+            return 2
     }
 }
 
