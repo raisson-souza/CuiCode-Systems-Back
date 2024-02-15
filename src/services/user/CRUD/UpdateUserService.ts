@@ -202,29 +202,43 @@ class UpdateUserService extends ClientService
     (
         userLog : EntityLog[],
         updatedUser : User
-    )
+    ) : void
     {
+        const deleted = EntityLog.GetProperyValue(['deleted', 'Deleted'], userLog)
+        const active = EntityLog.GetProperyValue(['active', 'Active'], userLog)
+
+        if (IsUndNull(deleted.NewValue) && IsUndNull(active.NewValue))
+            return
+
         let emailMessage = `Usuário ${ updatedUser.GenerateUserKey() } foi `
 
-        const deleted = EntityLog.GetProperyValue('deleted', userLog)
-
-        if (!IsUndNull(deleted.NewValue))
+        if (!IsUndNull(deleted.NewValue) && !IsUndNull(active.NewValue))
         {
             emailMessage += deleted.NewValue
-                ? "deletado(a)"
-                : "restaurado(a)"
-        }
-
-        const active = EntityLog.GetProperyValue('active', userLog)
-
-        if (!IsUndNull(active.NewValue))
-        {
+                ? "deletado(a) e "
+                : "restaurado(a) e "
             emailMessage += active.NewValue
                 ? "ativado(a)"
                 : "desativado(a)"
         }
+        else
+        {
+            if (!IsUndNull(deleted.NewValue))
+            {
+                emailMessage += deleted.NewValue
+                    ? "deletado(a)"
+                    : "restaurado(a)"
+            }
+    
+            if (!IsUndNull(active.NewValue))
+            {
+                emailMessage += active.NewValue
+                    ? "ativado(a)"
+                    : "desativado(a)"
+            }
+        }
 
-        emailMessage += "no sistema."
+        emailMessage += " no sistema."
 
         EmailSender.Internal(EmailTitlesEnum.USER_DEACTIVATED, emailMessage)
     }

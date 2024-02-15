@@ -31,21 +31,21 @@ class EntityLog
 
     static GetProperyValue
     (
-        propertyName : string,
-        log : EntityLog[]
+        propertyNames : string[],
+        logs : EntityLog[]
     )
     : { OldValue : any, NewValue : any }
     {
         let oldValue : any = null
         let newValue : any = null
 
-        for (let i = 0; i < log.length - 1; i++)
+        for (let i = 0; i < logs.length; i++)
         {
-            const propLog = log[i]
-            if (propLog.OldValue.ModelValue.Property === propertyName)
+            const propLog = logs[i]
+            if (propertyNames.includes(propLog.OldValue.ModelValue.Property))
             {
-                oldValue = log[i].OldValue.ModelValue.Value
-                newValue = log[i].NewValue.ModelValue.Value
+                oldValue = logs[i].OldValue.ModelValue.Value
+                newValue = logs[i].NewValue.ModelValue.Value
                 break
             }
         }
