@@ -48,9 +48,11 @@ CREATE TABLE users_logs(
     user_id int NOT NULL,
     "change" jsonb NOT NULL,
     "date" timestamp DEFAULT NOW(),
+    modified_by INT NOT NULL,
     adm_change BOOL DEFAULT FALSE,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (modified_by) REFERENCES users (id)
 )
 
 CREATE TABLE IF NOT EXISTS users_photos(

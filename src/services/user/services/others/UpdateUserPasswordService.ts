@@ -1,11 +1,10 @@
-import SetUserLogOperation from "../log/SetUserLogOperation"
-
 import { EntityLog } from "../../../../classes/entities/base/EntityLog"
 import ClientService from "../../../../classes/service/ClientService"
 import Exception from "../../../../classes/custom/Exception"
 import ResponseMessage from "../../../../classes/system/ResponseMessage"
 import User from "../../../../classes/entities/user/User"
 import UserBase from "../../../../classes/bases/UserBase"
+import UserLogBase from "../../../../classes/bases/UserLogBase"
 import UserRepository from "../../../../repositories/UserRepository"
 
 import EncryptInfo from "../../../../functions/security/EncryptPassword"
@@ -171,7 +170,13 @@ class UpdateUserPasswordService extends ClientService
 
         const isAdm = this.USER_auth!.PermissionLevel!.Value >= 3
 
-        await new SetUserLogOperation(userModel, this.DB_connection, userLog, isAdm).PerformOperation()
+        await UserLogBase.Create(
+            this.DB_connection,
+            userModel.Id,
+            this.USER_auth!.Id,
+            isAdm,
+            userLog
+        )
     }
 }
 

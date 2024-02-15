@@ -1,5 +1,4 @@
 import SendApprovalEmailOperation from "../services/email/SendApprovalUserEmailOperation"
-import SetUserLogOperation from "../services/log/SetUserLogOperation"
 
 import { EntityLog } from "../../../classes/entities/base/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
@@ -8,6 +7,7 @@ import Exception from "../../../classes/custom/Exception"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import User from "../../../classes/entities/user/User"
 import UserBase from "../../../classes/bases/UserBase"
+import UserLogBase from "../../../classes/bases/UserLogBase"
 import UserRepository from "../../../repositories/UserRepository"
 
 import AnySearch from "../../../interfaces/AnySearch"
@@ -134,7 +134,15 @@ class UpdateUserService extends ClientService
 
             this.DetectUserDeactivationOrDeletion(userLog, updatedUser!)
 
-            await new SetUserLogOperation(userModel, DB_connection, userLog, !this.SameUserAuthAndUserToOperate).PerformOperation()
+            const isAdm = this.USER_auth!.PermissionLevel!.Value >= 3
+
+            await UserLogBase.Create(
+                this.DB_connection,
+                userModel.Id,
+                this.USER_auth!.Id,
+                isAdm,
+                userLog
+            )
         }
         catch (ex)
         {
