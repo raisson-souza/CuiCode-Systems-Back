@@ -2,21 +2,24 @@ import { Client } from "pg"
 
 import QueryUser from "../../services/user/utilities/QueryUser"
 
+import Base from "./base/Base"
+
+import AnySearch from "../../interfaces/AnySearch"
+
 import { EntityLog } from "../entities/base/EntityLog"
-import EntityBasic from "../entities/base/EntityBasic"
 import SqlLabel from "../entities/base/SqlLabel"
 import User from "../entities/user/User"
 import UserPhoto from "../entities/user/UserPhoto"
 
-import IEntityBase from "../../interfaces/IEntityBase"
-
 import IsUndNull from "../../functions/logic/IsUndNull"
-import AnySearch from "../../interfaces/AnySearch"
 
-abstract class UserBase implements IEntityBase
+abstract class UserBase extends Base
 {
-    Get(db: Client, id: number) { }
-    static async Get(db : Client, id : number) : Promise<User | null>
+    static async Get
+    (
+        db : Client,
+        id : number
+    ) : Promise<User | null>
     {
         try
         {
@@ -28,8 +31,13 @@ abstract class UserBase implements IEntityBase
         }
     }
 
-    UpdateByLog(db: Client, entityId: number, model: EntityLog[], modifiedBy: number) { }
-    static async Update(db : Client, userId : number, log : EntityLog[], modifiedBy : number) : Promise<User | null>
+    static async Update
+    (
+        db : Client,
+        userId : number,
+        log : EntityLog[],
+        modifiedBy : number
+    ) : Promise<User | null>
     {
         try
         {
@@ -43,8 +51,12 @@ abstract class UserBase implements IEntityBase
         }
     }
 
-    UpdateByModel(db: Client, model: EntityBasic, modifiedBy: number) { }
-    static async UpdateByModel(db : Client, model : User, modifiedBy : number) : Promise<User | null>
+    static async UpdateByModel
+    (
+        db : Client,
+        model : User,
+        modifiedBy : number
+    ) : Promise<User | null>
     {
         try
         {
@@ -67,10 +79,17 @@ abstract class UserBase implements IEntityBase
         }
     }
 
-    Create(db: Client, model: EntityBasic) { }
-    static async Create(db : Client, model : User) { }
-    
-    static async GetPhoto(db : Client, userId : number)
+    static async Create
+    (
+        db : Client,
+        model : User
+    ) { }
+
+    static async GetPhoto
+    (
+        db : Client,
+        userId : number
+    )
     {
         const query = `SELECT * FROM users_photos WHERE user_id = ${ userId }`
         
@@ -85,7 +104,12 @@ abstract class UserBase implements IEntityBase
                 })
     }
 
-    static async CreateOrUpdatePhoto(db : Client, userId : number, photo : string)
+    static async CreateOrUpdatePhoto
+    (
+        db : Client,
+        userId : number,
+        photo : string
+    )
     {
         const userPhotoRegistry = await UserBase.GetPhoto(db, userId)
         let query : string

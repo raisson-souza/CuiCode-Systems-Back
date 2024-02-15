@@ -3,7 +3,7 @@ import { Client } from "pg"
 import { EntityLog } from "../classes/entities/base/EntityLog"
 import EntityBasic from "../classes/entities/base/EntityBasic"
 
-interface IEntityBase
+interface IBase
 {
     Get
     (
@@ -22,6 +22,7 @@ interface IEntityBase
     UpdateByModel
     (
         db : Client,
+        entityId: number,
         model : EntityBasic,
         modifiedBy : number
     ) : any
@@ -31,6 +32,18 @@ interface IEntityBase
         db : Client,
         model : EntityBasic
     ) : any
+
+    Delete
+    (
+        db : Client,
+        entityId : number
+    ) : any
+
+    Deactivate
+    (
+        db : Client,
+        entityId : number
+    ) : any
 }
 
-export default IEntityBase
+export default IBase
