@@ -134,13 +134,11 @@ class UpdateUserService extends ClientService
 
             this.DetectUserDeactivationOrDeletion(userLog, updatedUser!)
 
-            const isAdm = this.USER_auth!.PermissionLevel!.Value >= 3
-
             await UserLogBase.Create(
                 this.DB_connection,
                 userModel.Id,
                 this.USER_auth!.Id,
-                isAdm,
+                this.USER_auth!.IsAdm(),
                 userLog
             )
         }

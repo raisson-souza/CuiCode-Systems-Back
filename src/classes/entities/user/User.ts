@@ -104,6 +104,8 @@ class User extends EntityRegistry
     {
         this.Password = EncryptInfo(this.Password)
     }
+
+    IsAdm() : boolean { return this.PermissionLevel!.Value >= 3 }
 }
 
 export default User
