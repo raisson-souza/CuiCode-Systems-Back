@@ -9,12 +9,12 @@ import GetUserService from "../services/user/CRUD/GetUserService"
 import ListUsersService from "../services/user/CRUD/ListUsersService"
 import RegistryUserPhotoService from "../services/user/services/photo/RegistryUserPhotoService"
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
+import UpdateUserPasswordService from "../services/user/services/account/UpdateUserPasswordService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
 
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import AuthMiddleware from "../middlewares/AuthMiddleware"
-import UpdateUserPasswordService from "../services/user/services/others/UpdateUserPasswordService"
 
 function UsersController(app : Express, upload : Multer)
 {
