@@ -62,14 +62,15 @@ abstract class UserBase extends Base
             let query = "UPDATE users SET "
             const formattedUserModel = model.ConvertToSqlObject() as AnySearch
             const formattedUserModelEntries = Object.entries(formattedUserModel)
-            
+
             formattedUserModelEntries.forEach((prop, i) => {
                 if (!IsUndNull(prop[1]))
                     query += `"${ prop[0] }" = ${ SqlLabel.ParsePropNameToSql(typeof prop[1], prop[1]) }${ i < formattedUserModelEntries.length - 1 ? ", " : "" }`
-        })
-        
-        query += ` modified = now(), modified_by = ${ modifiedBy } WHERE id = ${ model.Id }`
-        await db.query(query)
+            })
+
+            query += ` modified = now(), modified_by = ${ modifiedBy } WHERE id = ${ model.Id }`
+            await db.query(query)
+
             return await UserBase.Get(db, model.Id)
         }
         catch (ex)
@@ -80,8 +81,8 @@ abstract class UserBase extends Base
 
     static async Create
     (
-        db : Client,
-        model : User
+        _ : Client,
+        __ : User
     ) { }
 
     static async GetPhoto
