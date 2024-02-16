@@ -2,14 +2,13 @@ import { Client } from "pg"
 
 import QueryUser from "../../services/user/utilities/QueryUser"
 
-import Base from "./base/Base"
-
-import AnySearch from "../../interfaces/AnySearch"
-
 import { EntityLog } from "../entities/base/EntityLog"
+import Base from "./base/Base"
 import SqlLabel from "../entities/base/SqlLabel"
 import User from "../entities/user/User"
 import UserPhoto from "../entities/user/UserPhoto"
+
+import AnySearch from "../../interfaces/AnySearch"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
 
@@ -122,6 +121,21 @@ abstract class UserBase extends Base
         await db.query(query)
 
         return await UserBase.GetPhoto(db, userId)
+    }
+
+    static async GetByEmail
+    (
+        db : Client,
+        email : string
+    ) : Promise<User | null>
+    {
+        return await db.query(`SELECT * FROM users WHERE email = '${email}'`)
+            .then(result => {
+                if (result.rowCount === 0)
+                    return null
+
+                return new User(result.rows[0])
+            })
     }
 }
 

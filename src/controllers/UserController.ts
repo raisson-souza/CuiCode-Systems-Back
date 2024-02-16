@@ -16,6 +16,7 @@ import VerifyEmailService from "../services/user/services/account/VerifyEmailSer
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import AuthMiddleware from "../middlewares/AuthMiddleware"
+import ConfirmAccountRecoveyService from "../services/user/services/account/ConfirmAccountRecoveyService"
 
 function UsersController(app : Express, upload : Multer)
 {
@@ -73,6 +74,10 @@ function UsersController(app : Express, upload : Multer)
 
     app.get('/user/account/recovery/verify_email', (req, res) => {
         new VerifyEmailService(req, res).Operation()
+    })
+
+    app.post('/user/account/recovery/confirm_restoration', (req, res) => {
+        new ConfirmAccountRecoveyService(req, res).Operation()
     })
 }
 

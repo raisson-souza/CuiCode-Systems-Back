@@ -1,6 +1,7 @@
 import ClientService from "../../../../classes/service/ClientService"
 import Exception from "../../../../classes/custom/Exception"
 import ResponseMessage from "../../../../classes/system/ResponseMessage"
+import UserBase from "../../../../classes/bases/UserBase"
 import UserRepository from "../../../../repositories/UserRepository"
 
 import IsUndNull from "../../../../functions/logic/IsUndNull"
@@ -45,18 +46,17 @@ class VerifyEmailService extends ClientService
 
             UserRepository.ValidateEmail(email)
 
-            await DB_connection.query(`SELECT id FROM users WHERE email = '${email}'`)
-                .then(result => {
-                    if (result.rowCount === 0)
-                        ResponseMessage.NotFoundUser(this.RES, Action)
+            const user = await UserBase.GetByEmail(DB_connection, email)
 
-                    ResponseMessage.Send(
-                        HttpStatusEnum.OK,
-                        `Usuário com email ${ email } encontrado no sistema.\nDeseja iniciar o processo de recuperação de conta?`,
-                        Action,
-                        this.RES
-                    )
-                })
+            if (IsUndNull(user))
+                ResponseMessage.NotFoundUser(this.RES, Action)
+
+            ResponseMessage.Send(
+                HttpStatusEnum.OK,
+                `Usuário com email ${ email } encontrado no sistema.\nDeseja iniciar o processo de recuperação de conta?`,
+                Action,
+                this.RES
+            )
         }
         catch (ex)
         {
