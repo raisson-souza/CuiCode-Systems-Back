@@ -11,6 +11,7 @@ import RegistryUserPhotoService from "../services/user/services/photo/RegistryUs
 import SendManualEmailApprovalService from "../services/user/services/email/SendManualEmailApprovalService"
 import UpdateUserPasswordService from "../services/user/services/account/UpdateUserPasswordService"
 import UpdateUserService from "../services/user/CRUD/UpdateUserService"
+import VerifyEmailService from "../services/user/services/account/VerifyEmailService"
 
 import ResponseMessage from "../classes/system/ResponseMessage"
 
@@ -68,6 +69,10 @@ function UsersController(app : Express, upload : Multer)
 
     app.put('/user/:user_id/password', AuthMiddleware, (req, res) => {
         new UpdateUserPasswordService(req, res).Operation()
+    })
+
+    app.get('/user/account/recovery/verify_email', (req, res) => {
+        new VerifyEmailService(req, res).Operation()
     })
 }
 

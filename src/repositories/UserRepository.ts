@@ -100,8 +100,9 @@ abstract class UserRepository
 
         await this.ValidateUser(db, user, true)
 
-        if (user.Email.indexOf("@") == -1 || user.RecoveryEmail.indexOf("@") == -1)
-            throw new Error("Email ou email de recuperação inválido.")
+        this.ValidateEmail(user.Email)
+
+        this.ValidateEmail(user.RecoveryEmail)
 
         this.ValidatePassword(user.Password)
 
@@ -127,8 +128,13 @@ abstract class UserRepository
 
         if (!IsUndNull(user.Email) && !IsUndNull(user.RecoveryEmail))
         {
-            if (user.Email.indexOf("@") == -1 || user.RecoveryEmail.indexOf("@") == -1)
+            Promise.all([
+                this.ValidateEmail(user.Email),
+                this.ValidateEmail(user.RecoveryEmail)
+            ])
+            .catch(() => {
                 throw new Error("Email ou email de recuperação inválido.")
+            })
         }
 
         // if (!IsUndNull(user.Password))
@@ -230,6 +236,12 @@ abstract class UserRepository
     {
         if (passwordHint.includes(password))
             throw new Error("A senha não pode estar presente na dica da senha.")
+    }
+
+    static ValidateEmail(email: string)
+    {
+        if (email.indexOf("@") == -1)
+            throw new Error("Email inválido.")
     }
 
     static ValidateUserGroupCreationLimit(user : User) { }
