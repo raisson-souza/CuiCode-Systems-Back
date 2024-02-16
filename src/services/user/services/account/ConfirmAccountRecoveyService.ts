@@ -131,6 +131,11 @@ class ConfirmAccountRecoveyService extends ClientService
             text,
             user.Email
         )
+
+        EmailSender.Internal(
+            EmailTitlesEnum.USER_ACCOUNT_RESTORATION,
+            `Solicitação de recuperação de conta para ${ user.GenerateUserKey() } realizada.`
+        )
     }
 }
 

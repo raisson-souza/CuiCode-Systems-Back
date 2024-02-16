@@ -1,7 +1,9 @@
 import { Express } from "express"
 import { Multer } from "multer"
 
+import AccountRecoveryService from "../services/user/services/account/AccountRecoveryService"
 import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
+import ConfirmAccountRecoveyService from "../services/user/services/account/ConfirmAccountRecoveyService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
 import GetUserLogsService from "../services/user/services/log/GetUserLogsService"
 import GetUserPhotoService from "../services/user/services/photo/GetUserPhotoService"
@@ -16,7 +18,6 @@ import VerifyEmailService from "../services/user/services/account/VerifyEmailSer
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import AuthMiddleware from "../middlewares/AuthMiddleware"
-import ConfirmAccountRecoveyService from "../services/user/services/account/ConfirmAccountRecoveyService"
 
 function UsersController(app : Express, upload : Multer)
 {
@@ -78,6 +79,10 @@ function UsersController(app : Express, upload : Multer)
 
     app.post('/user/account/recovery/confirm_restoration', (req, res) => {
         new ConfirmAccountRecoveyService(req, res).Operation()
+    })
+
+    app.post('/user/account/recovery/restore_account', AuthMiddleware, (req, res) => {
+        new AccountRecoveryService(req, res).Operation()
     })
 }
 

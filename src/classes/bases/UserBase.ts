@@ -65,7 +65,7 @@ abstract class UserBase extends Base
             
             formattedUserModelEntries.forEach((prop, i) => {
                 if (!IsUndNull(prop[1]))
-                query += `"${ prop[0] }" = ${ SqlLabel.ParsePropNameToSql(typeof prop[1], prop[1]) }${ i < formattedUserModelEntries.length - 1 ? ", " : "" }`
+                    query += `"${ prop[0] }" = ${ SqlLabel.ParsePropNameToSql(typeof prop[1], prop[1]) }${ i < formattedUserModelEntries.length - 1 ? ", " : "" }`
         })
         
         query += ` modified = now(), modified_by = ${ modifiedBy } WHERE id = ${ model.Id }`

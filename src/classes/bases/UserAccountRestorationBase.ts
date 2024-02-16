@@ -70,6 +70,23 @@ abstract class UserAccountRestorationBase extends Base
                 console.log(ex)
             })
     }
+
+    static async GetByJwt
+    (
+        db : Client,
+        jwt : string
+    )
+    {
+        const query = `SELECT * FROM user_account_restorations WHERE "jwt" = '${ jwt }'`
+
+        return await db.query(query)
+            .then(result => {
+                if (result.rowCount === 0)
+                    return null
+
+                return new UserAccountRestoration(result.rows[0])
+            })
+    }
 }
 
 export default UserAccountRestorationBase
