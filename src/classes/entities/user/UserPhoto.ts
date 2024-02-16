@@ -4,9 +4,12 @@ import EntityBasic from "../base/EntityBasic"
 import User from "./User"
 import UserBase from "../../bases/UserBase"
 
-import FindValue from "../../../functions/logic/FindValue"
+import IEntityWithForeignKey from "../../../interfaces/IEntityWithForeignKey"
 
-class UserPhoto extends EntityBasic
+import FindValue from "../../../functions/logic/FindValue"
+import IsUndNull from "../../../functions/logic/IsUndNull"
+
+class UserPhoto extends EntityBasic implements IEntityWithForeignKey
 {
     Base64 : string
     Created : Date
@@ -40,11 +43,12 @@ class UserPhoto extends EntityBasic
         }
     }
 
-    async GetUser(db : Client)
+    async GetForeignKey(db : Client)
     {
         const user = await UserBase.Get(db, this.UserId)
-        this.User = user!
-        return user
+
+        if (!IsUndNull(user))
+            this.User = user!
     }
 }
 

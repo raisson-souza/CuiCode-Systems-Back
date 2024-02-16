@@ -7,11 +7,13 @@ import EntityBasic from "../base/EntityBasic"
 import User from "./User"
 import UserBase from "../../bases/UserBase"
 
+import IEntityWithForeignKey from "../../../interfaces/IEntityWithForeignKey"
+
 import FindValue from "../../../functions/logic/FindValue"
 import IsJwtExpired from "../../../functions/math/IsTimeExpired"
 import IsUndNull from "../../../functions/logic/IsUndNull"
 
-class UserAccountRestoration extends EntityBasic
+class UserAccountRestoration extends EntityBasic implements IEntityWithForeignKey
 {
     Completed : Boolean
     Created : Date
