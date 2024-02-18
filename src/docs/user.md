@@ -166,3 +166,43 @@ Queote = 5
 
 Captura chave de identificação.
 QueoteWithoutPhoto = 6
+
+## EDIÇÃO DE SENHA DE USUÁRIO
+> PUT
+- Necessita autenticação.
+
+URL = http://localhost:3000/user/{ ID DE USUÁRIO }/password
+
+BODY =
+```
+{
+    "password": { NOVA SENHA },
+    "password_hint": { NOVA DICA DE SENHA }
+}
+```
+
+## RECUPERAÇÃO DE CONTA
+
+### VERIFICAÇÃO DE EMAIL
+> GET
+
+URL = http://localhost:3000/user/account/recovery/verify_email?email={ EMAIL }
+
+### CONFIRMAÇÃO DE RECUPERAÇÃO DE CONTA
+> POST
+
+URL = http://localhost:3000/user/account/recovery/confirm_restoration?email={ EMAIL }
+
+### RESTAURAÇÃO DE CONTA
+> POST
+- Necessita autenticação.
+
+URL = http://localhost:3000/user/account/recovery/restore_account?jwt={ TOKEN }
+
+BODY =
+```
+{
+    "password": { NOVA SENHA },
+    "password_hint": { NOVA DICA DE SENHA }
+}
+```
