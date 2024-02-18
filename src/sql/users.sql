@@ -1,68 +1,71 @@
-CREATE TABLE IF NOT EXISTS users(
-	id SERIAL,
-	username varchar(20) NOT NULL UNIQUE,
-	"name" varchar(100) NOT NULL,
-	birthdate DATE NOT NULL,
-	sex int NOT NULL,
-	email varchar(100) NOT NULL UNIQUE,
-	recovery_email varchar(100) UNIQUE,
-	phone varchar(20) UNIQUE,
-	"password" varchar(100) NOT NULL,
-	password_hint varchar(100) NOT NULL,
-	email_approved bool DEFAULT FALSE,
-	permission_level int NOT NULL DEFAULT 2,
-	created timestamp NOT NULL DEFAULT now(),
-	active boolean NOT NULL DEFAULT TRUE,
-	deleted boolean NOT NULL DEFAULT FALSE,
-    modified timestamp DEFAULT NULL,
-    modified_by int DEFAULT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY (sex) REFERENCES sexs (id),
-	FOREIGN KEY (permission_level) REFERENCES permission_levels (id),
-    FOREIGN KEY (modified_by) REFERENCES users (id)
+CREATE TABLE IF NOT EXISTS "permission_levels"(
+	"id" INT,
+	"description" varchar,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS permission_levels(
-	id int PRIMARY KEY,
-	description varchar
-);
-
-INSERT INTO permission_levels VALUES
+INSERT INTO "permission_levels" VALUES
 (4, 'Root'),
 (3, 'Adm'),
 (2, 'Member'),
 (1, 'Guest');
 
-CREATE TABLE IF NOT EXISTS sexs(
-	id int PRIMARY KEY,
-	description varchar
+CREATE TABLE IF NOT EXISTS "sexs"(
+	"id" INT,
+	"description" varchar,
+    PRIMARY KEY (id)
 );
 
-INSERT INTO sexs VALUES
+INSERT INTO "sexs" VALUES
 (1, 'Masculino'),
 (2, 'Feminino'),
 (3, 'Outro');
 
-CREATE TABLE users_logs(  
-    id SERIAL,
-    user_id int NOT NULL,
-    "change" jsonb NOT NULL,
-    "date" timestamp DEFAULT NOW(),
-    modified_by INT NOT NULL,
-    adm_change BOOL DEFAULT FALSE,
-    PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (modified_by) REFERENCES users (id)
-)
+CREATE TABLE IF NOT EXISTS "users"(
+	"id" SERIAL,
+	"username" VARCHAR(20) NOT NULL UNIQUE,
+	"name" VARCHAR(100) NOT NULL,
+	"birthdate" DATE NOT NULL,
+	"sex" INT NOT NULL,
+	"email" VARCHAR(100) NOT NULL UNIQUE,
+	"recovery_email" VARCHAR(100) UNIQUE,
+	"phone" VARCHAR(20) UNIQUE,
+	"password" VARCHAR(100) NOT NULL,
+	"password_hint" VARCHAR(100) NOT NULL,
+	"email_approved" BOOLEAN DEFAULT FALSE,
+	"permission_level" INT NOT NULL DEFAULT 2,
+	"created" TIMESTAMP NOT NULL DEFAULT NOW(),
+	"active" BOOLEAN NOT NULL DEFAULT TRUE,
+	"deleted" BOOLEAN NOT NULL DEFAULT FALSE,
+    "modified" TIMESTAMP DEFAULT NULL,
+    "modified_by" INT DEFAULT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (sex) REFERENCES "sexs" (id),
+	FOREIGN KEY (permission_level) REFERENCES "permission_levels" (id),
+    FOREIGN KEY (modified_by) REFERENCES "users" (id)
+);
 
-CREATE TABLE IF NOT EXISTS users_photos(
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL UNIQUE,
-    photo_base_64 TEXT DEFAULT NULL, AJUSTAR NO DATABASE
-    created timestamp NOT NULL DEFAULT now(),
-    modified timestamp DEFAULT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
-)
+CREATE TABLE "users_logs"(  
+    "id" SERIAL,
+    "user_id" INT NOT NULL,
+    "change" JSONB NOT NULL,
+    "date" TIMESTAMP DEFAULT NOW(),
+    "modified_by" INT NOT NULL,
+    "adm_change" BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES "users" (id),
+    FOREIGN KEY (modified_by) REFERENCES "users" (id)
+);
+
+CREATE TABLE IF NOT EXISTS "users_photos"(
+    "id" SERIAL,
+    "user_id" INT NOT NULL UNIQUE,
+    "photo_base_64" TEXT DEFAULT NULL
+    "created" TIMESTAMP NOT NULL DEFAULT NOW(),
+    "modified" TIMESTAMP DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES "users" (id)
+);
 
 /*
 CHAT

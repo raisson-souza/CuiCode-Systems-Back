@@ -99,14 +99,15 @@ class DatabaseService extends ServerService
         try
         {
             await this.DB_connection.query(`
-                CREATE TABLE IF NOT EXISTS parameters(
-                    id SERIAL PRIMARY KEY,
-                    sql_commands_created boolean NOT NULL DEFAULT TRUE,
-                    system_under_maintence boolean NOT NULL DEFAULT FALSE,
-                    special_system_style_on boolean NOT NULL DEFAULT FALSE
+                CREATE TABLE IF NOT EXISTS "parameters"(
+                    "id" SERIAL,
+                    "sql_commands_created" BOOLEAN NOT NULL DEFAULT TRUE,
+                    "system_under_maintence" BOOLEAN NOT NULL DEFAULT FALSE,
+                    "special_system_style_on" BOOLEAN NOT NULL DEFAULT FALSE,
+                    PRIMARY KEY (id)
                 );
 
-                INSERT INTO parameters (id) VALUES (1);
+                INSERT INTO "parameters" (id) VALUES (1);
             `)
         } catch { }
     }
@@ -118,44 +119,46 @@ class DatabaseService extends ServerService
         {
             await this.DB_connection.query(`
                 CREATE TABLE IF NOT EXISTS "permission_levels"(
-                    id int PRIMARY KEY,
-                    description varchar
+                    "id" INT,
+                    "description" varchar,
+                    PRIMARY KEY (id)
                 );
-                
+
                 INSERT INTO "permission_levels" VALUES
                 (4, 'Root'),
                 (3, 'Adm'),
                 (2, 'Member'),
                 (1, 'Guest');
-                
+
                 CREATE TABLE IF NOT EXISTS "sexs"(
-                    id int PRIMARY KEY,
-                    description varchar
+                    "id" INT,
+                    "description" varchar,
+                    PRIMARY KEY (id)
                 );
-                
+
                 INSERT INTO "sexs" VALUES
                 (1, 'Masculino'),
                 (2, 'Feminino'),
                 (3, 'Outro');
 
                 CREATE TABLE IF NOT EXISTS "users"(
-                    id SERIAL,
-                    username varchar(20) NOT NULL UNIQUE,
-                    "name" varchar(100) NOT NULL,
-                    birthdate DATE NOT NULL,
-                    sex int NOT NULL,
-                    email varchar(100) NOT NULL UNIQUE,
-                    recovery_email varchar(100) UNIQUE,
-                    phone varchar(20) UNIQUE,
-                    "password" varchar(100) NOT NULL,
-                    password_hint varchar(100) NOT NULL,
-                    email_approved bool DEFAULT FALSE,
-                    permission_level int NOT NULL DEFAULT 2,
-                    created timestamp NOT NULL DEFAULT now(),
-                    active boolean NOT NULL DEFAULT TRUE,
-                    deleted boolean NOT NULL DEFAULT FALSE,
-                    modified timestamp DEFAULT NULL,
-                    modified_by int DEFAULT NULL,
+                    "id" SERIAL,
+                    "username" VARCHAR(20) NOT NULL UNIQUE,
+                    "name" VARCHAR(100) NOT NULL,
+                    "birthdate" DATE NOT NULL,
+                    "sex" INT NOT NULL,
+                    "email" VARCHAR(100) NOT NULL UNIQUE,
+                    "recovery_email" VARCHAR(100) UNIQUE,
+                    "phone" VARCHAR(20) UNIQUE,
+                    "password" VARCHAR(100) NOT NULL,
+                    "password_hint" VARCHAR(100) NOT NULL,
+                    "email_approved" BOOLEAN DEFAULT FALSE,
+                    "permission_level" INT NOT NULL DEFAULT 2,
+                    "created" TIMESTAMP NOT NULL DEFAULT now(),
+                    "active" BOOLEAN NOT NULL DEFAULT TRUE,
+                    "deleted" BOOLEAN NOT NULL DEFAULT FALSE,
+                    "modified" TIMESTAMP DEFAULT NULL,
+                    "modified_by" INT DEFAULT NULL,
                     PRIMARY KEY (id),
                     FOREIGN KEY (sex) REFERENCES "sexs" (id),
                     FOREIGN KEY (permission_level) REFERENCES "permission_levels" (id),
@@ -163,57 +166,59 @@ class DatabaseService extends ServerService
                 );
 
                 CREATE TABLE IF NOT EXISTS "email_approvals"(
-                    id SERIAL PRIMARY KEY,
-                    user_id int NOT NULL,
-                    email varchar NOT NULL,
-                    approved bool NOT NULL,
-                    approved_date timestamp DEFAULT NULL,
-                    created timestamp DEFAULT now(),
+                    "id" SERIAL,
+                    "user_id" INT NOT NULL,
+                    "email" VARCHAR(100) NOT NULL,
+                    "approved" BOOLEAN NOT NULL,
+                    "approved_date" TIMESTAMP DEFAULT NULL,
+                    "created" TIMESTAMP DEFAULT now(),
+                    PRIMARY KEY (id),
                     FOREIGN KEY (user_id) REFERENCES "users" (id)
                 );
-                
-                CREATE OR REPLACE PROCEDURE approve_user_email(_user_id int, approval_id int)
+
+                CREATE OR REPLACE PROCEDURE "approve_user_email"(_user_id INT, approval_id INT)
                 LANGUAGE plpgsql AS 
                 $$
                 BEGIN 
                     UPDATE
-                        email_approvals em
+                        "email_approvals"
                     SET 
-                        approved = TRUE,
-                        approved_date = now()
+                        "approved" = TRUE,
+                        "approved_date" = now()
                     WHERE
-                        user_id = _user_id AND
-                        id = approval_id;
+                        "user_id" = _user_id AND
+                        "id" = approval_id;
 
                     UPDATE
-                        users
+                        "users"
                     SET
-                        email_approved = TRUE 
+                        "email_approved" = TRUE 
                     WHERE
-                        id = _user_id;
+                        "id" = _user_id;
                 END;
                 $$;
 
-                CREATE TABLE IF NOT EXISTS "users_logs"(  
-                    id SERIAL,
-                    user_id int NOT NULL,
-                    "change" jsonb NOT NULL,
-                    "date" timestamp DEFAULT NOW(),
-                    modified_by INT NOT NULL,
-                    adm_change BOOL DEFAULT FALSE,
+                CREATE TABLE "users_logs"(  
+                    "id" SERIAL,
+                    "user_id" INT NOT NULL,
+                    "change" JSONB NOT NULL,
+                    "date" TIMESTAMP DEFAULT NOW(),
+                    "modified_by" INT NOT NULL,
+                    "adm_change" BOOLEAN DEFAULT FALSE,
                     PRIMARY KEY (id),
                     FOREIGN KEY (user_id) REFERENCES "users" (id),
                     FOREIGN KEY (modified_by) REFERENCES "users" (id)
-                )
+                );
 
-                CREATE TABLE IF NOT EXISTS users_photos(
-                    id SERIAL PRIMARY KEY,
-                    user_id INT NOT NULL UNIQUE,
-                    photo_base_64 TEXT DEFAULT NULL,
-                    created timestamp NOT NULL DEFAULT now(),
-                    modified timestamp DEFAULT NULL,
-                    FOREIGN KEY (user_id) REFERENCES users (id)
-                )
+                CREATE TABLE IF NOT EXISTS "users_photos"(
+                    "id" SERIAL,
+                    "user_id" INT NOT NULL UNIQUE,
+                    "photo_base_64" TEXT DEFAULT NULL
+                    "created" TIMESTAMP NOT NULL DEFAULT now(),
+                    "modified" TIMESTAMP DEFAULT NULL,
+                    PRIMARY KEY (id),
+                    FOREIGN KEY (user_id) REFERENCES "users" (id)
+                );
             `)
         } catch { }
     }
@@ -224,30 +229,27 @@ class DatabaseService extends ServerService
         try
         {
             await this.DB_connection.query(`
-                CREATE TABLE IF NOT EXISTS system_styles (
-                    id serial PRIMARY KEY,
-                    style_name VARCHAR(50) NOT NULL,
-                    logo TEXT NOT NULL,
-                    header_color VARCHAR(10) NOT NULL,
-                    footer_color VARCHAR(10) NOT NULL,
-                    background_style INT NOT NULL,
-                    popup_style INT NOT NULL,
-                    initial_day INT NOT NULL,
-                    initial_time time NOT NULL,
-                    final_day INT NOT NULL,
-                    final_time time NOT NULL,
-                    is_special BOOLEAN NOT NULL DEFAULT FALSE,
-                    active BOOLEAN NOT NULL DEFAULT TRUE
+                CREATE TABLE IF NOT EXISTS "system_styles" (
+                    "id" SERIAL,
+                    "style_name" VARCHAR(50) NOT NULL,
+                    "logo" TEXT NOT NULL,
+                    "header_color" VARCHAR(10) NOT NULL,
+                    "footer_color" VARCHAR(10) NOT NULL,
+                    "background_style" INT NOT NULL,
+                    "popup_style" INT NOT NULL,
+                    "initial_day" INT NOT NULL,
+                    "initial_time" TIME NOT NULL,
+                    "final_day" INT NOT NULL,
+                    "final_time" TIME NOT NULL,
+                    "is_special" BOOLEAN NOT NULL DEFAULT FALSE,
+                    "active" BOOLEAN NOT NULL DEFAULT TRUE,
+                    PRIMARY KEY (id)
                 );
 
-                INSERT INTO system_styles
+                INSERT INTO "system_styles"
                 (style_name, logo, header_color, footer_color, background_style, popup_style, initial_day, initial_time, final_day, final_time)
                 VALUES
-                ('DIA', 'Logo Dia', '#0091CC', '#3394BB', 1, 1, 1, '08:00:00', 7, '17:59:59');
-
-                INSERT INTO system_styles
-                (style_name, logo, header_color, footer_color, background_style, popup_style, initial_day, initial_time, final_day, final_time)
-                VALUES
+                ('DIA', 'Logo Dia', '#0091CC', '#3394BB', 1, 1, 1, '08:00:00', 7, '17:59:59'),
                 ('NOITE', 'Logo Noite', '#0023A6', '#1F368C', 1, 1, 1, '18:00:00', 7, '07:59:59');
             `)
         }
