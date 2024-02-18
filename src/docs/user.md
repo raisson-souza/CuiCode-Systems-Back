@@ -104,3 +104,65 @@ BODY =
     "photo": { BASE 64 }
 }
 ```
+
+## LISTAGEM AVANÇADA DE USUÁRIOS
+> GET
+- Necessita autenticação.
+
+URL = http://localhost:3000/users/list?FilterType={ INT }&VisualizationType={ INT }
+
+**FilterType**  
+Usuário ativos.
+AllActive = 1
+
+Usuários deletados.
+AllDeleted = 2
+
+Usuários inativos.
+AllInactive = 3
+
+Usuários com email aprovado.
+AllEmailApproved = 4
+
+Usuários com email não aprovado.
+AllEmailUnnaproved = 5
+
+Usuários aniversariantes deste mês.
+AllMonthBirthdays = 6
+
+Usuários Administradores.
+AllAdms = 7
+
+Usuários Membros.
+AllMembers = 8
+
+Usuários com foto.
+AllWithPhoto = 9
+
+Usuários sem foto.
+AllWithoutPhoto = 10
+
+Usuários mulheres.
+AllWomen = 11
+
+Usuários homens.
+AllMen = 12
+
+**VisualizationType**  
+Captura todas as informações de um usuário (sem foto).
+Absolute = 1
+
+Captura foto e informações gerais.
+Presentation = 2
+
+Captura informações gerais.
+List = 3
+
+Captura informações básicas.
+Resume = 4
+
+Captura foto e chave de identificação.
+Queote = 5
+
+Captura chave de identificação.
+QueoteWithoutPhoto = 6

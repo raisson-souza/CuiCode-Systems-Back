@@ -58,7 +58,7 @@ CREATE TABLE users_logs(
 CREATE TABLE IF NOT EXISTS users_photos(
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
-    base_64 TEXT DEFAULT NULL,
+    photo_base_64 TEXT DEFAULT NULL, AJUSTAR NO DATABASE
     created timestamp NOT NULL DEFAULT now(),
     modified timestamp DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)

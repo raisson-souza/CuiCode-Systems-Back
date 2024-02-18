@@ -2,6 +2,7 @@ import { Express } from "express"
 import { Multer } from "multer"
 
 import AccountRecoveryService from "../services/user/services/account/AccountRecoveryService"
+import AdvancedUsersListService from "../services/user/CRUD/AdvancedUsersListService"
 import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
 import ConfirmAccountRecoveyService from "../services/user/services/account/ConfirmAccountRecoveyService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
@@ -43,6 +44,10 @@ function UsersController(app : Express, upload : Multer)
         .put((_, res) => {
             ResponseMessage.NotImplementedRoute(res)
         })
+
+    app.get("/users/list", AuthMiddleware, (req, res) => {
+        new AdvancedUsersListService(req, res).Operation()
+    })
 
     app.get('/email/approval', (req, res) => {
         // CORS não é necessário pois o acesso é externo

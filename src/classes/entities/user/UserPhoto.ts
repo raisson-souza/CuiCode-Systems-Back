@@ -11,7 +11,7 @@ import IsUndNull from "../../../functions/logic/IsUndNull"
 
 class UserPhoto extends EntityBasic implements IEntityWithForeignKey
 {
-    Base64 : string
+    PhotoBase64 : string
     Created : Date
     Modified : Date
     User : User
@@ -25,7 +25,7 @@ class UserPhoto extends EntityBasic implements IEntityWithForeignKey
 
     ConvertBody(body: any) : void
     {
-        this.Base64 = FindValue(body, ["Base64", "base_64"])
+        this.PhotoBase64 = FindValue(body, ["PhotoBase64", "photo_base_64"])
         this.Created = FindValue(body, ["Created", "created"])
         this.Modified = FindValue(body, ["Modified", "modified"])
         this.UserId = FindValue(body, ["UserId", "user_id"])
@@ -35,7 +35,7 @@ class UserPhoto extends EntityBasic implements IEntityWithForeignKey
     {
         return {
             "id": this.Id,
-            "base_64": this.Base64,
+            "photo_base_64": this.PhotoBase64,
             "created": this.Created,
             "modified": this.Modified,
             "user_id": this.UserId,

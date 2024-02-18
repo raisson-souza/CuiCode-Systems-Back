@@ -6,6 +6,7 @@ import EncryptInfo from "../../../functions/security/EncryptPassword"
 import FindValue from "../../../functions/logic/FindValue"
 import FormatIdNumber from "../../../functions/formatting/FormatIdNumber"
 import IsUndNull from "../../../functions/logic/IsUndNull"
+import UndNullPropsFormatting from "../../../functions/formatting/UndNullPropsFormatting"
 
 import PermissionLevelEnum from "../../../enums/PermissionLevelEnum"
 import SexEnum from "../../../enums/SexEnum"
@@ -106,6 +107,11 @@ class User extends EntityRegistry
     }
 
     IsAdm() : boolean { return this.PermissionLevel!.Value >= 3 }
+
+    ShowPopulatedPropsOnly() : any
+    {
+        return UndNullPropsFormatting({ ...this })
+    }
 }
 
 export default User
