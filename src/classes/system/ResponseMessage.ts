@@ -3,6 +3,9 @@ import { Response } from "express"
 import Exception from "../custom/Exception"
 import Send from "./Send"
 
+import FindValue from "../../functions/logic/FindValue"
+import IsUndNull from "../../functions/logic/IsUndNull"
+
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 abstract class ResponseMessage
@@ -12,11 +15,12 @@ abstract class ResponseMessage
         status : HttpStatusEnum,
         data: any,
         logMessage : string,
-        res : Response
+        res : Response,
+        dataPropToCount : string | null = null
     )
     {
         const success = this.RenderSuccess(status)
-        const length = this.RenderDataLength(data, success)
+        const length = this.RenderDataLength(data, dataPropToCount, success)
 
         const response = {
             "success": success,
@@ -94,18 +98,30 @@ abstract class ResponseMessage
     private static RenderDataLength
     (
         data : any,
+        dataPropToCount : string | null,
         success : boolean
     ) : number
     {
         if (!success) return 0
 
-        if (data instanceof Array)
-            return data.length
-
-        if (data instanceof Object)
-            return Object.keys(data).length
-
-        return 1
+        try
+        {
+            const _data = IsUndNull(dataPropToCount)
+                ? data
+                : FindValue(data, [dataPropToCount!])
+    
+            if (_data instanceof Array)
+                return _data.length
+    
+            if (_data instanceof Object)
+                return Object.keys(_data).length
+    
+            return 1
+        }
+        catch
+        {
+            return 1
+        }
     }
 
     private static BuildFieldsInfoMessage

@@ -92,7 +92,8 @@ class GetForm extends ServerService
                 HttpStatusEnum.OK,
                 form,
                 this.Action,
-                this.RES
+                this.RES,
+                "Fields"
             )
         }
         catch (ex)
