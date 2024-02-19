@@ -1,7 +1,7 @@
 import { Express } from "express"
 
 import DatabaseService from "../services/system/DatabaseService"
-import GetForm from "../services/frontend/fields/GetForm"
+import GetForm from "../services/system/GetForm"
 import GetStyleService from "../services/system/GetStyleService"
 import OkService from "../services/system/OkService"
 

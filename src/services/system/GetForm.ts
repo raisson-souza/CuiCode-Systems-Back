@@ -1,15 +1,15 @@
-import CREATE_USER_FORM from "../../../assets/fields/create_user.json"
-import Env from "../../../config/environment"
-import UPDATE_USER_FORM from "../../../assets/fields/update_user.json"
-import UPDATE_USER_PASSWORD_FORM from "../../../assets/fields/update_password.json"
+import CREATE_USER_FORM from "../../assets/fields/create_user.json"
+import Env from "../../config/environment"
+import UPDATE_USER_FORM from "../../assets/fields/update_user.json"
+import UPDATE_USER_PASSWORD_FORM from "../../assets/fields/update_password.json"
 
-import Exception from "../../../classes/custom/Exception"
-import ResponseMessage from "../../../classes/system/ResponseMessage"
-import ServerService from "../../../classes/service/ServerService"
+import Exception from "../../classes/custom/Exception"
+import ResponseMessage from "../../classes/system/ResponseMessage"
+import ServerService from "../../classes/service/ServerService"
 
-import IsUndNull from "../../../functions/logic/IsUndNull"
+import IsUndNull from "../../functions/logic/IsUndNull"
 
-import HttpStatusEnum from "../../../enums/system/HttpStatusEnum"
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 /**
  * Captura formulários para o front end.
