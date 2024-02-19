@@ -4,6 +4,7 @@ import { EntityLog } from "../../../classes/entities/base/EntityLog"
 import ClientService from "../../../classes/service/ClientService"
 import EmailSender from "../../../classes/entities/email/EmailSender"
 import Exception from "../../../classes/custom/Exception"
+import Label from "../../../classes/entities/base/Label"
 import ResponseMessage from "../../../classes/system/ResponseMessage"
 import User from "../../../classes/entities/user/User"
 import UserBase from "../../../classes/bases/UserBase"
@@ -172,6 +173,15 @@ class UpdateUserService extends ClientService
             //  Valida se a prop do usuário do banco é diferente da prop do model do usuário, eliminando props não atualizadas (indefinidas)
             if (userDbSql[prop] != userModelSql[prop] && !IsUndNull(userModelSql[prop]))
             {
+                if (
+                    userDbSql[prop] instanceof Label &&
+                    userModelSql[prop] instanceof Label
+                )
+                {
+                    if ((userDbSql[prop] as Label).Value === (userModelSql[prop] as Label).Value)
+                        continue
+                }
+
                 userLog.push(new EntityLog(prop, userDbSql[prop], userModelSql[prop]))
 
                 // Se um dos parâmetros do usuário a ser editado é o email, o novo email deve ser validado.
