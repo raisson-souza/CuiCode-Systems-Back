@@ -15,3 +15,24 @@ URL = /ok
 > GET
 
 URL = /ok
+
+## FORMULÁRIOS FRONT END
+> GET
+- Necessita autenticação.
+
+URL = http://localhost:3000/get_form/:form
+
+FORMS DISPONÍVEIS.
+- create_user
+- update_user
+- update_password
+- confirm_restoration
+- create_group
+- update_group
+- update_group_members
+- create_solicitation
+- update_solicitation
+- create_dream
+- update_dream
+- create_post
+- update_post

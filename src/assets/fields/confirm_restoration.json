@@ -1,0 +1,13 @@
+{
+    "Endpoint": "/user/account/recovery/confirm_restoration",
+    "Method": "POST",
+    "Fields": [
+        {
+            "FieldId": "Email",
+            "Name": "Seu Email",
+            "Type": "email",
+            "PlaceHolder": "fulano@email.com",
+            "MaxLen": 999
+        }
+    ]
+}
