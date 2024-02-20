@@ -19,6 +19,7 @@ abstract class ResponseMessage
         dataPropToCount : string | null = null
     )
     {
+        data = this.FixTimeZone(data) // DESENVOLVIMENTO PROVISÓRIO PARA TRATAMENTO DE ERRO NO FUSO HORÁRIO.
         const success = this.RenderSuccess(status)
         const length = this.RenderDataLength(data, dataPropToCount, success)
 
@@ -279,6 +280,37 @@ abstract class ResponseMessage
             "Usuário não encontrado.",
             logMessage
         )
+    }
+
+    private static FixTimeZone(data : any) // DESENVOLVIMENTO PROVISÓRIO PARA TRATAMENTO DE ERRO NO FUSO HORÁRIO.
+    {
+        try
+        {
+            if (data instanceof Array)
+            {
+                data.forEach(obj => {
+                    if (obj instanceof Date)
+                        obj.setHours(obj.getHours() - 3)
+                })
+            }
+
+            if (data instanceof Date)
+                data.setHours(data.getHours() - 3)
+
+            if (typeof data === "object")
+            {
+                Object.entries(data).forEach(obj => {
+                    if (obj[1] instanceof Date)
+                        obj[1].setHours(obj[1].getHours() - 3)
+                })
+            }
+
+            return data
+        }
+        catch
+        {
+            return data
+        }
     }
 }
 
