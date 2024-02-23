@@ -86,7 +86,7 @@ class GetForm extends ServerService
                 Exception.Error(msg, this.Action)
             }
 
-            form.Endpoint = `${ Env.Base }${ form.Endpoint }`
+            form.Endpoint = `${ Env.BackBase }${ form.Endpoint }`
 
             ResponseMessage.Send(
                 HttpStatusEnum.OK,

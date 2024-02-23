@@ -63,7 +63,7 @@ abstract class ServerClientService extends Service
     {
         const encryptedKey = EncryptInfo(systemKey)
 
-        if (encryptedKey != Env.SystemUserKey)
+        if (encryptedKey != Env.SystemKey)
             ResponseMessage.UnauthorizedUser(this.RES, this.Action)
 
         this.IsSystemRequestor = true

@@ -14,6 +14,7 @@ import IsUndNull from "../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../enums/system/HttpStatusEnum"
 
+// AUTHMIDDLEWARE NÃO SERÁ MAIS USADO!
 async function AuthMiddleware
 (
     req : Request,
@@ -25,17 +26,17 @@ async function AuthMiddleware
     try
     {
         const {
-            allowed_origins,
+            Allowed_origins,
         } = Env
     
-        const cors = require("cors")({ origin: allowed_origins })
+        const cors = require("cors")({ origin: Allowed_origins })
     
         if (
             (
                 req.header("Origin") ||
                 IsUndNull(req.header("Origin"))
             ) &&
-            !allowed_origins.includes(req.header("Origin")!)
+            !Allowed_origins.includes(req.header("Origin")!)
         )
         {
             const { authorization } = req.headers

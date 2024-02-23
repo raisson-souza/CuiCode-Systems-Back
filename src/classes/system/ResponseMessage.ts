@@ -225,6 +225,44 @@ abstract class ResponseMessage
         )
     }
 
+    static UnauthorizedSystem
+    (
+        res : Response,
+        logMessage : string
+    )
+    {
+        this.Send(
+            HttpStatusEnum.UNAUTHORIZED,
+            "Sistema não autenticado.",
+            logMessage,
+            res
+        )
+
+        Exception.Error(
+            "Sistema não autenticado.",
+            logMessage
+        )
+    }
+
+    static NoAuthFoundInToken
+    (
+        res : Response,
+        logMessage : string
+    )
+    {
+        this.Send(
+            HttpStatusEnum.UNAUTHORIZED,
+            "Nenhuma autenticação válida encontrada no token.",
+            logMessage,
+            res
+        )
+
+        Exception.Error(
+            "Nenhuma autenticação válida encontrada no token.",
+            logMessage
+        )
+    }
+
     static ProhibitedOperation
     (
         res : Response,

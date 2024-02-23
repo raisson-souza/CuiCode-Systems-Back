@@ -5,27 +5,27 @@ import GetForm from "../services/system/GetForm"
 import GetStyleService from "../services/system/GetStyleService"
 import OkService from "../services/system/OkService"
 
-import AuthMiddleware from "../middlewares/AuthMiddleware"
+import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
 
 function SystemController(app : Express)
 {
     app.route('/database')
-        .get(AuthMiddleware, async (req, res) => {
+        .get(OriginAuthMiddleware, async (req, res) => {
             await new DatabaseService(req, res).Operation()
         })
-        .post(AuthMiddleware, async (req, res) => {
+        .post(OriginAuthMiddleware, async (req, res) => {
             await new DatabaseService(req, res).Operation()
         })
 
-    app.get('/ok', (req, res) => {
+    app.get('/ok', OriginAuthMiddleware, (req, res) => {
         new OkService(req, res).Operation()
     })
 
-    app.get('/get_style', (req, res) => {
+    app.get('/get_style', OriginAuthMiddleware, (req, res) => {
         new GetStyleService(req, res).Operation()
     })
 
-    app.get('/get_form/:form', AuthMiddleware, (req, res) => {
+    app.get('/get_form/:form', OriginAuthMiddleware, (req, res) => {
         new GetForm(req, res).Operation()
     })
 }

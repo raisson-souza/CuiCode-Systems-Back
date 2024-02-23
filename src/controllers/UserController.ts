@@ -18,24 +18,25 @@ import VerifyEmailService from "../services/user/services/account/VerifyEmailSer
 
 import ResponseMessage from "../classes/system/ResponseMessage"
 
-import AuthMiddleware from "../middlewares/AuthMiddleware"
+import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
+import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
 
 function UsersController(app : Express, upload : Multer)
 {
     app.route("/user")
-        .get(AuthMiddleware, (req, res) => {
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
             new GetUserService(req, res).Operation()
         })
-        .post((req, res) => {
+        .post(OriginAuthMiddleware, (req, res) => {
             // Não há autenticação na criação de usuário.
             new CreateUserService(req, res).Operation()
         })
-        .put(AuthMiddleware, (req, res) => {
+        .put(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
             new UpdateUserService(req, res).Operation()
         })
 
     app.route("/users")
-        .get(AuthMiddleware, (req, res) => {
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
             new ListUsersService(req, res).Operation()
         })
         .post((_, res) => {
@@ -45,7 +46,7 @@ function UsersController(app : Express, upload : Multer)
             ResponseMessage.NotImplementedRoute(res)
         })
 
-    app.get("/users/list", AuthMiddleware, (req, res) => {
+    app.get("/users/list", OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
         new AdvancedUsersListService(req, res).Operation()
     })
 
@@ -54,27 +55,27 @@ function UsersController(app : Express, upload : Multer)
         new ApproveUserEmailService(req, res).Operation()
     })
 
-    app.post('/email/approval/send', AuthMiddleware, (req, res) => {
+    app.post('/email/approval/send', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
         new SendManualEmailApprovalService(req, res).Operation()
     })
 
-    app.get('/user/logs', AuthMiddleware, (req, res) => {
+    app.get('/user/logs', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
         new GetUserLogsService(req, res).Operation()
     })
 
     app.route('/user/:user_id/photo')
-        .post(AuthMiddleware, (req, res) => {
+        .post(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
             new RegistryUserPhotoService(req, res).Operation()
         })
-        .put(AuthMiddleware, (req, res) => {
+        .put(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
             new RegistryUserPhotoService(req, res).Operation()
         })
 
-    app.get('/user/:user_id/photo', AuthMiddleware, (req, res) => {
+    app.get('/user/:user_id/photo', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
         new GetUserPhotoService(req, res).Operation()
     })
 
-    app.put('/user/:user_id/password', AuthMiddleware, (req, res) => {
+    app.put('/user/:user_id/password', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
         new UpdateUserPasswordService(req, res).Operation()
     })
 
@@ -86,7 +87,7 @@ function UsersController(app : Express, upload : Multer)
         new ConfirmAccountRecoveyService(req, res).Operation()
     })
 
-    app.post('/user/account/recovery/restore_account', AuthMiddleware, (req, res) => {
+    app.post('/user/account/recovery/restore_account', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
         new AccountRecoveryService(req, res).Operation()
     })
 }

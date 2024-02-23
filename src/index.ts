@@ -7,6 +7,8 @@ import FeaturesController from "./controllers/FeaturesController"
 import SystemController from "./controllers/SystemController"
 import UsersController from "./controllers/UserController"
 
+import OriginAuthMiddleware from "./middlewares/OriginAuthMiddleware"
+
 import MegaByteCalc from "./functions/math/MegaByteCalc"
 
 const app = express()
@@ -25,6 +27,11 @@ app.use(bodyParser.json())
 app.get('/', (_, res) => {
     res.send("CuiCodeSystems ERP by Raisson Souza")
 })
+
+// Incluída rota geral para OPTIONS para desviar problemas com CORS
+// devido aos browsers realizarem uma requisição OPTIONS sempre antes.
+// OBS: Validar problemas em rotas externas tipo aprovação de email (pode ser necessário criar uma controler apenas para options).
+app.options("*", OriginAuthMiddleware)
 
 AuthController(app)
 FeaturesController(app)

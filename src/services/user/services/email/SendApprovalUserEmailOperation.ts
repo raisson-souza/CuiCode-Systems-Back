@@ -43,7 +43,7 @@ class SendApprovalEmailOperation extends Operation
             })
             .catch(ex => {
                 let emailBody = `${ saudation } Houve um erro ao criar o seu pedido de aprovação de email, por favor realize a operação novamente manualmente no ERP:\n`
-                emailBody += `${ Env.Front_URL }/userProfile`
+                emailBody += `${ Env.FrontBase }/userProfile`
 
                 EmailSender.External(EmailTitles.EMAIL_APPROVAL_REQUEST, emailBody, User!.Email)
 
@@ -55,7 +55,7 @@ class SendApprovalEmailOperation extends Operation
 
         private GenerateEndpoint(id : number, email : string)
         {
-            return `${ Env.Base }/email/approval?userId=${ id }&email=${ email }`
+            return `${ Env.BackBase }/email/approval?userId=${ id }&email=${ email }`
         }
 }
 

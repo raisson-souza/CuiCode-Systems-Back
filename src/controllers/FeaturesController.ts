@@ -2,11 +2,11 @@ import { Express } from "express"
 
 import TraceAccessService from "../services/features/TraceAccessService"
 
-import AuthMiddleware from "../middlewares/AuthMiddleware"
+import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
 
 function FeaturesController(app : Express)
 {
-    app.trace('/trace', AuthMiddleware, (req, res) => {
+    app.trace('/trace', OriginAuthMiddleware, (req, res) => {
         new TraceAccessService(req, res).Operation()
     })
 }
