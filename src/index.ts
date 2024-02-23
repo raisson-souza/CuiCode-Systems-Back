@@ -10,6 +10,7 @@ import UsersController from "./controllers/UserController"
 import OriginAuthMiddleware from "./middlewares/OriginAuthMiddleware"
 
 import MegaByteCalc from "./functions/math/MegaByteCalc"
+import Test from "./functions/testing/Test"
 
 const app = express()
 const upload = multer(
@@ -41,3 +42,5 @@ UsersController(app, upload)
 app.listen(3000, () => {
     console.log("CuiCodeSystems ERP ouvindo na porta 3000.");
 })
+
+Test()

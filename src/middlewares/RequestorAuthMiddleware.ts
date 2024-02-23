@@ -34,13 +34,13 @@ async function RequestorAuthMiddleware
 
         // Para a credencial do sistema é necessário enviar crua do front
         const {
-            userId,
+            userAuthId,
             systemKey
         } = DecodeJwt(token, res)
 
         PrintAuthInReq(
             req,
-            userId,
+            userAuthId,
             systemKey
         )
 
@@ -83,14 +83,14 @@ function DecodeJwt
         Env.JWT_key
     ) as any
 
-    const userId = decoded["id"] as string
-    const systemKey = decoded["system_key"] as string
+    const userAuthId = decoded["UserAuthId"] as string
+    const systemKey = decoded["SystemKey"] as string
 
-    if (IsUndNull(userId) && IsUndNull(systemKey))
+    if (IsUndNull(userAuthId) && IsUndNull(systemKey))
         ResponseMessage.NoAuthFoundInToken(res, ACTION)
 
     return {
-        "userId": userId,
+        "userAuthId": userAuthId,
         "systemKey": systemKey,
     }
 }

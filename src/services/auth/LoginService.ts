@@ -50,7 +50,7 @@ class LoginService extends ClientService
 
             const token = sign(
                 {
-                    id: userDb.Id,
+                    UserAuthId: userDb.Id,
                 },
                 Env.JWT_key,
                 { expiresIn: "3d" }
