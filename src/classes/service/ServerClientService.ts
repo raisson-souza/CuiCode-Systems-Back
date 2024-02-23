@@ -1,4 +1,4 @@
-import Env from "../../config/environment"
+import Env from "../../config/Env"
 
 import QueryUser from "../../services/user/utilities/QueryUser"
 

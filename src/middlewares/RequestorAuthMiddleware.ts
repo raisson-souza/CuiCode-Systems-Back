@@ -5,7 +5,7 @@ import {
 } from "express"
 import { verify } from "jsonwebtoken"
 
-import Env from "../config/environment"
+import Env from "../config/Env"
 
 import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"

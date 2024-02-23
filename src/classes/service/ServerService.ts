@@ -1,4 +1,4 @@
-import Env from "../../config/environment"
+import Env from "../../config/Env"
 
 import ResponseMessage from "../system/ResponseMessage"
 import Service from "./base/Service"

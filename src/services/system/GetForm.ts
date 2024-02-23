@@ -1,5 +1,5 @@
 import CREATE_USER_FORM from "../../assets/fields/create_user.json"
-import Env from "../../config/environment"
+import Env from "../../config/Env"
 import UPDATE_USER_FORM from "../../assets/fields/update_user.json"
 import UPDATE_USER_PASSWORD_FORM from "../../assets/fields/update_password.json"
 

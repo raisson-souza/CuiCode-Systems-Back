@@ -1,6 +1,6 @@
 import { sign } from "jsonwebtoken"
 
-import Env from "../../config/environment"
+import Env from "../../config/Env"
 
 import ClientService from "../../classes/service/ClientService"
 import Exception from "../../classes/custom/Exception"

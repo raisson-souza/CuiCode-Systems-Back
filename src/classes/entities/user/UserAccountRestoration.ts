@@ -1,7 +1,7 @@
 import { Client } from "pg"
 import { sign, verify } from "jsonwebtoken"
 
-import Env from "../../../config/environment"
+import Env from "../../../config/Env"
 
 import EntityBasic from "../base/EntityBasic"
 import User from "./User"

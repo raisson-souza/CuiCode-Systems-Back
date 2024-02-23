@@ -1,6 +1,6 @@
 import { verify } from "jsonwebtoken"
 
-import Env from "../../config/environment"
+import Env from "../../config/Env"
 
 function IsJwtExpired(token : string)
 {
