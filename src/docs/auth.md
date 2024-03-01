@@ -11,3 +11,8 @@ BODY =
     "password": "{ SENHA }"
 }
 ```
+
+## VALIDADOR DE JWT
+> POST
+
+URL = /validate_jwt?jwt={ JWT }
