@@ -14,13 +14,13 @@ URL = /ok
 ## ESTILO DO TEMA DO FRONT END
 > GET
 
-URL = /ok
+URL = /get_style
 
 ## FORMULÁRIOS FRONT END
 > GET
 - Necessita autenticação.
 
-URL = http://localhost:3000/get_form/:form
+URL = /get_form/:form
 
 FORMS DISPONÍVEIS.
 - create_user

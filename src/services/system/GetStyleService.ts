@@ -16,12 +16,18 @@ class GetStyleService extends ServerService
     Action = "Estilo do Sistema."
     DefaultSystemStyle = new SystemStyle(
         {
-            "style_name": "Estilo Padrão",
-            "logo": "Logo Padrão", // DEFINIR LOGO PADRÃO
-            "header_color": "", // DEFINIR COR DO HEADER
-            "footer_color": "", // DEFINIR COR DO FOOTER
-            "background_style": 1,
-            "popup_style": 1,
+            "background_primary_color": "#adf2f4",
+            "background_secondary_color": "#bdf4f6",
+            "background_terciary_color": "#cdf7f8",
+            "footer_color": "#def9fa",
+            "header_color": "#eefcfc",
+            "logo": '',
+            "modules_column_color": "#5be5e9",
+            "primary_color": "#a2c4e6",
+            "secondary_color": "#1dd5db",
+            "style_name": 'DEFAULT BACKEND',
+            "terciary_color": "#8eeaed",
+            "text_color": "black",
         }
     )
 

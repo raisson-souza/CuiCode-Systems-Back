@@ -232,25 +232,31 @@ class DatabaseService extends ServerService
                 CREATE TABLE IF NOT EXISTS "system_styles" (
                     "id" SERIAL,
                     "style_name" VARCHAR(50) NOT NULL,
+                    "background_primary_color" VARCHAR(50) NOT NULL,
+                    "background_secondary_color" VARCHAR(50) NOT NULL,
+                    "background_terciary_color" VARCHAR(50) NOT NULL,
+                    "footer_color" VARCHAR(50) NOT NULL,
+                    "header_color" VARCHAR(50) NOT NULL,
+                    "modules_column_color" VARCHAR(50) NOT NULL,
+                    "primary_color" VARCHAR(50) NOT NULL,
+                    "secondary_color" VARCHAR(50) NOT NULL,
+                    "terciary_color" VARCHAR(50) NOT NULL,
+                    "text_color" VARCHAR(50) NOT NULL,
                     "logo" TEXT NOT NULL,
-                    "header_color" VARCHAR(10) NOT NULL,
-                    "footer_color" VARCHAR(10) NOT NULL,
-                    "background_style" INT NOT NULL,
-                    "popup_style" INT NOT NULL,
-                    "initial_day" INT NOT NULL,
-                    "initial_time" TIME NOT NULL,
-                    "final_day" INT NOT NULL,
-                    "final_time" TIME NOT NULL,
                     "is_special" BOOLEAN NOT NULL DEFAULT FALSE,
+                    "initial_day" INT NOT NULL,
+                    "final_day" INT NOT NULL,
+                    "initial_time" TIME NOT NULL,
+                    "final_time" TIME NOT NULL,
                     "active" BOOLEAN NOT NULL DEFAULT TRUE,
                     PRIMARY KEY (id)
                 );
-
+                
                 INSERT INTO "system_styles"
-                (style_name, logo, header_color, footer_color, background_style, popup_style, initial_day, initial_time, final_day, final_time)
+                (style_name, header_color, footer_color, background_primary_color, background_secondary_color, background_terciary_color, primary_color, secondary_color, terciary_color, modules_column_color, text_color, initial_day, initial_time, final_day, final_time, logo)
                 VALUES
-                ('DIA', 'Logo Dia', '#0091CC', '#3394BB', 1, 1, 1, '08:00:00', 7, '17:59:59'),
-                ('NOITE', 'Logo Noite', '#0023A6', '#1F368C', 1, 1, 1, '18:00:00', 7, '07:59:59');
+                ('DIA', '#eefcfc', '#def9fa', '#adf2f4', '#bdf4f6', '#cdf7f8', '#a2c4e6', '#1dd5db', '#8eeaed', '#5be5e9', 'black', 1, '08:00:00', 7, '17:59:59', '')
+                ('NOITE', '#4c3781', '#402e6b', '#332556', '#261b40', '#19122b', '#805dd7', '#7353c1', '#664aac', '#0c0915', 'white', 1, '18:00:00', 7, '07:59:59', '')
             `)
         }
         catch { }

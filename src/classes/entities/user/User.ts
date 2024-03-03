@@ -37,7 +37,7 @@ class User extends EntityRegistry
     {
         this.BirthDate = FindValue(body, ["BirthDate", "birthdate"])
         this.Email = FindValue(body, ["Email", "email"])
-        this.EmailAproved = FindValue(body, ["Username", "username"])
+        this.EmailAproved = FindValue(body, ["EmailAproved", "email_approved"])
         this.ModifiedBy = FindValue(body, ["ModifiedBy", "modified_by"])
         this.Name = FindValue(body, ["Name", "name"])
         this.Password = FindValue(body, ["Password", "password"])
