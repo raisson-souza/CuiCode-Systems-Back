@@ -58,7 +58,7 @@ class LoginService extends ClientService
 
             const response = {
                 token: token,
-                USER_auth: userDb
+                user: userDb
             }
 
             ResponseMessage.Send(

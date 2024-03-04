@@ -5,6 +5,8 @@ import Env from "../../config/Env"
 import ClientService from "../../classes/service/ClientService"
 import Exception from "../../classes/custom/Exception"
 import ResponseMessage from "../../classes/system/ResponseMessage"
+import User from "../../classes/entities/user/User"
+import UserBase from "../../classes/bases/UserBase"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
 
@@ -36,16 +38,23 @@ class ValidateJwtService extends ClientService
         try
         {
             const jwt = this.CheckQuery()
+            let user : User | null = null
 
             try
             {
-                verify(jwt, Env.JWT_key)
+                const decoded = verify(jwt, Env.JWT_key) as any
+                const userId = Number.parseInt(decoded["UserAuthId"] as string)
+
+                user = await UserBase.Get(this.DB_connection, userId)
             }
             catch (ex)
             {
                 ResponseMessage.Send(
                     HttpStatusEnum.INVALID,
-                    false,
+                    {
+                        "ok": false,
+                        "user": null
+                    },
                     this.Action,
                     this.RES
                 )
@@ -54,7 +63,10 @@ class ValidateJwtService extends ClientService
 
             ResponseMessage.Send(
                 HttpStatusEnum.OK,
-                true,
+                {
+                    "ok": true,
+                    "user": user
+                },
                 this.Action,
                 this.RES
             )
