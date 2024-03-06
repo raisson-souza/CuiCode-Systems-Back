@@ -1,6 +1,4 @@
 {
-    "Endpoint": "/user/account/recovery/confirm_restoration",
-    "Method": "POST",
     "Fields": [
         {
             "FieldId": "Email",

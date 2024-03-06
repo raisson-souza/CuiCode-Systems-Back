@@ -1,6 +1,4 @@
 {
-    "Endpoint": "/user",
-    "Method": "PUT",
     "Fields": [
         {
             "FieldId": "Username",

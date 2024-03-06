@@ -1,0 +1,16 @@
+{
+    "Fields": [
+        {
+            "FieldId": "Email",
+            "Name": "Email",
+            "Type": "email",
+            "MaxLen": 999
+        },
+        {
+            "FieldId": "Password",
+            "Name": "Senha",
+            "Type": "password",
+            "MaxLen": 999
+        }
+    ]
+}

@@ -1,5 +1,6 @@
 import CREATE_USER_FORM from "../../assets/fields/create_user.json"
 import Env from "../../config/Env"
+import LOGIN_FORM from "../../assets/fields/login.json"
 import UPDATE_USER_FORM from "../../assets/fields/update_user.json"
 import UPDATE_USER_PASSWORD_FORM from "../../assets/fields/update_password.json"
 
@@ -43,6 +44,9 @@ class GetForm extends ServerService
             {
                 case "create_user":
                     form = CREATE_USER_FORM
+                    break
+                case "login":
+                    form = LOGIN_FORM
                     break
                 case "update_user":
                     form = UPDATE_USER_FORM

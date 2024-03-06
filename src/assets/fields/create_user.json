@@ -1,6 +1,4 @@
 {
-    "Endpoint": "/user",
-    "Method": "POST",
     "Fields": [
         {
             "FieldId": "Username",
