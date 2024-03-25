@@ -46,6 +46,11 @@ class ValidateJwtService extends ClientService
                 const userId = Number.parseInt(decoded["UserAuthId"] as string)
 
                 user = await UserBase.Get(this.DB_connection, userId)
+
+                const userPhoto = await UserBase.GetPhoto(this.DB_connection, user!.Id)
+
+                if (!IsUndNull(userPhoto))
+                    user!.PhotoBase64 = userPhoto!.PhotoBase64
             }
             catch (ex)
             {

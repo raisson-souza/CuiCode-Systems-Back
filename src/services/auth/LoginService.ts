@@ -7,6 +7,7 @@ import Exception from "../../classes/custom/Exception"
 import ResponseMessage from "../../classes/system/ResponseMessage"
 import User from "../../classes/entities/user/User"
 import UserAuth from "../../classes/entities/user/UserAuth"
+import UserBase from "../../classes/bases/UserBase"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
 
@@ -47,6 +48,11 @@ class LoginService extends ClientService
 
             if (this.USER_auth!.Password != userDb.Password)
                 throw new Error("Senha de usuário incorreta.")
+
+            const userPhoto = await this.GetUserPhoto(userDb.Id)
+
+            if (!IsUndNull(userPhoto))
+                userDb.PhotoBase64 = userPhoto!
 
             const token = sign(
                 {
@@ -104,6 +110,21 @@ class LoginService extends ClientService
         catch (ex)
         {
             throw new Error((ex as Error).message);
+        }
+    }
+
+    private async GetUserPhoto(userId : number) : Promise<string | null> {
+        try
+        {
+            const userPhoto = await UserBase.GetPhoto(this.DB_connection, userId)
+
+            return IsUndNull(userPhoto)
+                ? null
+                : userPhoto!.PhotoBase64
+        }
+        catch
+        {
+            return null
         }
     }
 }
