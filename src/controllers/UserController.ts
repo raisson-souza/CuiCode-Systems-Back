@@ -24,20 +24,20 @@ import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
 function UsersController(app : Express, upload : Multer)
 {
     app.route("/user")
-        .get(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-            new GetUserService(req, res).Operation()
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new GetUserService(req, res).Operation()
         })
-        .post(OriginAuthMiddleware, (req, res) => {
+        .post(OriginAuthMiddleware, async (req, res) => {
             // Não há autenticação na criação de usuário.
-            new CreateUserService(req, res).Operation()
+            await new CreateUserService(req, res).Operation()
         })
-        .put(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-            new UpdateUserService(req, res).Operation()
+        .put(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new UpdateUserService(req, res).Operation()
         })
 
     app.route("/users")
-        .get(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-            new ListUsersService(req, res).Operation()
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new ListUsersService(req, res).Operation()
         })
         .post((_, res) => {
             ResponseMessage.NotImplementedRoute(res)
@@ -46,49 +46,49 @@ function UsersController(app : Express, upload : Multer)
             ResponseMessage.NotImplementedRoute(res)
         })
 
-    app.get("/users/list", OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-        new AdvancedUsersListService(req, res).Operation()
+    app.get("/users/list", OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new AdvancedUsersListService(req, res).Operation()
     })
 
-    app.get('/email/approval', (req, res) => {
+    app.get('/email/approval', async (req, res) => {
         // CORS não é necessário pois o acesso é externo
-        new ApproveUserEmailService(req, res).Operation()
+        await new ApproveUserEmailService(req, res).Operation()
     })
 
-    app.post('/email/approval/send', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-        new SendManualEmailApprovalService(req, res).Operation()
+    app.post('/email/approval/send', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new SendManualEmailApprovalService(req, res).Operation()
     })
 
-    app.get('/user/logs', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-        new GetUserLogsService(req, res).Operation()
+    app.get('/user/logs', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new GetUserLogsService(req, res).Operation()
     })
 
     app.route('/user/:user_id/photo')
-        .post(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-            new RegistryUserPhotoService(req, res).Operation()
+        .post(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new RegistryUserPhotoService(req, res).Operation()
         })
-        .put(OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-            new RegistryUserPhotoService(req, res).Operation()
+        .put(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new RegistryUserPhotoService(req, res).Operation()
         })
 
-    app.get('/user/:user_id/photo', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-        new GetUserPhotoService(req, res).Operation()
+    app.get('/user/:user_id/photo', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new GetUserPhotoService(req, res).Operation()
     })
 
-    app.put('/user/:user_id/password', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-        new UpdateUserPasswordService(req, res).Operation()
+    app.put('/user/:user_id/password', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new UpdateUserPasswordService(req, res).Operation()
     })
 
-    app.get('/user/account/recovery/verify_email', (req, res) => {
-        new VerifyEmailService(req, res).Operation()
+    app.get('/user/account/recovery/verify_email', async (req, res) => {
+        await new VerifyEmailService(req, res).Operation()
     })
 
-    app.post('/user/account/recovery/confirm_restoration', (req, res) => {
-        new ConfirmAccountRecoveyService(req, res).Operation()
+    app.post('/user/account/recovery/confirm_restoration', async (req, res) => {
+        await new ConfirmAccountRecoveyService(req, res).Operation()
     })
 
-    app.post('/user/account/recovery/restore_account', OriginAuthMiddleware, RequestorAuthMiddleware, (req, res) => {
-        new AccountRecoveryService(req, res).Operation()
+    app.post('/user/account/recovery/restore_account', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new AccountRecoveryService(req, res).Operation()
     })
 }
 

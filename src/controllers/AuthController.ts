@@ -10,8 +10,8 @@ function AuthController(app : Express)
         await new LoginService(req, res).Operation()
     })
 
-    app.get('/validate_jwt', OriginAuthMiddleware, (req, res) => {
-        new ValidateJwtService(req, res).Operation()
+    app.get('/validate_jwt', OriginAuthMiddleware, async (req, res) => {
+        await new ValidateJwtService(req, res).Operation()
     })
 }
 

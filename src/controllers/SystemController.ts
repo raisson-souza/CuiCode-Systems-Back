@@ -17,12 +17,12 @@ function SystemController(app : Express)
             await new DatabaseService(req, res).Operation()
         })
 
-    app.get('/ok', OriginAuthMiddleware, (req, res) => {
-        new OkService(req, res).Operation()
+    app.get('/ok', OriginAuthMiddleware, async (req, res) => {
+        await new OkService(req, res).Operation()
     })
 
-    app.get('/get_style', OriginAuthMiddleware, (req, res) => {
-        new GetStyleService(req, res).Operation()
+    app.get('/get_style', OriginAuthMiddleware, async (req, res) => {
+        await new GetStyleService(req, res).Operation()
     })
 
     app.get('/get_form/:form', OriginAuthMiddleware, (req, res) => {
