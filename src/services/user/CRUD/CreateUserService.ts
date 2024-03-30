@@ -9,6 +9,7 @@ import User from "../../../classes/entities/user/User"
 import UserRepository from "../../../repositories/UserRepository"
 
 import IsUndNull from "../../../functions/logic/IsUndNull"
+import Sleep from "../../../functions/security/Sleep"
 import ToSqlDate from "../../../functions/SQL/ToSqlDate"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"
@@ -52,6 +53,8 @@ class CreateUserService extends ServerService
             user.EncryptPassword()
 
             await this.PersistUserCreation(user)
+
+            await Sleep()
 
             ResponseMessage.Send(
                 HttpStatusEnum.CREATED,

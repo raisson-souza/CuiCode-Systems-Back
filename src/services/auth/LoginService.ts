@@ -10,6 +10,7 @@ import UserAuth from "../../classes/entities/user/UserAuth"
 import UserBase from "../../classes/bases/UserBase"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
+import Sleep from "../../functions/security/Sleep"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
@@ -76,6 +77,7 @@ class LoginService extends ClientService
         }
         catch (ex)
         {
+            await Sleep()
             ResponseMessage.Send(
                 HttpStatusEnum.INTERNAL_SERVER_ERROR,
                 `Houve um erro no login. Erro: ${ (ex as Error).message }`,
