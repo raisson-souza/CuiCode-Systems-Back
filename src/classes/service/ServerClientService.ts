@@ -43,16 +43,19 @@ abstract class ServerClientService extends Service
                 return
             }
 
-            ResponseMessage.UnauthorizedUser(this.RES, this.Action)
+            ResponseMessage.UnauthorizedUser({
+                expressResponse: this.RES,
+                log: this.Action
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Ocorreu um erro na autenticação. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Ocorreu um erro na autenticação. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
     }
 
@@ -63,8 +66,12 @@ abstract class ServerClientService extends Service
     {
         const encryptedKey = EncryptInfo(systemKey)
 
-        if (encryptedKey != Env.SystemKey)
-            ResponseMessage.UnauthorizedUser(this.RES, this.Action)
+        if (encryptedKey != Env.SystemKey) {
+            ResponseMessage.UnauthorizedUser({
+                expressResponse: this.RES,
+                log: this.Action
+            })
+        }
 
         this.IsSystemRequestor = true
         this.SameUserAuthAndUserToOperate = false
@@ -77,8 +84,13 @@ abstract class ServerClientService extends Service
      */
     private async AuthenticateUserRequestor(userAuthId : string | null)
     {
-        if (IsUndNull(userAuthId))
-            ResponseMessage.SendNullField(["userAuthId"], this.Action, this.RES)
+        if (IsUndNull(userAuthId)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["userAuthId"],
+                log: this.Action
+            })
+        }
 
         const user = await Promise.resolve(
             QueryUser(this.DB_connection, Number.parseInt(userAuthId!)))
@@ -88,12 +100,12 @@ abstract class ServerClientService extends Service
                 .catch(ex => {
                     if ((ex as Error).message === "Nenhum usuário encontrado.")
                     {
-                        ResponseMessage.Send(
-                            HttpStatusEnum.NOT_FOUND,
-                            "Usuário requeridor não encontrado.",
-                            this.Action,
-                            this.RES
-                        )
+                        ResponseMessage.Send({
+                            status: HttpStatusEnum.NOT_FOUND,
+                            data: "Usuário requeridor não encontrado.",
+                            log: this.Action,
+                            expressResponse: this.RES
+                        })
                     }
 
                     throw new Error((ex as Error).message)
@@ -131,7 +143,10 @@ abstract class ServerClientService extends Service
                     this.USER_auth!.PermissionLevel!.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
                 )
                     return
-                ResponseMessage.ProhibitedOperation(this.RES, this.Action)
+                ResponseMessage.ProhibitedOperation({
+                    expressResponse: this.RES,
+                    log: this.Action
+                })
             }
             this.SameUserAuthAndUserToOperate = true
         }

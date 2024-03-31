@@ -25,7 +25,6 @@ class SendManualEmailApprovalService extends ClientService
         {
             const {
                 DB_connection,
-                Action
             } = this
 
             await this.AuthenticateRequestor()
@@ -34,12 +33,12 @@ class SendManualEmailApprovalService extends ClientService
 
             await Promise.resolve(new SendApprovalEmailOperation(this.USER_auth!, DB_connection).PerformOperation())
                 .then(() => {
-                    ResponseMessage.Send(
-                        HttpStatusEnum.ACCEPTED,
-                        "Solicitação de aprovação de email realizada com sucesso.",
-                        Action,
-                        this.RES
-                    )
+                    ResponseMessage.Send({
+                        status: HttpStatusEnum.ACCEPTED,
+                        data: "Solicitação de aprovação de email realizada com sucesso.",
+                        log: this.Action,
+                        expressResponse: this.RES
+                    })
                 })
                 .catch(ex => {
                     throw new Error((ex as Error).message)
@@ -47,12 +46,12 @@ class SendManualEmailApprovalService extends ClientService
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao realizar a solicitação de aprovação de email. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao realizar a solicitação de aprovação de email. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

@@ -22,11 +22,21 @@ class GetUserService extends ServerClientService
     {
         const userId = Number.parseInt(this.REQ.query.UserId as string)
 
-        if (IsUndNull(userId))
-            ResponseMessage.SendNullField(["UserId"], this.Action, this.RES)
+        if (IsUndNull(userId)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["UserId"],
+                log: this.Action
+            })
+        }
 
-        if (userId < 0)
-            ResponseMessage.SendInvalidField(["UserId"], this.Action, this.RES)
+        if (userId < 0) {
+            ResponseMessage.SendInvalidField({
+                expressResponse: this.RES,
+                fields: ["UserId"],
+                log: this.Action
+            })
+        }
 
         return userId
     }
@@ -41,7 +51,6 @@ class GetUserService extends ServerClientService
 
             const {
                 DB_connection,
-                Action
             } = this
 
             const userId = this.CheckQuery()
@@ -52,12 +61,12 @@ class GetUserService extends ServerClientService
 
             await Promise.resolve(QueryUser(DB_connection, userId, nonPrivateLevelQuery))
                 .then(user => {
-                    ResponseMessage.Send(
-                        HttpStatusEnum.OK,
-                        user,
-                        Action,
-                        this.RES
-                    )
+                    ResponseMessage.Send({
+                        status: HttpStatusEnum.OK,
+                        data: user,
+                        log: this.Action,
+                        expressResponse: this.RES
+                    })
                 })
                 .catch(ex => {
                     throw new Error((ex as Error).message)
@@ -65,12 +74,12 @@ class GetUserService extends ServerClientService
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

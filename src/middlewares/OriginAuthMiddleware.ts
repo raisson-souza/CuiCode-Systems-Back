@@ -50,12 +50,12 @@ async function OriginAuthMiddleware
     }
     catch (ex)
     {
-        ResponseMessage.Send(
-            HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            `Erro na autenticação de origem: ${ (ex as Error).message }`,
-            ACTION,
-            res
-        )
+        ResponseMessage.Send({
+            status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+            data: `Erro na autenticação de origem: ${ (ex as Error).message }`,
+            log: ACTION,
+            expressResponse: res
+        })
         Exception.UnexpectedError((ex as Error).message, ACTION)
     }
 }

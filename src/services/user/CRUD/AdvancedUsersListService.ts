@@ -21,13 +21,16 @@ class AdvancedUsersListService extends ServerService
 
     CheckQuery()
     {
-        const { Action } = this
-
         const filterType = Number.parseInt(this.REQ.query["FilterType"] as string)
         const visualizationType = Number.parseInt(this.REQ.query["VisualizationType"] as string)
 
-        if (IsUndNull(filterType) || IsUndNull(visualizationType))
-            ResponseMessage.SendNullField(["FilterType", "VisualizationType"], Action, this.RES)
+        if (IsUndNull(filterType) || IsUndNull(visualizationType)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["FilterType", "VisualizationType"],
+                log: this.Action
+            })
+        }
 
         return {
             "filterType": filterType,
@@ -43,7 +46,6 @@ class AdvancedUsersListService extends ServerService
         {
             const {
                 DB_connection,
-                Action
             } = this
 
             this.AuthenticateRequestor()
@@ -77,21 +79,21 @@ class AdvancedUsersListService extends ServerService
                     })
                 })
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                users,
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: users,
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao listar os usuários. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao listar os usuários. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

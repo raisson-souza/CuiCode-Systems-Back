@@ -20,16 +20,26 @@ class RegistryUserPhoto extends ClientService
         userId : number
     }
     {
-        const { REQ, RES, Action } = this
+        const { REQ } = this
 
         const userId = REQ.params.user_id
         const userbase64Photo = REQ.body["photo"]
 
-        if (IsUndNull(userId))
-            ResponseMessage.SendInvalidField(['user_id'], Action, RES)
+        if (IsUndNull(userId)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["user_id"],
+                log: this.Action
+            })
+        }
 
-        if (IsUndNull(userbase64Photo))
-            ResponseMessage.SendNullField(["photo"], Action, RES)
+        if (IsUndNull(userbase64Photo)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["photo"],
+                log: this.Action
+            })
+        }
 
         return {
             userPhoto: userbase64Photo,
@@ -52,29 +62,33 @@ class RegistryUserPhoto extends ClientService
 
             const user = await UserBase.Get(this.DB_connection, userId)
 
-            if (IsUndNull(user))
-                ResponseMessage.NotFoundUser(this.RES, this.Action)
+            if (IsUndNull(user)) {
+                ResponseMessage.NotFoundUser({
+                    expressResponse: this.RES,
+                    log: this.Action
+                })
+            }
 
             await this.AuthenticateRequestor()
             this.ValidateRequestor(PermissionLevelEnum.Member, user!.Id)
 
             await UserBase.CreateOrUpdatePhoto(this.DB_connection, user!.Id, userPhoto)
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                'Foto de usuário atualizada com sucesso.',
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: "Foto de usuário atualizada com sucesso.",
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao cadastrar a foto do usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao cadastrar a foto do usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

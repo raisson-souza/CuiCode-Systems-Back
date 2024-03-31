@@ -1,72 +1,116 @@
 import { Response } from "express"
 
+import { PrimalSendProps, ResponseMessage } from "../../types/ResponseMessage"
+
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 abstract class Send
 {
+    /**
+     * Realiza o envio final da Response.
+     */
     private static Send
-    (
-        res : Response,
-        responseMessage : any,
-        logMessage : string,
-        status : HttpStatusEnum
-    )
+    ({
+        expressResponse,
+        response,
+        status
+    } : PrimalSendProps)
     {
-        if (!res.headersSent)
+        if (!expressResponse.headersSent)
         {
-            res.status(status).send(responseMessage)
-            console.log(`| STATUS ${ status } | ${ logMessage }`)
+            expressResponse.status(status).send(response)
+            console.log(`${ new Date().toString() } | STATUS ${ status } | ${ response.log }`)
         }
     }
 
-    static OK(res: Response, responseMessage: any, logMessage: string)
+    static OK(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.OK)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.OK
+        })
     }
 
-    static CREATED(res: Response, responseMessage: any, logMessage: string)
+    static CREATED(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.CREATED)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.CREATED
+        })
     }
 
-    static ACCEPTED(res: Response, responseMessage: any, logMessage: string)
+    static ACCEPTED(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.ACCEPTED)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.ACCEPTED
+        })
     }
 
-    static INVALID(res: Response, responseMessage: any, logMessage: string)
+    static INVALID(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.INVALID)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.INVALID
+        })
     }
 
-    static UNAUTHORIZED(res: Response, responseMessage: any, logMessage: string)
+    static UNAUTHORIZED(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.UNAUTHORIZED)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.UNAUTHORIZED
+        })
     }
 
-    static PROHIBITED(res: Response, responseMessage: any, logMessage: string)
+    static PROHIBITED(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.PROHIBITED)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.PROHIBITED
+        })
     }
 
-    static NOT_FOUND(res: Response, responseMessage: any, logMessage: string)
+    static NOT_FOUND(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.NOT_FOUND)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.NOT_FOUND
+        })
     }
 
-    static INTERNAL_SERVER_ERROR(res: Response, responseMessage: any, logMessage: string)
+    static INTERNAL_SERVER_ERROR(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.INTERNAL_SERVER_ERROR)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+        })
     }
 
-    static NOT_IMPLEMENTED(res: Response, responseMessage: any, logMessage: string)
+    static NOT_IMPLEMENTED(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.NOT_IMPLEMENTED)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.NOT_IMPLEMENTED
+        })
     }
 
-    static UNAVAIALBLE(res: Response, responseMessage: any, logMessage: string)
+    static UNAVAIALBLE(expressRes: Response, response: ResponseMessage)
     {
-        Send.Send(res, responseMessage, logMessage, HttpStatusEnum.UNAVAIALBLE)
+        Send.Send({
+            expressResponse: expressRes,
+            response: response,
+            status: HttpStatusEnum.UNAVAIALBLE
+        })
     }
 }
 

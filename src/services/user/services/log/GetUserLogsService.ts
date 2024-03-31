@@ -31,8 +31,13 @@ class GetUserLogsService extends ServerClientService
 
             let startDate = null; let finalDate = null;
 
-            if (IsUndNull(query.userId))
-                ResponseMessage.SendNullField(["userId"], this.Action, this.RES)
+            if (IsUndNull(query.userId)) {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["userId"],
+                    log: this.Action
+                })
+            }
 
             if (!IsUndNull(query.startDate))
                 startDate = new DateCustom(query.startDate)
@@ -60,7 +65,6 @@ class GetUserLogsService extends ServerClientService
         {
             const {
                 DB_connection,
-                Action
             } = this
 
             await this.AuthenticateRequestor()
@@ -73,12 +77,12 @@ class GetUserLogsService extends ServerClientService
 
             await Promise.resolve(new GetUserLogsOperation(user, DB_connection, filterProps.StartDate, filterProps.FinalDate).PerformOperation())
                 .then(result => {
-                    ResponseMessage.Send(
-                        HttpStatusEnum.OK,
-                        result,
-                        Action,
-                        this.RES
-                    )
+                    ResponseMessage.Send({
+                        status: HttpStatusEnum.OK,
+                        data: result,
+                        log: this.Action,
+                        expressResponse: this.RES
+                    })
                 })
                 .catch(ex => {
                     throw new Error((ex as Error).message)
@@ -86,12 +90,12 @@ class GetUserLogsService extends ServerClientService
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao consultar os logs do usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao consultar os logs do usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

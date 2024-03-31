@@ -52,12 +52,12 @@ abstract class Service implements IService
         await this.DB_connection.connect()
             .then(() => {})
             .catch(ex => {
-                ResponseMessage.Send(
-                    HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                    `Houve um erro ao conectar no banco. Erro: ${ ex.message }`,
-                    this.Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                    data: `Houve um erro ao conectar no banco. Erro: ${ ex.message }`,
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
             })
     }
 

@@ -23,18 +23,24 @@ class AccountRecoveryService extends ServerService
 
     CheckBody()
     {
-        const {
-            Action
-        }  = this
-
         const password = this.REQ.body["password"]
         const passwordHint = this.REQ.body["passwordHint"]
 
-        if (IsUndNull(password))
-            ResponseMessage.SendNullField(["password"], Action, this.RES)
+        if (IsUndNull(password)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["password"],
+                log: this.Action
+            })
+        }
 
-        if (IsUndNull(passwordHint))
-            ResponseMessage.SendNullField(["passwordHint"], Action, this.RES)
+        if (IsUndNull(passwordHint)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["passwordHint"],
+                log: this.Action
+            })
+        }
 
         return {
             "password": password as string,
@@ -46,8 +52,13 @@ class AccountRecoveryService extends ServerService
     {
         const jwt = this.REQ.query["jwt"]
 
-        if (IsUndNull(jwt))
-            ResponseMessage.SendNullField(["jwt"], this.Action, this.RES)
+        if (IsUndNull(jwt)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["jwt"],
+                log: this.Action
+            })
+        }
 
         return String(jwt)
     }
@@ -80,24 +91,24 @@ class AccountRecoveryService extends ServerService
             if (IsUndNull(userAccountRestoration))
             {
                 const msg = "Registro de recuperação de conta não encontrado."
-                ResponseMessage.Send(
-                    HttpStatusEnum.NOT_FOUND,
-                    msg,
-                    Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.NOT_FOUND,
+                    data: msg,
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
                 Exception.Error(msg, Action)
             }
 
             if (IsJwtExpired(userAccountRestoration!.Jwt!))
             {
                 const msg = "Registro de recuperação de conta expirado, tente novamente!"
-                ResponseMessage.Send(
-                    HttpStatusEnum.NOT_FOUND,
-                    msg,
-                    Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.NOT_FOUND,
+                    data: msg,
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
                 await UserAccountRestorationBase.Expire(
                     DB_connection,
                     userAccountRestoration!.Id
@@ -123,12 +134,12 @@ class AccountRecoveryService extends ServerService
                 newUser.Id
             )
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                "Credenciais da conta atualizados com sucesso!",
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: "Credenciais da conta atualizados com sucesso!",
+                log: this.Action,
+                expressResponse: this.RES
+            })
 
             await UserAccountRestorationBase.Complete(
                 DB_connection,
@@ -155,12 +166,12 @@ class AccountRecoveryService extends ServerService
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao atualizar as credenciais da conta. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao atualizar as credenciais da conta. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

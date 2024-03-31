@@ -57,21 +57,21 @@ class GetStyleService extends ServerService
             if (IsUndNull(systemStyle))
                 systemStyle = this.DefaultSystemStyle
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                systemStyle!.FrontEndConvertedStyle(),
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: systemStyle!.FrontEndConvertedStyle(),
+                log: Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao determinar a estilo do sistema. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao determinar a estilo do sistema. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

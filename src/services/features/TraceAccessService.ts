@@ -30,21 +30,21 @@ class TraceAccessService extends ServerService
                 JSON.stringify(emailBody)
             )
 
-            ResponseMessage.Send(
-                HttpStatusEnum.ACCEPTED,
-                "Ação de rastreio realizada com sucesso.",
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.ACCEPTED,
+                data: "Ação de rastreio realizada com sucesso.",
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro no envio do email. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro no envio do email. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

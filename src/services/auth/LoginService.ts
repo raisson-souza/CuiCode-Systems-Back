@@ -28,8 +28,13 @@ class LoginService extends ClientService
             password
         } = this.REQ.body
 
-        if (IsUndNull(email) || IsUndNull(password))
-            ResponseMessage.SendNullField(["email", "password"], this.Action, this.RES)
+        if (IsUndNull(email) || IsUndNull(password)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["email", "password"],
+                log: this.Action
+            })
+        }
 
         this.USER_auth = new UserAuth({ "Email": email, "Password": password }, this.REQ.headers)
         this.USER_auth.EncryptPassword()
@@ -68,22 +73,22 @@ class LoginService extends ClientService
                 user: userDb
             }
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                response,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: response,
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
             await Sleep()
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro no login. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro no login. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

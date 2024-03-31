@@ -30,33 +30,33 @@ class DatabaseService extends ServerService
                     {
                         return this.FoundCuiCodeSystemsDatabase()
                             .then(() => {
-                                ResponseMessage.Send(
-                                    HttpStatusEnum.CREATED,
-                                    "Banco de dados configurado com sucesso.",
-                                    this.Action,
-                                    this.RES
-                                )
+                                ResponseMessage.Send({
+                                    status: HttpStatusEnum.CREATED,
+                                    data: "Banco de dados configurado com sucesso.",
+                                    log: this.Action,
+                                    expressResponse: this.RES
+                                })
                             })
                             .catch(ex => {
                                 throw new Error((ex as Error).message)
                             })
                     }
-                    return ResponseMessage.Send(
-                        HttpStatusEnum.ACCEPTED,
-                        "Banco de dados já configurado.",
-                        this.Action,
-                        this.RES
-                    )
+                    return ResponseMessage.Send({
+                        status: HttpStatusEnum.ACCEPTED,
+                        data: "Banco de dados já configurado.",
+                        log: this.Action,
+                        expressResponse: this.RES
+                    })
                 })
                 .catch(async () => {
                     return this.FoundCuiCodeSystemsDatabase()
                         .then(() => {
-                            ResponseMessage.Send(
-                                HttpStatusEnum.CREATED,
-                                "Banco de dados configurado com sucesso.",
-                                this.Action,
-                                this.RES
-                            )
+                            ResponseMessage.Send({
+                                status: HttpStatusEnum.CREATED,
+                                data: "Banco de dados configurado com sucesso.",
+                                log: this.Action,
+                                expressResponse: this.RES
+                            })
                         })
                         .catch(ex => {
                             throw new Error((ex as Error).message)
@@ -65,12 +65,12 @@ class DatabaseService extends ServerService
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao configurar o banco. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao configurar o banco. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

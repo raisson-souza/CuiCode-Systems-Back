@@ -23,8 +23,13 @@ class VerifyEmailService extends ClientService
     {
         const email = this.REQ.query["email"]
 
-        if (IsUndNull(email))
-            ResponseMessage.SendNullField(["email"], this.Action, this.RES)
+        if (IsUndNull(email)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["email"],
+                log: this.Action
+            })
+        }
 
         return String(email)
     }
@@ -37,7 +42,6 @@ class VerifyEmailService extends ClientService
         {
             const {
                 DB_connection,
-                Action
             } = this
 
             const email = this.CheckQuery()
@@ -48,24 +52,28 @@ class VerifyEmailService extends ClientService
 
             const user = await UserBase.GetByEmail(DB_connection, email)
 
-            if (IsUndNull(user))
-                ResponseMessage.NotFoundUser(this.RES, Action)
+            if (IsUndNull(user)) {
+                ResponseMessage.NotFoundUser({
+                    expressResponse: this.RES,
+                    log: this.Action
+                })
+            }
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                `Usuário com email ${ email } encontrado no sistema.\nDeseja iniciar o processo de recuperação de conta?`,
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: `Usuário com email ${ email } encontrado no sistema.\nDeseja iniciar o processo de recuperação de conta?`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao buscar o usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao buscar o usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

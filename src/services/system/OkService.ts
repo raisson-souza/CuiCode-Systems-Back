@@ -22,38 +22,37 @@ class OkService extends ServerService
     {
         try
         {
-            const { Action } = this
-
             // Aqui não será utilizado ParametersBase para obter-se maior precisão na busca levando
             // em conta o propósito da OkService.
             await this.DB_connection.query("SELECT * FROM parameters")
                 .then(result => {
                     const parameters = new Parameters(result.rows[0])
 
-                    if (parameters.SystemUnderMaintence)
-                        ResponseMessage.Send(
-                            HttpStatusEnum.UNAVAIALBLE,
-                            "Sistema em Manutenção.",
-                            Action,
-                            this.RES
-                        )
+                    if (parameters.SystemUnderMaintence) {
+                        ResponseMessage.Send({
+                            status: HttpStatusEnum.UNAVAIALBLE,
+                            data: "Sistema em Manutenção.",
+                            log: this.Action,
+                            expressResponse: this.RES
+                        })
+                    }
 
-                    ResponseMessage.Send(
-                        HttpStatusEnum.OK,
-                        null,
-                        Action,
-                        this.RES
-                    )
+                    ResponseMessage.Send({
+                        status: HttpStatusEnum.OK,
+                        data: null,
+                        log: this.Action,
+                        expressResponse: this.RES
+                    })
                 })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao consultar o estado do sistema. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao consultar o estado do sistema. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

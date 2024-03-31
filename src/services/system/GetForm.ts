@@ -27,8 +27,13 @@ class GetForm extends ServerService
     {
         const formName = this.REQ.params["form"]
 
-        if (IsUndNull(formName))
-            ResponseMessage.SendNullField(["form"], this.Action, this.RES)
+        if (IsUndNull(formName)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["form"],
+                log: this.Action
+            })
+        }
 
         return formName
     }
@@ -81,33 +86,32 @@ class GetForm extends ServerService
             if (IsUndNull(form))
             {
                 const msg = "Formulário requerido não encontrado."
-                ResponseMessage.Send(
-                    HttpStatusEnum.INVALID,
-                    msg,
-                    this.Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.INVALID,
+                    data: msg,
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
                 Exception.Error(msg, this.Action)
             }
 
             form.Endpoint = `${ Env.BackBase }${ form.Endpoint }`
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                form,
-                this.Action,
-                this.RES,
-                "Fields"
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: form,
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao carregar o form. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao carregar o form. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

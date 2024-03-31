@@ -21,8 +21,13 @@ class ListUsersService extends ServerService
     {
         const query = this.REQ.query as any
 
-        if (IsUndNull(query.RequiredInfo))
-            ResponseMessage.SendNullField(["RequiredInfo"], this.Action, this.RES)
+        if (IsUndNull(query.RequiredInfo)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["RequiredInfo"],
+                log: this.Action
+            })
+        }
 
         const JsonConvertedQuery = JSON.parse(query.RequiredInfo)
 
@@ -39,7 +44,6 @@ class ListUsersService extends ServerService
         {
             const {
                 DB_connection,
-                Action
             } = this
 
             this.AuthenticateRequestor()
@@ -49,12 +53,12 @@ class ListUsersService extends ServerService
 
             await Promise.resolve(QueryUsersInfo(DB_connection, userRequiredInfo))
                 .then(userInfos => {
-                    ResponseMessage.Send(
-                        HttpStatusEnum.OK,
-                        userInfos,
-                        Action,
-                        this.RES
-                    )
+                    ResponseMessage.Send({
+                        status: HttpStatusEnum.OK,
+                        data: userInfos,
+                        log: this.Action,
+                        expressResponse: this.RES
+                    })
                 })
                 .catch(ex => {
                     throw new Error((ex as Error).message)
@@ -62,12 +66,12 @@ class ListUsersService extends ServerService
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao listar as informações requeridas dos usuários. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

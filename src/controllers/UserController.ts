@@ -40,10 +40,10 @@ function UsersController(app : Express, upload : Multer)
             await new ListUsersService(req, res).Operation()
         })
         .post((_, res) => {
-            ResponseMessage.NotImplementedRoute(res)
+            ResponseMessage.NotImplementedRoute({ expressResponse: res })
         })
         .put((_, res) => {
-            ResponseMessage.NotImplementedRoute(res)
+            ResponseMessage.NotImplementedRoute({ expressResponse: res })
         })
 
     app.get("/users/list", OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {

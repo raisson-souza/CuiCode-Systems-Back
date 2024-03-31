@@ -1,5 +1,7 @@
 import { Response } from "express"
 
+import { BadFieldsResponseProps, GenericHttpResponseProps, GlobalSendProps, ResponseMessage as ResponseMessageType } from "../../types/ResponseMessage"
+
 import Exception from "../custom/Exception"
 import Send from "./Send"
 
@@ -10,68 +12,77 @@ import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
 abstract class ResponseMessage
 {
+    /**
+     * Direciona a Response para o método de tratamento final em Send.
+     */
     static Send
-    (
-        status : HttpStatusEnum,
-        data: any,
-        logMessage : string,
-        res : Response,
-        dataPropToCount : string | null = null
-    )
+    ({
+        status,
+        data,
+        log,
+        expressResponse,
+        dataPropToCount
+    } : GlobalSendProps)
     {
         data = this.FixTimeZone(data) // DESENVOLVIMENTO PROVISÓRIO PARA TRATAMENTO DE ERRO NO FUSO HORÁRIO.
         const success = this.RenderSuccess(status)
-        const length = this.RenderDataLength(data, dataPropToCount, success)
+        const length = this.RenderDataLength(success, data, dataPropToCount)
 
-        const response = {
-            "success": success,
-            "data": data,
-            "length": length,
-            "action": logMessage
+        const response : ResponseMessageType = {
+            success,
+            data,
+            length,
+            log
         }
 
         switch (status)
         {
             case HttpStatusEnum.OK:
-                return Send.OK(res, response, logMessage)
+                return Send.OK(expressResponse, response)
 
             case HttpStatusEnum.ACCEPTED:
-                return Send.ACCEPTED(res, response, logMessage)
+                return Send.ACCEPTED(expressResponse, response)
 
             case HttpStatusEnum.CREATED:
-                return Send.CREATED(res, response, logMessage)
+                return Send.CREATED(expressResponse, response)
 
             case HttpStatusEnum.INVALID:
-                Send.INVALID(res, response, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                Send.INVALID(expressResponse, response)
+                return Exception.UnexpectedError(data, log)
 
             case HttpStatusEnum.UNAUTHORIZED:
-                Send.UNAUTHORIZED(res, response, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                Send.UNAUTHORIZED(expressResponse, response)
+                return Exception.UnexpectedError(data, log)
 
             case HttpStatusEnum.PROHIBITED:
-                Send.PROHIBITED(res, response, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                Send.PROHIBITED(expressResponse, response)
+                return Exception.UnexpectedError(data, log)
 
             case HttpStatusEnum.NOT_FOUND:
-                Send.NOT_FOUND(res, response, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                Send.NOT_FOUND(expressResponse, response)
+                return Exception.UnexpectedError(data, log)
 
             case HttpStatusEnum.INTERNAL_SERVER_ERROR:
-                Send.INTERNAL_SERVER_ERROR(res, response, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                Send.INTERNAL_SERVER_ERROR(expressResponse, response)
+                return Exception.UnexpectedError(data, log)
 
             case HttpStatusEnum.NOT_IMPLEMENTED:
-                Send.NOT_IMPLEMENTED(res, response, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                Send.NOT_IMPLEMENTED(expressResponse, response)
+                return Exception.UnexpectedError(data, log)
 
             case HttpStatusEnum.UNAVAIALBLE:
-                Send.UNAVAIALBLE(res, response, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                Send.UNAVAIALBLE(expressResponse, response)
+                return Exception.UnexpectedError(data, log)
 
             default:
-                Send.INTERNAL_SERVER_ERROR(res, null, logMessage)
-                return Exception.UnexpectedError(data, logMessage)
+                const nullResponse : ResponseMessageType = {
+                    success: false,
+                    data: null,
+                    length: 0,
+                    log
+                }
+                Send.INTERNAL_SERVER_ERROR(expressResponse, nullResponse)
+                return Exception.UnexpectedError(data, log)
         }
     }
 
@@ -90,7 +101,6 @@ abstract class ResponseMessage
             case HttpStatusEnum.INTERNAL_SERVER_ERROR:
             case HttpStatusEnum.NOT_IMPLEMENTED:
             case HttpStatusEnum.UNAVAIALBLE:
-                return false
             default:
                 return false
         }
@@ -98,25 +108,25 @@ abstract class ResponseMessage
 
     private static RenderDataLength
     (
+        success : boolean,
         data : any,
-        dataPropToCount : string | null,
-        success : boolean
+        dataPropToCount? : string
     ) : number
     {
         if (!success) return 0
 
         try
         {
-            const _data = IsUndNull(dataPropToCount)
+            const parsedData = IsUndNull(dataPropToCount)
                 ? data
                 : FindValue(data, [dataPropToCount!])
-    
-            if (_data instanceof Array)
-                return _data.length
-    
-            if (_data instanceof Object)
-                return Object.keys(_data).length
-    
+
+            if (parsedData instanceof Array)
+                return parsedData.length
+
+            if (parsedData instanceof Object)
+                return Object.keys(parsedData).length
+
             return 1
         }
         catch
@@ -144,61 +154,61 @@ abstract class ResponseMessage
     }
 
     static SendInvalidField
-    (
-        fields : string[],
-        logMessage : string,
-        res : Response
-    )
+    ({
+        fields,
+        log,
+        expressResponse
+    } : BadFieldsResponseProps)
     {
         let response = this.BuildFieldsInfoMessage(fields, "está inválido", "estão inválidos")
 
-        this.Send(
-            HttpStatusEnum.INVALID,
-            response,
-            logMessage,
-            res
-        )
+        this.Send({
+            status: HttpStatusEnum.INVALID,
+            data: response,
+            expressResponse: expressResponse,
+            log: log,
+        })
 
         Exception.Error(
             "Campo inválido.",
-            logMessage
+            log
         )
     }
 
     static SendNullField
-    (
-        fields : string[],
-        logMessage : string,
-        res : Response
-    )
+    ({
+        fields,
+        log,
+        expressResponse
+    } : BadFieldsResponseProps)
     {
         let response = this.BuildFieldsInfoMessage(fields, "não pode ser nulo", "não podem ser nulos")
 
-        this.Send(
-            HttpStatusEnum.INVALID,
-            response,
-            logMessage,
-            res
-        )
+        this.Send({
+            status: HttpStatusEnum.INVALID,
+            data: response,
+            expressResponse: expressResponse,
+            log: log,
+        })
 
         Exception.Error(
             "Campo nulo.",
-            logMessage
+            log
         )
     }
 
     static NotImplementedRoute
-    (
-        res : Response
-    )
+    ({
+        expressResponse,
+        log = "Operação não implementada."
+    } : GenericHttpResponseProps)
     {
-        const log = "Operação não implementada."
-        this.Send(
-            HttpStatusEnum.NOT_IMPLEMENTED,
-            log,
-            log,
-            res
-        )
+        this.Send({
+            status: HttpStatusEnum.NOT_IMPLEMENTED,
+            data: log,
+            expressResponse: expressResponse,
+            log: log,
+        })
 
         Exception.Error(
             "Rota não implementada.",
@@ -207,116 +217,122 @@ abstract class ResponseMessage
     }
 
     static UnauthorizedUser
-    (
-        res : Response,
-        logMessage : string
-    )
+    ({
+        expressResponse,
+        log
+    } : GenericHttpResponseProps)
     {
-        this.Send(
-            HttpStatusEnum.UNAUTHORIZED,
-            "Usuário não autenticado.",
-            logMessage,
-            res
-        )
+        const response = "Usuário não autenticado."
+
+        this.Send({
+            status: HttpStatusEnum.UNAUTHORIZED,
+            data: response,
+            expressResponse: expressResponse,
+            log: log!,
+        })
 
         Exception.Error(
-            "Usuário não-autorizado.",
-            logMessage
+            response,
+            log!
         )
     }
 
     static UnauthorizedSystem
-    (
-        res : Response,
-        logMessage : string
-    )
+    ({
+        expressResponse,
+        log
+    } : GenericHttpResponseProps)
     {
-        this.Send(
-            HttpStatusEnum.UNAUTHORIZED,
-            "Sistema não autenticado.",
-            logMessage,
-            res
-        )
+        const response = "Usuário não autenticado."
+
+        this.Send({
+            status: HttpStatusEnum.UNAUTHORIZED,
+            data: response,
+            expressResponse: expressResponse,
+            log: log!,
+        })
 
         Exception.Error(
-            "Sistema não autenticado.",
-            logMessage
+            response,
+            log!
         )
     }
 
     static NoAuthFoundInToken
-    (
-        res : Response,
-        logMessage : string
-    )
+    ({
+        expressResponse,
+        log
+    } : GenericHttpResponseProps)
     {
-        this.Send(
-            HttpStatusEnum.UNAUTHORIZED,
-            "Nenhuma autenticação válida encontrada no token.",
-            logMessage,
-            res
-        )
+        const response = "Nenhuma autenticação válida encontrada no token."
+
+        this.Send({
+            status: HttpStatusEnum.UNAUTHORIZED,
+            data: response,
+            expressResponse: expressResponse,
+            log: log!,
+        })
 
         Exception.Error(
-            "Nenhuma autenticação válida encontrada no token.",
-            logMessage
+            response,
+            log!
         )
     }
 
     static ProhibitedOperation
-    (
-        res : Response,
-        logMessage : string
-    )
+    ({
+        expressResponse,
+        log
+    } : GenericHttpResponseProps)
     {
-        this.Send(
-            HttpStatusEnum.PROHIBITED,
-            "Ação não disponível para usuário.",
-            logMessage,
-            res
-        )
+        this.Send({
+            status: HttpStatusEnum.PROHIBITED,
+            data: "Ação não disponível para usuário.",
+            expressResponse: expressResponse,
+            log: log!,
+        })
 
         Exception.Error(
-            "Operação proibida.",
-            logMessage
+            "Operação Proibida.",
+            log!
         )
     }
 
     static InvalidRequest
-    (
-        res : Response,
-        logMessage : string
-    )
+    ({
+        expressResponse,
+        log
+    } : GenericHttpResponseProps)
     {
-        this.Send(
-            HttpStatusEnum.INVALID,
-            "Corpo da requisição inválido.",
-            logMessage,
-            res
-        )
+        this.Send({
+            status: HttpStatusEnum.INVALID,
+            data: "Corpo da requisição inválido.",
+            expressResponse: expressResponse,
+            log: log!,
+        })
 
         Exception.Error(
-            "Request inválida.",
-            logMessage
+            "Request Inválida.",
+            log!
         )
     }
 
     static NotFoundUser
-    (
-        res : Response,
-        logMessage : string
-    )
+    ({
+        expressResponse,
+        log
+    } : GenericHttpResponseProps)
     {
-        this.Send(
-            HttpStatusEnum.NOT_FOUND,
-            "Usuário não encontrado.",
-            logMessage,
-            res
-        )
+        this.Send({
+            status: HttpStatusEnum.NOT_FOUND,
+            data: "Usuário não encontrado.",
+            expressResponse: expressResponse,
+            log: log!,
+        })
 
         Exception.Error(
             "Usuário não encontrado.",
-            logMessage
+            log!
         )
     }
 

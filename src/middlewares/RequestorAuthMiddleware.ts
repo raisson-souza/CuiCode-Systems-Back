@@ -27,8 +27,12 @@ async function RequestorAuthMiddleware
     {
         const { authorization } = req.headers
 
-        if (IsUndNull(authorization))
-            ResponseMessage.UnauthorizedUser(res, ACTION)
+        if (IsUndNull(authorization)) {
+            ResponseMessage.UnauthorizedUser({
+                expressResponse: res,
+                log: ACTION
+            })
+        }
 
         const token = ParseJwt(authorization!)
 
@@ -48,12 +52,12 @@ async function RequestorAuthMiddleware
     }
     catch (ex)
     {
-        ResponseMessage.Send(
-            HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            `Erro na autenticação do requeridor: ${ (ex as Error).message }`,
-            ACTION,
-            res
-        )
+        ResponseMessage.Send({
+            status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+            data: `Erro na autenticação do requeridor: ${ (ex as Error).message }`,
+            log: ACTION,
+            expressResponse: res
+        })
         Exception.UnexpectedError((ex as Error).message, ACTION)
     }
 }
@@ -86,8 +90,12 @@ function DecodeJwt
     const userAuthId = decoded["UserAuthId"] as string
     const systemKey = decoded["SystemKey"] as string
 
-    if (IsUndNull(userAuthId) && IsUndNull(systemKey))
-        ResponseMessage.NoAuthFoundInToken(res, ACTION)
+    if (IsUndNull(userAuthId) && IsUndNull(systemKey)) {
+        ResponseMessage.NoAuthFoundInToken({
+            expressResponse: res,
+            log: ACTION
+        })
+    }
 
     return {
         "userAuthId": userAuthId,

@@ -35,8 +35,13 @@ class UpdateUserService extends ClientService
 
         const user = new User(body)
 
-        if (IsUndNull(user.Id))
-            ResponseMessage.SendNullField(["Id"], this.Action, this.RES)
+        if (IsUndNull(user.Id)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["Id"],
+                log: this.Action
+            })
+        }
 
         return user
     }
@@ -66,21 +71,21 @@ class UpdateUserService extends ClientService
 
             await this.PersistUserUpdate(userModel)
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                "Usuário editado com sucesso.",
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: "Usuário editado com sucesso.",
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao editar o usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
@@ -255,12 +260,12 @@ class UpdateUserService extends ClientService
 
     private NotImplementedUpdate(message: string)
     {
-        ResponseMessage.Send(
-            HttpStatusEnum.NOT_IMPLEMENTED,
-            message,
-            this.Action,
-            this.RES
-        )
+        ResponseMessage.Send({
+            status: HttpStatusEnum.NOT_IMPLEMENTED,
+            data: message,
+            log: this.Action,
+            expressResponse: this.RES
+        })
     }
 }
 

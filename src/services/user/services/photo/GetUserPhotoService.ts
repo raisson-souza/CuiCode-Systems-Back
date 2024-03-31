@@ -21,8 +21,13 @@ class GetUserPhoto extends ClientService
     {
         const userId = this.REQ.params.user_id
 
-        if (IsUndNull(userId))
-            ResponseMessage.SendNullField(["UserId"], this.Action, this.RES)
+        if (IsUndNull(userId)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["UserId"],
+                log: this.Action
+            })
+        }
 
         return Number.parseInt(userId as string)
     }
@@ -41,38 +46,42 @@ class GetUserPhoto extends ClientService
 
             this.ValidateRequestor(PermissionLevelEnum.Member, userId)
 
-            if (IsUndNull(user))
-                ResponseMessage.NotFoundUser(this.RES, this.Action)
+            if (IsUndNull(user)) {
+                ResponseMessage.NotFoundUser({
+                    expressResponse: this.RES,
+                    log: this.Action
+                })
+            }
 
             const userPhoto = await UserBase.GetPhoto(this.DB_connection, user!.Id)
 
             if (IsUndNull(userPhoto))
             {
-                ResponseMessage.Send(
-                    HttpStatusEnum.NOT_FOUND,
-                    "O usuário não possui foto.",
-                    this.Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.NOT_FOUND,
+                    data: "O usuário não possui foto.",
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
             }
             else
             {
-                ResponseMessage.Send(
-                    HttpStatusEnum.OK,
-                    userPhoto,
-                    this.Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.OK,
+                    data: userPhoto,
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
             }
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao consultar o usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

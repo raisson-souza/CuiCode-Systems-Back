@@ -25,11 +25,21 @@ class UpdateUserPasswordService extends ClientService
     {
         const { REQ , Action, RES } = this
 
-        if (IsUndNull(REQ.body.password))
-            ResponseMessage.SendNullField(["password"], Action, RES)
+        if (IsUndNull(REQ.body.password)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["password"],
+                log: this.Action
+            })
+        }
 
-        if (IsUndNull(REQ.body.password_hint))
-            ResponseMessage.SendNullField(["password_hint"], Action, RES)
+        if (IsUndNull(REQ.body.password_hint)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["password_hint"],
+                log: this.Action
+            })
+        }
 
         return {
             "password": REQ.body.password,
@@ -39,8 +49,13 @@ class UpdateUserPasswordService extends ClientService
 
     CheckParams()
     {
-        if (IsUndNull(this.REQ.params["user_id"]))
-            ResponseMessage.SendNullField(["user_id"], this.Action, this.RES)
+        if (IsUndNull(this.REQ.params["user_id"])) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["user_id"],
+                log: this.Action
+            })
+        }
 
         return parseInt(this.REQ.params["user_id"])
     }
@@ -71,30 +86,34 @@ class UpdateUserPasswordService extends ClientService
 
             const userDb = await UserBase.Get(DB_connection, userId)
 
-            if (IsUndNull(userDb))
-                ResponseMessage.NotFoundUser(this.RES, Action)
+            if (IsUndNull(userDb)) {
+                ResponseMessage.NotFoundUser({
+                    expressResponse: this.RES,
+                    log: Action
+                })
+            }
 
             this.ValidateUpdate(userModel, userDb!)
 
             await this.PersistUpdate(userModel)
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                "Senha e dica de senha atualizadas com sucesso.",
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: "Senha e dica de senha atualizadas com sucesso.",
+                log: this.Action,
+                expressResponse: this.RES
+            })
 
             await this.SetUserLog(userModel, userDb!)
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao editar a senha do usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao editar a senha do usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
@@ -113,12 +132,12 @@ class UpdateUserPasswordService extends ClientService
 
         if (encryptedPassword === userDb.Password)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INVALID,
-                "A nova senha é identica a antiga.",
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INVALID,
+                data: "A nova senha é identica a antiga.",
+                log: this.Action,
+                expressResponse: this.RES
+            })
             throw new Error("A nova senha é identica a antiga.")
         }
 

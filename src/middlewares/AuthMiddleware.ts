@@ -41,8 +41,12 @@ async function AuthMiddleware
         {
             const { authorization } = req.headers
 
-            if (IsUndNull(authorization))
-                ResponseMessage.UnauthorizedUser(res, "AuthMiddleware")
+            if (IsUndNull(authorization)) {
+                ResponseMessage.UnauthorizedUser({
+                    expressResponse: res,
+                    log: "AuthMiddleware"
+                })
+            }
 
             const token = authorization!.split(" ")[1]!
 
@@ -71,12 +75,12 @@ async function AuthMiddleware
     }
     catch (ex)
     {
-        ResponseMessage.Send(
-            HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            `Erro na autenticação: ${ (ex as Error).message }`,
-            "AuthMiddleware",
-            res
-        )
+        ResponseMessage.Send({
+            status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+            data: `Erro na autenticação: ${ (ex as Error).message }`,
+            log: "AuthMiddleware",
+            expressResponse: res
+        })
         Exception.UnexpectedError((ex as Error).message, "AuthMiddleware")
     }
 }

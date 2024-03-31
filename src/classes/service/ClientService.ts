@@ -34,12 +34,12 @@ abstract class ClientService extends Service
                 .catch(ex => {
                     if ((ex as Error).message === "Nenhum usuário encontrado.")
                     {
-                        ResponseMessage.Send(
-                            HttpStatusEnum.NOT_FOUND,
-                            "Usuário requeridor não encontrado.",
-                            this.Action,
-                            this.RES
-                        )
+                        ResponseMessage.Send({
+                            status: HttpStatusEnum.NOT_FOUND,
+                            data: "Usuário requeridor não encontrado.",
+                            log: this.Action,
+                            expressResponse: this.RES
+                        })
                     }
 
                     throw new Error((ex as Error).message)
@@ -73,7 +73,10 @@ abstract class ClientService extends Service
                     this.USER_auth!.PermissionLevel!.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
                 )
                     return
-                ResponseMessage.ProhibitedOperation(this.RES, this.Action)
+                ResponseMessage.ProhibitedOperation({
+                    expressResponse: this.RES,
+                    log: this.Action
+                })
             }
             this.SameUserAuthAndUserToOperate = true
         }
@@ -85,12 +88,12 @@ abstract class ClientService extends Service
 
         if (IsUndNull(userAuthId))
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.NOT_FOUND,
-                "Usuário requeridor não encontrado.",
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.NOT_FOUND,
+                data: "Usuário requeridor não encontrado.",
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
 
         return Number.parseInt(userAuthId!)

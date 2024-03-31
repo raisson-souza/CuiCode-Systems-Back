@@ -27,8 +27,12 @@ class CreateUserService extends ServerService
     {
         const body = this.REQ.body as any
 
-        if (IsUndNull(body))
-            ResponseMessage.InvalidRequest(this.RES, this.Action)
+        if (IsUndNull(body)) {
+            ResponseMessage.InvalidRequest({
+                expressResponse: this.RES,
+                log: this.Action
+            })
+        }
 
         return new User(body)
     }
@@ -43,7 +47,6 @@ class CreateUserService extends ServerService
         {
             const {
                 DB_connection,
-                Action
             } = this
 
             const user = this.CheckBody()
@@ -56,12 +59,12 @@ class CreateUserService extends ServerService
 
             await Sleep()
 
-            ResponseMessage.Send(
-                HttpStatusEnum.CREATED,
-                `Usuário ${ user.GenerateUserKey() } criado com sucesso.`,
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.CREATED,
+                data: `Usuário ${ user.GenerateUserKey() } criado com sucesso.`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
 
             EmailSender.Internal(EmailTitles.NEW_USER, user.GenerateUserKey())
 
@@ -69,12 +72,12 @@ class CreateUserService extends ServerService
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao criar o usuário. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

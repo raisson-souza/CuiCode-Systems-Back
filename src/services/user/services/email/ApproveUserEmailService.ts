@@ -20,11 +20,21 @@ class ApproveUserEmailService extends ClientService
     {
         const query = this.REQ.query as any
 
-        if (IsUndNull(query.email))
-            ResponseMessage.SendNullField(["email"], this.Action, this.RES)
+        if (IsUndNull(query.email)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["email"],
+                log: this.Action
+            })
+        }
 
-        if (IsUndNull(query.userId))
-            ResponseMessage.SendNullField(["userId"], this.Action, this.RES)
+        if (IsUndNull(query.userId)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["userId"],
+                log: this.Action
+            })
+        }
 
         return { email : query.email, userId : query.userId }
     }
@@ -37,7 +47,6 @@ class ApproveUserEmailService extends ClientService
         {
             const {
                 DB_connection,
-                Action
             } = this
 
             const userInfoApproval = this.CheckQuery()
@@ -89,21 +98,21 @@ class ApproveUserEmailService extends ClientService
                     throw new Error(ex.message)
                 })
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                "Email aprovado com sucesso!",
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: "Email aprovado com sucesso!",
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao aprovar o email. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao aprovar o email. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

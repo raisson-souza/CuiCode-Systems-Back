@@ -28,8 +28,13 @@ class ConfirmAccountRecoveyService extends ClientService
     {
         const email = this.REQ.query["email"]
 
-        if (IsUndNull(email))
-            ResponseMessage.SendNullField(["email"], this.Action, this.RES)
+        if (IsUndNull(email)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["email"],
+                log: this.Action
+            })
+        }
 
         return String(email)
     }
@@ -49,8 +54,12 @@ class ConfirmAccountRecoveyService extends ClientService
 
             const user = await this.QueryUserByEmail(email)
 
-            if (IsUndNull(user))
-                ResponseMessage.NotFoundUser(this.RES, Action)
+            if (IsUndNull(user)) {
+                ResponseMessage.NotFoundUser({
+                    expressResponse: this.RES,
+                    log: this.Action
+                })
+            }
 
             const accountHasPreviusRestorationProcess = await UserAccountRestorationRepository.ValidateCreation(
                 DB_connection,
@@ -60,12 +69,12 @@ class ConfirmAccountRecoveyService extends ClientService
             if (!accountHasPreviusRestorationProcess)
             {
                 const msg = "Já existe uma solicitação de restauração de conta ativa para este usuário.\nAguarde expirar ou conclua o processo."
-                ResponseMessage.Send(
-                    HttpStatusEnum.INVALID,
-                    msg,
-                    Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.INVALID,
+                    data: msg,
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
                 Exception.Error(msg, Action)
             }
 
@@ -85,21 +94,21 @@ class ConfirmAccountRecoveyService extends ClientService
 
             this.SendRestorationEmail(user!)
 
-            ResponseMessage.Send(
-                HttpStatusEnum.CREATED,
-                `Solicitação de restauração de conta criada com sucesso.`,
-                Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.CREATED,
+                data: `Solicitação de restauração de conta criada com sucesso.`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro solicitar restauração de conta. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro solicitar restauração de conta. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally

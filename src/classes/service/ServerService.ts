@@ -18,8 +18,12 @@ abstract class ServerService extends Service
 
         const encryptedKey = EncryptInfo(key)
 
-        if (encryptedKey != Env.SystemKey)
-            ResponseMessage.UnauthorizedSystem(this.RES, this.Action)
+        if (encryptedKey != Env.SystemKey) {
+            ResponseMessage.UnauthorizedSystem({
+                expressResponse: this.RES,
+                log: this.Action
+            })
+        }
 
         this.USER_auth = null
     }

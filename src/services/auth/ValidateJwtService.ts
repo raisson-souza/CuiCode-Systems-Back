@@ -12,6 +12,11 @@ import IsUndNull from "../../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
+type ValidateJwtResponse = {
+    ok : boolean,
+    user : User | null
+}
+
 /**
  * Realiza a validação de um token de usuário para permitir acesso a rotas privadas no front.
  */
@@ -25,8 +30,13 @@ class ValidateJwtService extends ClientService
     { 
         const jwt = this.REQ.query["jwt"]
 
-        if (IsUndNull(jwt))
-            ResponseMessage.SendNullField(["jwt"], this.Action, this.RES)
+        if (IsUndNull(jwt)) {
+            ResponseMessage.SendNullField({
+                expressResponse: this.RES,
+                fields: ["jwt"],
+                log: this.Action
+            })
+        }
 
         return jwt as string
     }
@@ -54,36 +64,36 @@ class ValidateJwtService extends ClientService
             }
             catch (ex)
             {
-                ResponseMessage.Send(
-                    HttpStatusEnum.INVALID,
-                    {
-                        "ok": false,
-                        "user": null
-                    },
-                    this.Action,
-                    this.RES
-                )
+                ResponseMessage.Send({
+                    status: HttpStatusEnum.INVALID,
+                    data: {
+                        ok: false,
+                        user: null
+                    } as ValidateJwtResponse,
+                    log: this.Action,
+                    expressResponse: this.RES
+                })
                 Exception.Error((ex as Error).message, this.Action)
             }
 
-            ResponseMessage.Send(
-                HttpStatusEnum.OK,
-                {
-                    "ok": true,
-                    "user": user
-                },
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.OK,
+                data: {
+                    ok: true,
+                    user: user
+                } as ValidateJwtResponse,
+                log: this.Action,
+                expressResponse: this.RES
+            })
         }
         catch (ex)
         {
-            ResponseMessage.Send(
-                HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                `Houve um erro ao validar o JWT. Erro: ${ (ex as Error).message }`,
-                this.Action,
-                this.RES
-            )
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: `Houve um erro ao validar o JWT. Erro: ${ (ex as Error).message }`,
+                log: this.Action,
+                expressResponse: this.RES
+            })
             Exception.UnexpectedError((ex as Error).message, this.Action)
         }
         finally
