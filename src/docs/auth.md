@@ -12,7 +12,19 @@ BODY =
 }
 ```
 
+**RETORNA:**
+```json
+"token": string
+"user": User
+```
+
 ## VALIDADOR DE JWT
 > POST
 
 URL = /validate_jwt?jwt={ JWT }
+
+**RETORNA:**
+```json
+"ok": boolean
+"user": User | null
+```
