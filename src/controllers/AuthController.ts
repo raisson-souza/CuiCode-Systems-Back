@@ -1,7 +1,10 @@
 import { Express } from "express"
 
-import LoginService from "../services/auth/LoginService"
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
+import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
+
+import LoginService from "../services/auth/LoginService"
+import UserAuthorizedModulesService from "../services/auth/UserAuthorizedModules"
 import ValidateJwtService from "../services/auth/ValidateJwtService"
 
 function AuthController(app : Express)
@@ -12,6 +15,10 @@ function AuthController(app : Express)
 
     app.get('/validate_jwt', OriginAuthMiddleware, async (req, res) => {
         await new ValidateJwtService(req, res).Operation()
+    })
+
+    app.get('/user_authorized_modules', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new UserAuthorizedModulesService(req, res).Operation()
     })
 }
 
