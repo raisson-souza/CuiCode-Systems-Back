@@ -6,6 +6,7 @@ import AdvancedUsersListService from "../services/user/CRUD/AdvancedUsersListSer
 import ApproveUserEmailService from "../services/user/services/email/ApproveUserEmailService"
 import ConfirmAccountRecoveyService from "../services/user/services/account/ConfirmAccountRecoveyService"
 import CreateUserService from "../services/user/CRUD/CreateUserService"
+import DailyInfoService from "../services/user/services/account/DailyInfoService"
 import GetUserLogsService from "../services/user/services/log/GetUserLogsService"
 import GetUserPhotoService from "../services/user/services/photo/GetUserPhotoService"
 import GetUserService from "../services/user/CRUD/GetUserService"
@@ -89,6 +90,10 @@ function UsersController(app : Express, upload : Multer)
 
     app.post('/user/account/recovery/restore_account', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
         await new AccountRecoveryService(req, res).Operation()
+    })
+
+    app.get('/user/daily_info', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new DailyInfoService(req, res).Operation()
     })
 }
 

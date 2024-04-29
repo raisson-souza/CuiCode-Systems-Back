@@ -286,3 +286,38 @@ BODY =
     "password_hint": { NOVA DICA DE SENHA }
 }
 ```
+
+### INFORMAÇÕES DIÁRIAS DO USUÁRIO
+> GET
+- Necessita autenticação.
+
+URL = /user/daily_info
+
+**RETORNA:**
+```json
+{
+    "groupsIncluded": [
+        {
+            "Id": 0,
+            "Name": "Nome do grupo",
+        }
+    ],
+    "mySolicitations": [
+        {
+            "Id": 0,
+            "Name": "Nome da solicitação",
+        }
+    ],
+    "myDelayedSolicitations": [
+        {
+            "Id": 0,
+            "Name": "Nome da solicitação",
+        }
+    ],
+    "userParticipatingChats": 1,
+    "userDreams": 1,
+    "hestiaTasksThisWeek": 1,
+    "hestiaTasksPending": 1,
+    "minervaOpenPlans": 1
+}
+```

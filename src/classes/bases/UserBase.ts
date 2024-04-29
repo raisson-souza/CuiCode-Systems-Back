@@ -9,6 +9,10 @@ import User from "../entities/user/User"
 import UserPhoto from "../entities/user/UserPhoto"
 
 import AnySearch from "../../interfaces/AnySearch"
+import {
+    GetUserCreatorModuleReferenceRegistries,
+    GetUserModuleReferenceRegistries
+} from "./UserBaseTypes"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
 
@@ -137,6 +141,160 @@ abstract class UserBase extends Base
 
                 return new User(result.rows[0])
             })
+    }
+
+    /**
+     * Captura os grupos que um usuário criou.
+     */
+    static async GetUserGroups
+    ({
+        db,
+        userId,
+        includeDeleted = false,
+        includeInactive = false
+    } : GetUserCreatorModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura os grupos que um usuário participa.
+     */
+    static async GetUserParticipatingGroups
+    ({
+        db,
+        userId,
+        includeDeleted = false,
+        includeInactive = false
+    } : GetUserCreatorModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura as solicitações que um usuário atende.
+     */
+    static async GetUserAttendantSolicitations
+    ({
+        db,
+        userId
+    } : GetUserModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura as solicitações em atendimento atreladas a um grupo que o usuário pertença.
+     */
+    static async GetUserByGroupAttendantSolicitations
+    ({
+        db,
+        userId,
+    } : GetUserModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura as solicitações que um usuário tenha criado.
+     */
+    static async GetUserSolicitations
+    ({
+        db,
+        userId,
+        includeDeleted = false,
+        includeInactive = false,
+    } : GetUserCreatorModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura os chats que um usuário tenha criado.
+     */
+    static async GetUserChats
+    ({
+        db,
+        userId,
+        includeDeleted = false,
+        includeInactive = false
+    } : GetUserCreatorModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura os chats que um usuário participa.
+     */
+    static async GetUserParticipatingChats
+    ({
+        db,
+        userId
+    } : GetUserModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura todos os sonhos criados por um usuário.
+     */
+    static async GetUserMorfeus
+    ({
+        db,
+        userId,
+        includeDeleted = false,
+        includeInactive = false
+    } : GetUserCreatorModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura todas as tarefas Hestia de um usuário.
+     */
+    static async GetUserHestia
+    ({
+        db,
+        userId,
+        includeDeleted = false,
+        includeInactive = false
+    } : GetUserCreatorModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
+    }
+
+    /**
+     * Captura todos os planos Minerva de um usuário.
+     */
+    static async GetUserMinerva
+    ({
+        db,
+        userId,
+        includeDeleted = false,
+        includeInactive = false
+    } : GetUserCreatorModuleReferenceRegistries)
+    {
+        // TODO: CRIAR QUERY
+
+        return []
     }
 }
 
