@@ -16,6 +16,10 @@ const allowed_origins = ENV === "production"
         "http://127.0.0.1:5000",
         "http://localhost:3001/", // DOMINIO TESTING FRONT ATUAL (PORIVSÓRIO)
         "http://localhost:3001", // DOMINIO TESTING FRONT ATUAL (PORIVSÓRIO)
+        "http://192.168.18.8:3001",
+        "http://192.168.18.8:3001/",
+        "http://192.168.18.14:3001/",
+        "http://192.168.18.14:3001",
         ]
 
 const Env = {
