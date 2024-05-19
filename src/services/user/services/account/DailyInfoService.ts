@@ -47,40 +47,44 @@ class DailyInfoService extends ClientService
 
             const myDelayedSolicitations : never[] = [] // MOCK
 
-            const userParticipatingChats = await UserBase.GetUserParticipatingChats({
-                db: this.DB_connection,
-                userId: this.USER_auth!.Id
-            })
+            // const userParticipatingChats = await UserBase.GetUserParticipatingChats({ // ARRUMAR ESSE E EOUTROS POIS RETORNA NUMBER OU PEGAR O LEN DELES
+            //     db: this.DB_connection,
+            //     userId: this.USER_auth!.Id
+            // })
 
-            const userDreams = await UserBase.GetUserMorfeus({
-                db: this.DB_connection,
-                userId: this.USER_auth!.Id
-            })
+            const userParticipatingChats = 0 // MOCK
+
+            // const userDreams = await UserBase.GetUserMorfeus({
+            //     db: this.DB_connection,
+            //     userId: this.USER_auth!.Id
+            // })
+
+            const userDreams = 0 // MOCK
 
             // const hestia = await UserBase.GetUserHestia({ // HestiaBase retornará especifico do usuario por data
             //     db: this.DB_connection,
             //     userId: this.USER_auth!.Id
             // })
 
-            const hestiaTasksThisWeek  : never[]= [] // MOCK
-            const hestiaTasksPending : never[] = [] // MOCK
+            const hestiaTasksThisWeek =  0 // MOCK
+            const hestiaTasksPending = 0 // MOCK
 
             // const minerva = await UserBase.GetUserMinerva({ // MinervaBase retornará planos não-concluidos por usuario
             //     db: this.DB_connection,
             //     userId: this.USER_auth!.Id
             // })
 
-            const minervaOpenPlans : never[] = [] // MOCK
+            const minervaOpenPlans = 0 // MOCK
 
-            const response = { // Realizar Map() de cada um retornar Id e Name (conforme documentação)
+            const response = { // Realizar Map() de cada um retornar Id e Name conforme documentação
                 groupsIncluded,
                 mySolicitations,
                 myDelayedSolicitations,
-                userParticipatingChats, // Quantidade
-                userDreams, // Quantidade
-                hestiaTasksThisWeek, // Quantidade
-                hestiaTasksPending, // Quantidade
-                minervaOpenPlans // Quantidade
+                userParticipatingChats,
+                userDreams,
+                hestiaTasksThisWeek,
+                hestiaTasksPending,
+                minervaOpenPlans
             }
 
             ResponseMessage.Send({
