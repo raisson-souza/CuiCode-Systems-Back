@@ -65,16 +65,15 @@ function UsersController(app : Express, upload : Multer)
     })
 
     app.route('/user/:user_id/photo')
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new GetUserPhotoService(req, res).Operation()
+        })
         .post(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
             await new RegistryUserPhotoService(req, res).Operation()
         })
         .put(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
             await new RegistryUserPhotoService(req, res).Operation()
         })
-
-    app.get('/user/:user_id/photo', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
-        await new GetUserPhotoService(req, res).Operation()
-    })
 
     app.put('/user/:user_id/password', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
         await new UpdateUserPasswordService(req, res).Operation()
