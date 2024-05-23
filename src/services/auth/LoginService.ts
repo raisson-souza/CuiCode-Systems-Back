@@ -1,6 +1,6 @@
 import { sign } from "jsonwebtoken"
 
-import Env from "../../config/Env"
+import env from "../../config/Env"
 
 import ClientService from "../../classes/service/ClientService"
 import Exception from "../../classes/custom/Exception"
@@ -64,7 +64,7 @@ class LoginService extends ClientService
                 {
                     UserAuthId: userDb.Id,
                 },
-                Env.JWT_key,
+                env.JwtSecret(),
                 { expiresIn: "3d" }
             )
 

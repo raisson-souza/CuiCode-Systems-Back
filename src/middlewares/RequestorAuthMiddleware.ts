@@ -5,7 +5,7 @@ import {
 } from "express"
 import { verify } from "jsonwebtoken"
 
-import Env from "../config/Env"
+import env from "../config/Env"
 
 import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"
@@ -84,7 +84,7 @@ function DecodeJwt
 {
     const decoded = verify(
         jwt,
-        Env.JWT_key
+        env.JwtSecret()
     ) as any
 
     const userAuthId = decoded["UserAuthId"] as string

@@ -1,4 +1,4 @@
-import Env from "../../config/Env"
+import env from "../../config/Env"
 
 import QueryUser from "../../services/user/utilities/QueryUser"
 
@@ -66,7 +66,7 @@ abstract class ServerClientService extends Service
     {
         const encryptedKey = EncryptInfo(systemKey)
 
-        if (encryptedKey != Env.SystemKey) {
+        if (encryptedKey != env.SystemJwt()) {
             ResponseMessage.UnauthorizedUser({
                 expressResponse: this.RES,
                 log: this.Action

@@ -1,4 +1,4 @@
-import Env from "../../config/Env"
+import env from "../../config/Env"
 
 import ResponseMessage from "../system/ResponseMessage"
 import Service from "./base/Service"
@@ -18,7 +18,7 @@ abstract class ServerService extends Service
 
         const encryptedKey = EncryptInfo(key)
 
-        if (encryptedKey != Env.SystemKey) {
+        if (encryptedKey != env.SystemJwt()) {
             ResponseMessage.UnauthorizedSystem({
                 expressResponse: this.RES,
                 log: this.Action

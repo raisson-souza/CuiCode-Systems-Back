@@ -1,6 +1,6 @@
 import { verify } from "jsonwebtoken"
 
-import Env from "../../config/Env"
+import env from "../../config/Env"
 
 import ClientService from "../../classes/service/ClientService"
 import Exception from "../../classes/custom/Exception"
@@ -52,7 +52,7 @@ class ValidateJwtService extends ClientService
 
             try
             {
-                const decoded = verify(jwt, Env.JWT_key) as any
+                const decoded = verify(jwt, env.JwtSecret()) as any
                 const userId = Number.parseInt(decoded["UserAuthId"] as string)
 
                 user = await UserBase.Get(this.DB_connection, userId)

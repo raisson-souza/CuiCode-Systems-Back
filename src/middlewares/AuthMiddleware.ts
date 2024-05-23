@@ -5,7 +5,7 @@ import {
 } from "express"
 import { verify } from "jsonwebtoken"
 
-import Env from "../config/Env"
+import env from "../config/Env"
 
 import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"
@@ -25,18 +25,14 @@ async function AuthMiddleware
 {
     try
     {
-        const {
-            Allowed_origins,
-        } = Env
-    
-        const cors = require("cors")({ origin: Allowed_origins })
+        const cors = require("cors")({ origin: env.AllowedOrigins() })
     
         if (
             (
                 req.header("Origin") ||
                 IsUndNull(req.header("Origin"))
             ) &&
-            !Allowed_origins.includes(req.header("Origin")!)
+            !env.AllowedOrigins().includes(req.header("Origin")!)
         )
         {
             const { authorization } = req.headers
@@ -50,7 +46,7 @@ async function AuthMiddleware
 
             const token = authorization!.split(" ")[1]!
 
-            const decoded = verify(token,  Env.JWT_key)
+            const decoded = verify(token,  env.JwtSecret())
             const id = (decoded as any)["id"]
             // Para a credencial do sistema é necessário enviar crua do front
             const systemKey = (decoded as any)["system_key"]

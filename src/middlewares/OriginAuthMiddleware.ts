@@ -3,8 +3,7 @@ import {
     Request,
     Response,
 } from "express"
-
-import Env from "../config/Env"
+import env from "../config/Env"
 
 import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"
@@ -24,21 +23,22 @@ async function OriginAuthMiddleware
 {
     try
     {
-        const {
-            Allowed_origins,
-            PostManTestingException
-        } = Env
+        const allowedOrigins = env.AllowedOrigins()
 
-        const cors = require("cors")({ origin: Allowed_origins })
+        const cors = require("cors")({
+            origin: allowedOrigins.length > 0
+                ? allowedOrigins
+                : '*'
+        })
 
         if (
             (
                 IsUndNull(req.header("Origin")) ||
-                !Allowed_origins.includes(req.header("Origin")!)
+                !allowedOrigins.includes(req.header("Origin")!)
             )
         )
         {
-            if (!PostManTestingException)
+            if (!env.PostManTestingException())
                 throw new Error("Origem de requisição não autorizada.")
         }
 

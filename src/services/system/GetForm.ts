@@ -1,5 +1,5 @@
 import CREATE_USER_FORM from "../../assets/fields/create_user.json"
-import Env from "../../config/Env"
+import env from "../../config/Env"
 import LOGIN_FORM from "../../assets/fields/login.json"
 import UPDATE_USER_FORM from "../../assets/fields/update_user.json"
 import UPDATE_USER_PASSWORD_FORM from "../../assets/fields/update_password.json"
@@ -95,7 +95,7 @@ class GetForm extends ServerService
                 Exception.Error(msg, this.Action)
             }
 
-            form.Endpoint = `${ Env.BackBase }${ form.Endpoint }`
+            form.Endpoint = `${ env.BackBaseUrl() }/${ form.Endpoint }`
 
             ResponseMessage.Send({
                 status: HttpStatusEnum.OK,

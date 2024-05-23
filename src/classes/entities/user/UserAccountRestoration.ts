@@ -1,7 +1,7 @@
 import { Client } from "pg"
 import { sign, verify } from "jsonwebtoken"
 
-import Env from "../../../config/Env"
+import env from "../../../config/Env"
 
 import EntityBasic from "../base/EntityBasic"
 import User from "./User"
@@ -83,7 +83,7 @@ class UserAccountRestoration extends EntityBasic implements IEntityWithForeignKe
         )
             return
 
-        const decoded = verify(jwt, Env.JWT_key, { ignoreExpiration: true })
+        const decoded = verify(jwt, env.JwtSecret(), { ignoreExpiration: true })
 
         const userId = (decoded as any)["user_id"]
         const userEmail = (decoded as any)["user_email"]
@@ -112,7 +112,7 @@ class UserAccountRestoration extends EntityBasic implements IEntityWithForeignKe
                 "user_id": this.UserId,
                 "user_email": this.UserEmail
             },
-            Env.JWT_key,
+            env.JwtSecret(),
             { expiresIn: "30m" }
         )
     }

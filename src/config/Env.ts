@@ -1,35 +1,77 @@
-import DATABASE from "./database_config.json"
+import AreNil from "../functions/logic/AreNil"
+import IsNil from "../functions/logic/IsNil"
 
-let ENV = "testing"
+import { EnvProps } from "../types/EnvProps"
 
-const allowed_origins = ENV === "production"
-    ?
-        [
-            "http://26.219.172.71:3000/", // ALTERAR PARA NOVO DOMINIO EM PRODUÇÃO
-            "http://26.219.172.71:3000" // ALTERAR PARA NOVO DOMINIO EM PRODUÇÃO
-        ]
-    :
-        [
-        "http://localhost:3000/",
-        "http://localhost:3000",
-        "http://127.0.0.1:5000/",
-        "http://127.0.0.1:5000",
-        "http://localhost:3001/", // DOMINIO TESTING FRONT ATUAL (PORIVSÓRIO)
-        "http://localhost:3001", // DOMINIO TESTING FRONT ATUAL (PORIVSÓRIO)
-        "http://192.168.18.8:3001",
-        "http://192.168.18.8:3001/",
-        "http://192.168.18.14:3001/",
-        "http://192.168.18.14:3001",
-        ]
+const env : EnvProps = {
+    Env: () => {
+        const _ = String(process.env["CUI_CODE_ENV"])
+        if (_ != "testing" && _ != "production") return "testing"
+        return _
+    },
+    BackBaseUrl: () => {
+        const _ = String(process.env["CUI_CODE_BACK_BASE_URL"])
+        if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_BACK_BASE_URL não configurada.")
+        return _
+    },
+    FrontBaseUrl: () => {
+        const _ = String(process.env["CUI_CODE_FRONT_BASE_URL"])
+        if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_FRONT_BASE_URL não configurada.")
+        return _
+    },
+    JwtSecret: () => {
+        const _ = String(process.env["CUI_CODE_JWT_SECRET"])
+        if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_JWT_SECRET não configurada.")
+        return _
+    },
+    AllowedOrigins: () => {
+        const _ = String(process.env["CUI_CODE_ALLOWED_ORIGINS"])
+        if (IsNil(_)) return []
+        const allowedOriginsList = _.split('@')
+        if (allowedOriginsList.length === 0) return []
+        const allowedOrigins : string[] = []
+        allowedOriginsList.forEach(origin => {
+            allowedOrigins.push(origin)
+            allowedOrigins.push(`${ origin }/`)
+        })
+        return allowedOrigins
+    },
+    SystemJwt: () => {
+        const _ = String(process.env["CUI_CODE_SYS_KEY"])
+        if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_SYS_KEY não configurada.")
+        return _
+    },
+    PostManTestingException: () => {
+        const _env = env.Env()
+        return _env === "testing"
+    },
+    DatabaseConfig : () => {
+        const user = String(process.env["CUI_CODE_DATABASE_CONFIG_USER"])
+        const host = String(process.env["CUI_CODE_DATABASE_CONFIG_HOST"])
+        const database = String(process.env["CUI_CODE_DATABASE_CONFIG_DATABASE"])
+        const password = String(process.env["CUI_CODE_DATABASE_CONFIG_PASSWORD"])
+        const port = String(process.env["CUI_CODE_DATABASE_CONFIG_PORT"])
 
-const Env = {
-    BackBase: ENV == "production" ? "http://26.219.172.71:3000" : "http://localhost:3000", // ALTERAR PARA NOVO DOMINIO EM PRODUÇÃO
-    FrontBase: ENV == "production" ? "http://26.219.172.71:8000" : "http://localhost:8000", // ALTERAR PARA NOVO DOMINIO EM PRODUÇÃO
-    JWT_key: "cui_code_systems_jwt_key_2223",
-    Allowed_origins: allowed_origins,
-    SystemKey: "6f83517d7035894c05c13ee3a48fd746", // cui_code_systems_admin_key
-    PostManTestingException: ENV != "production",
-    Database: DATABASE.DatabaseConfig,
+        if (AreNil({
+            params: [
+                user,
+                host,
+                database,
+                password,
+                password,
+                port,
+            ],
+            allNil: false
+        })) throw new Error("Uma ou mais variáveis de ambiente do banco configuradas incorretamente.")
+
+        return {
+            user,
+            host,
+            database,
+            password,
+            port,
+        }
+    },
 }
 
-export default Env
+export default env

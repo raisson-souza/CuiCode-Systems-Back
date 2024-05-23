@@ -1,12 +1,12 @@
 import { verify } from "jsonwebtoken"
 
-import Env from "../../config/Env"
+import env from "../../config/Env"
 
 function IsJwtExpired(token : string)
 {
     const decoded = verify(
         token,
-        Env.JWT_key,
+        env.JwtSecret(),
         { ignoreExpiration: true }
     )
 

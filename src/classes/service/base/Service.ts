@@ -1,7 +1,7 @@
 import { Client } from "pg"
 import { Request, Response } from "express"
 
-import Env from "../../../config/Env"
+import env from "../../../config/Env"
 
 import ResponseMessage from "../../system/ResponseMessage"
 import UserAuth from "../../entities/user/UserAuth"
@@ -31,7 +31,7 @@ abstract class Service implements IService
     {
         this.REQ = req
         this.RES = res
-        this.DB_connection = new Client(Env.Database)
+        this.DB_connection = new Client(env.DatabaseConfig() as any)
         this.PerformConnection()
     }
 
