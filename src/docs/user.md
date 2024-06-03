@@ -166,7 +166,7 @@ URL = /user/logs?userId={ ID DE USUÁRIO }&initialDate={ DATA }&finalDate={ DATA
 > GET
 - Necessita autenticação.
 
-URL = http://localhost:3000/user/{ ID DE USUÁRIO }/photo
+URL = /user/{ ID DE USUÁRIO }/photo
 
 **Retorna** um base 64 da foto do usuário.
 
@@ -174,7 +174,7 @@ URL = http://localhost:3000/user/{ ID DE USUÁRIO }/photo
 > POST | PUT
 - Necessita autenticação.
 
-URL = http://localhost:3000/user/{ ID DE USUÁRIO }/photo
+URL = /user/{ ID DE USUÁRIO }/photo
 
 BODY =
 ```
@@ -187,7 +187,7 @@ BODY =
 > GET
 - Necessita autenticação.
 
-URL = http://localhost:3000/users/list?FilterType={ INT }&VisualizationType={ INT }
+URL = /users/list?FilterType={ INT }&VisualizationType={ INT }
 
 **FilterType**  
 Usuário ativos.
@@ -251,7 +251,7 @@ QueoteWithoutPhoto = 6
 > PUT
 - Necessita autenticação.
 
-URL = http://localhost:3000/user/{ ID DE USUÁRIO }/password
+URL = /user/{ ID DE USUÁRIO }/password
 
 BODY =
 ```
@@ -266,18 +266,18 @@ BODY =
 ### VERIFICAÇÃO DE EMAIL
 > GET
 
-URL = http://localhost:3000/user/account/recovery/verify_email?email={ EMAIL }
+URL = /user/account/recovery/verify_email?email={ EMAIL }
 
 ### CONFIRMAÇÃO DE RECUPERAÇÃO DE CONTA
 > POST
 
-URL = http://localhost:3000/user/account/recovery/confirm_restoration?email={ EMAIL }
+URL = /user/account/recovery/confirm_restoration?email={ EMAIL }
 
 ### RESTAURAÇÃO DE CONTA
 > POST
 - Necessita autenticação.
 
-URL = http://localhost:3000/user/account/recovery/restore_account?jwt={ TOKEN }
+URL = /user/account/recovery/restore_account?jwt={ TOKEN }
 
 BODY =
 ```

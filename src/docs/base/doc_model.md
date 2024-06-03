@@ -1,11 +1,39 @@
 ## NOME DO ENDPOINT
-> METHOD
-// - Necessita autenticação.
+> METHOD | METHOD  
+> Necessita autenticação. [ remover caso não ]
 
-URL = http://localhost:3000/
+*URL =* /
 
-BODY =
-```
+**REQUEST**
+```json
 {
+}
+```
+
+**RESPONSE**
+```json
+{
+}
+```
+
+# EXEMPLO
+
+## OPERAÇÃO X
+> POST | PUT  
+> Necessita autenticação.
+
+*URL =* /x
+
+**REQUEST**
+```json
+{
+    "Teste": 0
+}
+```
+
+**RESPONSE**
+```json
+{
+    "Teste": 1
 }
 ```
