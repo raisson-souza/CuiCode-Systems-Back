@@ -1,6 +1,8 @@
 import express from "express"
 import multer from 'multer' 
 
+import Env from "./config/Env"
+
 import AuthController from "./controllers/AuthController"
 import FeaturesController from "./controllers/FeaturesController"
 import SystemController from "./controllers/SystemController"
@@ -41,8 +43,10 @@ UsersController({
     upload: upload
 })
 
-app.listen(3000, () => {
-    console.log("CuiCodeSystems SGPISG ouvindo na porta 3000.");
+const PORT = Env.Port()
+
+app.listen(PORT, () => {
+    console.log(`CuiCodeSystems SGPISG ouvindo na porta ${ PORT }.`);
 })
 
 Test()

@@ -3,7 +3,7 @@ import IsNil from "../functions/logic/IsNil"
 
 import { EnvProps } from "../types/EnvProps"
 
-const env : EnvProps = {
+const Env : EnvProps = {
     Env: () => {
         const _ = String(process.env["CUI_CODE_ENV"])
         if (_ != "testing" && _ != "production") return "testing"
@@ -17,6 +17,11 @@ const env : EnvProps = {
     FrontBaseUrl: () => {
         const _ = String(process.env["CUI_CODE_FRONT_BASE_URL"])
         if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_FRONT_BASE_URL não configurada.")
+        return _
+    },
+    Port: () => {
+        const _ = Number.parseInt(String(process.env["CUI_CODE_PORT"]))
+        if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_PORT não configurada.")
         return _
     },
     JwtSecret: () => {
@@ -42,7 +47,7 @@ const env : EnvProps = {
         return _
     },
     PostManTestingException: () => {
-        const _env = env.Env()
+        const _env = Env.Env()
         return _env === "testing"
     },
     DatabaseConfig : () => {
@@ -74,4 +79,4 @@ const env : EnvProps = {
     },
 }
 
-export default env
+export default Env
