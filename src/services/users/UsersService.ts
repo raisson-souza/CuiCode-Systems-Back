@@ -9,27 +9,27 @@ import ToSqlDate from "../../functions/SQL/ToSqlDate"
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
 
 import {
-    AdvancedUsersListProps,
-    CreateUserProps,
+    AdvancedListProps,
+    CreateProps,
     DailyInfoProps,
-    GetUserLogsProps,
-    GetUserPhotoProps,
-    GetUserProps,
-    InactivateUserProps,
-    ListUsersProps,
-    RegistryUserPhotoProps,
+    GetLogsProps,
+    GetPhotoProps,
+    GetProps,
+    InactivateProps,
+    ListProps,
+    RegistryPhotoProps,
     UpdatePasswordProps,
-    UpdateUserProps,
+    UpdateProps,
 } from "./types/UsersServiceProps"
 
 export default abstract class UsersService
 {
     /** Cria um usuário. */
-    static async CreateUser(createUserProps : CreateUserProps) : Promise<void>
+    static async Create(createProps : CreateProps) : Promise<void>
     {
-        const { user } = createUserProps
+        const { user } = createProps
 
-        await UsersValidator.ValidateCreation(user, createUserProps.Db.PostgresDb)
+        await UsersValidator.ValidateCreation(user, createProps.Db.PostgresDb)
 
         user.EncryptPassword()
 
@@ -65,7 +65,7 @@ export default abstract class UsersService
 
         query.trim()
 
-        await createUserProps.Db.PostgresDb.query(query)
+        await createProps.Db.PostgresDb.query(query)
             .then(() => {})
             .catch(ex => {
                 throw new Error(ex.message);
@@ -77,26 +77,26 @@ export default abstract class UsersService
     }
 
     /** Edita um usuário. */
-    static async UpdateUser(updateUserProps : UpdateUserProps) : Promise<User>
+    static async Update(updateProps : UpdateProps) : Promise<User>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Inativa um usuário. */
-    static async InactivateUser(inactivateUserProps : InactivateUserProps) : Promise<void>
+    static async Inactivate(inactivateProps : InactivateProps) : Promise<void>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Captura um usuário. */
-    static async GetUser(getUserProps : GetUserProps) : Promise<User>
+    static async Get(getProps : GetProps) : Promise<User>
     {
-        if (IsNil(getUserProps.userId))
+        if (IsNil(getProps.userId))
             throw new Error("Id de usuário não informado.")
 
-        const query = `SELECT * FROM users WHERE id = ${ getUserProps.userId }`
+        const query = `SELECT * FROM users WHERE id = ${ getProps.userId }`
         
-        return await getUserProps.Db.PostgresDb.query(query)
+        return await getProps.Db.PostgresDb.query(query)
             .then(result => {
                 if (result.rowCount === 0)
                     throw new Error("Nenhum usuário encontrado.")
@@ -107,25 +107,25 @@ export default abstract class UsersService
     }
 
     /** Captura a foto de um usuário. */
-    static async GetUserPhoto(getUserPhotoProps : GetUserPhotoProps) : Promise<string>
+    static async GetPhoto(getPhotoProps : GetPhotoProps) : Promise<string>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Registra a foto de um usuário. */
-    static async RegistryUserPhoto(registryUserPhotoProps : RegistryUserPhotoProps) : Promise<string>
+    static async RegistryPhoto(registryPhotoProps : RegistryPhotoProps) : Promise<string>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Lista usuários. */
-    static async ListUsers(listUsersProps : ListUsersProps) : Promise<User[]>
+    static async List(listProps : ListProps) : Promise<User[]>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Lista usuários de forma avançada. */
-    static async AdvancedUsersList(advancedUsersListProps : AdvancedUsersListProps) : Promise<User[]>
+    static async AdvancedList(advancedListProps : AdvancedListProps) : Promise<User[]>
     {
         throw new Error("Method not implemented.");
     }
@@ -137,7 +137,7 @@ export default abstract class UsersService
     }
 
     /** Captura os logs de um usuário. */
-    static async GetUserLogs(getUserLogsProps : GetUserLogsProps) : Promise<void>
+    static async GetLogs(getLogsProps : GetLogsProps) : Promise<void>
     {
         throw new Error("Method not implemented.");
     }

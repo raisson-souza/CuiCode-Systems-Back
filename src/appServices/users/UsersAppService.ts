@@ -20,7 +20,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             await this.Db.ConnectPostgres()
 
-            await UsersService.CreateUser({
+            await UsersService.Create({
                 Db: this.Db,
                 user: user
             })

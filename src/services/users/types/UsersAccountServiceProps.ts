@@ -14,7 +14,7 @@ type VerifyEmailProps = {
 
 } & DbProp
 
-type ApproveUserEmailProps = {
+type ApproveEmailProps = {
 
 } & DbProp
 
@@ -27,6 +27,6 @@ export type {
     AccountRecoveryProps,
     ConfirmAccountRecoveryProps,
     VerifyEmailProps,
-    ApproveUserEmailProps,
+    ApproveEmailProps,
     SendEmailApprovalProps,
 }

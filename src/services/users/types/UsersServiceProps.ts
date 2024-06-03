@@ -2,35 +2,35 @@ import User from "../../../classes/entities/user/User"
 
 import { DbProp } from "../../base/types/BaseServiceProps"
 
-export type CreateUserProps = {
+export type CreateProps = {
     user : User,
 } & DbProp
 
-export type UpdateUserProps = {
+export type UpdateProps = {
     user : User,
 } & DbProp
 
-export type InactivateUserProps = {
+export type InactivateProps = {
     userId : number,
 } & DbProp
 
-export type GetUserProps = {
+export type GetProps = {
     userId : number,
 } & DbProp
 
-export type GetUserPhotoProps = {
+export type GetPhotoProps = {
     userId : number,
 } & DbProp
 
-export type RegistryUserPhotoProps = {
+export type RegistryPhotoProps = {
     userId : number,
 } & DbProp
 
-export type ListUsersProps = {
+export type ListProps = {
 
 } & DbProp
 
-export type AdvancedUsersListProps = {
+export type AdvancedListProps = {
 
 } & DbProp
 
@@ -38,11 +38,15 @@ export type DailyInfoProps = {
     userId : number,
 } & DbProp
 
-export type GetUserLogsProps = {
+export type GetLogsProps = {
     userId : number,
 } & DbProp
 
 export type UpdatePasswordProps = {
     userId : number,
     newPassword : string,
+} & DbProp
+
+export type DeleteProps = {
+    userId : number,
 } & DbProp

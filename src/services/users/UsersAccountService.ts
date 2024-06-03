@@ -10,7 +10,7 @@ import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
 
 import {
     AccountRecoveryProps,
-    ApproveUserEmailProps,
+    ApproveEmailProps,
     ConfirmAccountRecoveryProps,
     SendEmailApprovalProps,
     VerifyEmailProps,
@@ -37,7 +37,7 @@ export default class UsersAccountService
     }
 
     /** Aprova o email de um usuário. */
-    static async ApproveUserEmail(approveUserEmailProps : ApproveUserEmailProps) : Promise<void>
+    static async ApproveEmail(approveEmailProps : ApproveEmailProps) : Promise<void>
     {
 
     }

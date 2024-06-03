@@ -52,7 +52,7 @@ export default abstract class AppServiceBase implements IAppService
             })
         }
 
-        const user = await UsersService.GetUser({
+        const user = await UsersService.Get({
             Db: this.Db,
             userId: userAuthId
         })
