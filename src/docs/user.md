@@ -72,9 +72,18 @@ URL = /user
 BODY =
 ```
 {
-    "Id": { ID DO USUÁRIO A SER EDITADO },
-    "{ PROPRIEDADE DE USUÁRIO }": "{ VALOR }",
-    { ... }
+	"Id": 1,
+	"Active": true,
+	"Deleted": false,
+	"BirthDate": "2000-01-01T02:00:00.000Z",
+	"Email": "email@gmail.com",
+	"Name": "Nome",
+	"PermissionLevel": 2,
+	"Phone": "(55) 55 9999-9999",
+	"PhotoBase64": null,
+	"RecoveryEmail": "email@email.recuperacao.com",
+	"Sex": 1,
+	"Username": "@username"
 }
 ```
 

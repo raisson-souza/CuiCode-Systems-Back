@@ -50,8 +50,11 @@ class SqlLabel
     /**
      * Converte o valor de um SQL para string em uma query baseado no seu tipo.
      */
-    static ParsePropNameToSql(valueType : string, value : string) : string
+    static ParsePropNameToSql(valueType : string, value : any) : string
     {
+        if (value instanceof Label)
+            return String(value.Value)
+
         switch (valueType)
         {
             case "string":

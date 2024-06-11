@@ -7,12 +7,15 @@ import UsersService from "../../services/users/UsersService"
 import IUsersAppService from "./IUsersAppService"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
+import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
+import { UpdateUserDTO } from "./base/types/UsersAppServiceProps"
+import ToBool from "../../functions/formatting/ToBool"
 
 export default class UsersAppService extends AppServiceBase implements IUsersAppService
 {
-    AppServiceAction = "Criação de usuário"
+    AppServiceAction = "AppService Usuários"
 
-    async CreateUser()
+    async CreateUser() // att doc
     {
         try
         {
@@ -53,9 +56,62 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         }
     }
 
-    UpdateUser()
+    async UpdateUser()
     {
-        throw new Error("Method not implemented.");
+        try
+        {
+            const userDto : UpdateUserDTO = {
+                Id: Number.parseInt(this.REQ.body["Id"]),
+                Active: ToBool(this.REQ.body["Active"]),
+                Deleted: ToBool(this.REQ.body["Deleted"]),
+                BirthDate: this.REQ.body["BirthDate"],
+                Email: this.REQ.body["Email"],
+                Name: this.REQ.body["Name"],
+                PermissionLevel: Number.parseInt(this.REQ.body["PermissionLevel"]),
+                Phone: this.REQ.body["Phone"],
+                PhotoBase64: this.REQ.body["PhotoBase64"],
+                RecoveryEmail: this.REQ.body["RecoveryEmail"],
+                Sex: Number.parseInt(this.REQ.body["Sex"]),
+                Username: this.REQ.body["Username"],
+            }
+
+            await this.Db.ConnectPostgres()
+
+            await this.AuthenticateUserRequestor()
+
+            this.ValidateUserRequestor({
+                allowDifferentUserAuthAndUserToOperate: true,
+                level: PermissionLevelEnum.Member,
+                userIdToOperate: userDto.Id
+            })
+
+            const newUser = await UsersService.Update({
+                Db: this.Db,
+                user: userDto,
+                updatedBy: this.UserAuth!.Id,
+                authUser: this.UserAuth!,
+            })
+
+            ResponseMessage.Send({
+                status: HttpStatusEnum.ACCEPTED,
+                data: `Usuário ${ newUser.GenerateUserKey() } editado com sucesso.`,
+                log: this.AppServiceAction,
+                expressResponse: this.RES
+            })
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                data: (ex as Error).message,
+                log: this.AppServiceAction,
+                expressResponse: this.RES
+            })
+        }
+        finally
+        {
+            await this.Db.DisconnectPostgres()
+        }
     }
 
     InactivateUser()

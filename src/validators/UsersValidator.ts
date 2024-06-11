@@ -6,6 +6,8 @@ import User from "../classes/entities/user/User"
 import IsUndNull from "../functions/logic/IsUndNull"
 
 import PermissionLevelEnum from "../enums/PermissionLevelEnum"
+import { UserUpdateValidatorProps } from "./types/UsersValidatorProps"
+import IsNil from "../functions/logic/IsNil"
 
 export default abstract class UsersValidator
 {
@@ -245,4 +247,93 @@ export default abstract class UsersValidator
     }
 
     static ValidateUserGroupCreationLimit(user : User) { } // TODO: transformar em service!
+
+    /**
+     * Valida a edição de um usuário baseado na diferença entre o usuário do banco e o novo.
+     * Necessita ser chamado antes da edição dos dados imutáveis.
+    */
+    static Update(updateProps : UserUpdateValidatorProps)
+    {
+        const {
+            dbUser,
+            newUser,
+            userAuth,
+            sameUserOperation
+        } = updateProps
+
+        if (!userAuth.IsAdm() && !sameUserOperation)
+            throw new Error("Você não tem permissão para editar outro usuário.")
+
+        if (userAuth.IsAdm() && dbUser.PermissionLevel!.Value === 4 && userAuth.PermissionLevel!.Value != 4)
+            throw new Error("Você não tem permissão para editar um usuário administrador ROOT.")
+
+        if (dbUser.Id != newUser.Id)
+            throw new Error("Id de usuário não pode ser editado.")
+
+        const authUserLevel = userAuth.PermissionLevel!.Value
+
+        if (!sameUserOperation)
+        {
+            // Caso edição de nível
+            if (dbUser.PermissionLevel!.Value != newUser.PermissionLevel!.Value)
+            {
+                // Caso upgrade de nível
+                if (newUser.PermissionLevel!.Value > dbUser.PermissionLevel!.Value)
+                {
+                    switch (authUserLevel)
+                    {
+                        case 3:
+                            // Caso authUser ADM tornando user GUEST
+                            if (newUser.PermissionLevel!.Value === 1)
+                                throw new Error("Você não pode tornar outro usuário um convidado.")
+                            // Caso authUser ADM tornando user ADM
+                            if (newUser.PermissionLevel!.Value === 3)
+                                throw new Error("Você não pode tornar outro usuário um administrador.")
+                            // Caso authUser ADM tornando user ROOT
+                            else if (newUser.PermissionLevel!.Value === 4)
+                                throw new Error("Você não pode tornar outro usuário um administrador ROOT.")
+                            break
+                        case 4:
+                            // Caso authUser ROOT tornando user ROOT
+                            if (newUser.PermissionLevel!.Value === 4)
+                                throw new Error("Você não pode tornar outro usuário um administrador ROOT.")
+                        default:
+                    }
+                }
+                // Caso downgrade de nível
+                else
+                {
+                    switch (authUserLevel)
+                    {
+                        case 3:
+                            // Caso authUser ADM tornando user GUEST
+                            if (newUser.PermissionLevel!.Value === 1)
+                                throw new Error("Você não pode tornar outro usuário um convidado.")
+                            // Caso authUser ADM tornando user MEMBER
+                            if (newUser.PermissionLevel!.Value === 2)
+                                throw new Error("Você não pode tornar alguém membro.")
+                            // Caso authUser ADM tornando user ADM
+                            if (newUser.PermissionLevel!.Value === 3)
+                                throw new Error("Você não pode tornar outro usuário um administrador.")
+                            // Caso authUser ADM tornando user ROOT
+                            else if (newUser.PermissionLevel!.Value === 4)
+                                throw new Error("Você não pode tornar outro usuário um administrador ROOT.")
+                            break
+                        case 4:
+                            // Caso authUser ROOT tornando user GUEST
+                            if (newUser.PermissionLevel!.Value === 1)
+                                throw new Error("Você não pode tornar outro usuário um convidado.")
+                            // Caso authUser ROOT tornando user ROOT
+                            if (newUser.PermissionLevel!.Value === 4)
+                                throw new Error("Você não pode tornar outro usuário um administrador ROOT.")
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (dbUser.PermissionLevel!.Value != newUser.PermissionLevel!.Value)
+                throw new Error("Você não pode editar o próprio nível.")
+        }
+    }
 }

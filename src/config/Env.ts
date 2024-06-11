@@ -51,11 +51,11 @@ const Env : EnvProps = {
         return _env === "testing"
     },
     DatabaseConfig : () => {
-        const user = String(process.env["CUI_CODE_DATABASE_CONFIG_USER"])
-        const host = String(process.env["CUI_CODE_DATABASE_CONFIG_HOST"])
-        const database = String(process.env["CUI_CODE_DATABASE_CONFIG_DATABASE"])
-        const password = String(process.env["CUI_CODE_DATABASE_CONFIG_PASSWORD"])
-        const port = String(process.env["CUI_CODE_DATABASE_CONFIG_PORT"])
+        const user = String(process.env["CUI_CODE_POSTGRES_DATABASE_CONFIG_USER"])
+        const host = String(process.env["CUI_CODE_POSTGRES_DATABASE_CONFIG_HOST"])
+        const database = String(process.env["CUI_CODE_POSTGRES_DATABASE_CONFIG_DATABASE"])
+        const password = String(process.env["CUI_CODE_POSTGRES_DATABASE_CONFIG_PASSWORD"])
+        const port = String(process.env["CUI_CODE_POSTGRES_DATABASE_CONFIG_PORT"])
 
         if (AreNil({
             params: [

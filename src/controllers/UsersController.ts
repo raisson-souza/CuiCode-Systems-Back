@@ -1,4 +1,5 @@
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
+import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
 
 import UsersAppService from "../appServices/users/UsersAppService"
 
@@ -11,5 +12,8 @@ export default function UsersController(controllerProps : ControllerProps)
     app.route("/user")
         .post(OriginAuthMiddleware, async (req, res) => {
             await new UsersAppService(req, res).CreateUser()
+        })
+        .put(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new UsersAppService(req, res).UpdateUser()
         })
 }

@@ -1,4 +1,6 @@
+import { UpdateUserDTO } from "../../../appServices/users/base/types/UsersAppServiceProps"
 import User from "../../../classes/entities/user/User"
+import UserAuth from "../../../classes/entities/user/UserAuth"
 
 import { DbProp } from "../../base/types/BaseServiceProps"
 
@@ -7,7 +9,9 @@ export type CreateProps = {
 } & DbProp
 
 export type UpdateProps = {
-    user : User,
+    user : UpdateUserDTO
+    updatedBy : number
+    authUser : UserAuth
 } & DbProp
 
 export type InactivateProps = {
@@ -49,4 +53,12 @@ export type UpdatePasswordProps = {
 
 export type DeleteProps = {
     userId : number,
+} & DbProp
+
+export type CreateLogProps = {
+    userId : number
+    oldUser : User
+    newUser : User
+    modifiedBy : number
+    isAdmChange : boolean
 } & DbProp
