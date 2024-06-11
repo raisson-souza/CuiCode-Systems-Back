@@ -19,38 +19,38 @@ import {
 export default class UsersAccountService
 {
     /** Recupera a conta de um usuário. */
-    static async AccountRecovery(accountRecoveryProps : AccountRecoveryProps) : Promise<void>
+    static async AccountRecovery(props : AccountRecoveryProps) : Promise<void>
     {
 
     }
 
     /** Confirma a recuperação de conta de um usuário. */
-    static async ConfirmAccountRecovery(confirmAccountRecoveryProps : ConfirmAccountRecoveryProps) : Promise<void>
+    static async ConfirmAccountRecovery(props : ConfirmAccountRecoveryProps) : Promise<void>
     {
 
     }
 
     /** Verifica o email de um usuário. */
-    static async VerifyEmail(verifyEmailProps : VerifyEmailProps) : Promise<void>
+    static async VerifyEmail(props : VerifyEmailProps) : Promise<void>
     {
 
     }
 
     /** Aprova o email de um usuário. */
-    static async ApproveEmail(approveEmailProps : ApproveEmailProps) : Promise<void>
+    static async ApproveEmail(props : ApproveEmailProps) : Promise<void>
     {
 
     }
 
     /** Envia aprovação de email. */
-    static async SendEmailApproval(sendEmailApprovalProps : SendEmailApprovalProps) : Promise<boolean>
+    static async SendEmailApproval(props : SendEmailApprovalProps) : Promise<boolean>
     {
-        const { isCreation, user } = sendEmailApprovalProps
+        const { isCreation, user } = props
 
         if (isCreation || IsNil(user.Id))
         {
             user.Id = await QueryDbRowByProperty(
-                sendEmailApprovalProps.Db.PostgresDb,
+                props.Db.PostgresDb,
                 "users",
                 "username",
                 user.Username,
@@ -84,7 +84,7 @@ export default class UsersAccountService
         const saudation = `Olá ${ user.Name }, ${ defineGreetingMessage() } a CuiCodeSystems!`
         const endpoint = `${ env.BackBaseUrl() }/email/approval?userId=${ user.Id }&email=${ user.Email }`
 
-        return await sendEmailApprovalProps.Db.PostgresDb.query(createEmailApprovalQuery)
+        return await props.Db.PostgresDb.query(createEmailApprovalQuery)
             .then(() => {
                 const emailBody = `${ saudation }\nAcesse esse link para aprovar seu email no sistema:\n${ endpoint }.`
 

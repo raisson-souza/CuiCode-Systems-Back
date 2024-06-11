@@ -33,11 +33,11 @@ import {
 export default abstract class UsersService
 {
     /** Cria um usuário. */
-    static async Create(createProps : CreateProps) : Promise<void>
+    static async Create(props : CreateProps) : Promise<void>
     {
-        const { user } = createProps
+        const { user } = props
 
-        await UsersValidator.ValidateCreation(user, createProps.Db.PostgresDb)
+        await UsersValidator.ValidateCreation(user, props.Db.PostgresDb)
 
         user.EncryptPassword()
 
@@ -73,7 +73,7 @@ export default abstract class UsersService
 
         query.trim()
 
-        await createProps.Db.PostgresDb.query(query)
+        await props.Db.PostgresDb.query(query)
             .then(() => {})
             .catch(ex => {
                 throw new Error(ex.message);
@@ -227,20 +227,20 @@ export default abstract class UsersService
     }
 
     /** Inativa um usuário. */
-    static async Inactivate(inactivateProps : InactivateProps) : Promise<void>
+    static async Inactivate(props : InactivateProps) : Promise<void>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Captura um usuário. */
-    static async Get(getProps : GetProps) : Promise<User>
+    static async Get(props : GetProps) : Promise<User>
     {
-        if (IsNil(getProps.userId))
+        if (IsNil(props.userId))
             throw new Error("Id de usuário não informado.")
 
-        const query = `SELECT * FROM users WHERE id = ${ getProps.userId }`
+        const query = `SELECT * FROM users WHERE id = ${ props.userId }`
         
-        return await getProps.Db.PostgresDb.query(query)
+        return await props.Db.PostgresDb.query(query)
             .then(result => {
                 if (result.rowCount === 0)
                     throw new Error("Nenhum usuário encontrado.")
@@ -251,51 +251,51 @@ export default abstract class UsersService
     }
 
     /** Captura a foto de um usuário. */
-    static async GetPhoto(getPhotoProps : GetPhotoProps) : Promise<string>
+    static async GetPhoto(props : GetPhotoProps) : Promise<string>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Registra a foto de um usuário. */
-    static async RegistryPhoto(registryPhotoProps : RegistryPhotoProps) : Promise<string>
+    static async RegistryPhoto(props : RegistryPhotoProps) : Promise<string>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Lista usuários. */
-    static async List(listProps : ListProps) : Promise<User[]>
+    static async List(props : ListProps) : Promise<User[]>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Lista usuários de forma avançada. */
-    static async AdvancedList(advancedListProps : AdvancedListProps) : Promise<User[]>
+    static async AdvancedList(props : AdvancedListProps) : Promise<User[]>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Captura informações diárias de um usuário. */
-    static async DailyInfo(dailyInfoProps : DailyInfoProps) : Promise<void>
+    static async DailyInfo(props : DailyInfoProps) : Promise<void>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Captura os logs de um usuário. */
-    static async GetLogs(getLogsProps : GetLogsProps) : Promise<void>
+    static async GetLogs(props : GetLogsProps) : Promise<void>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Atualiza a senha de um usuário. */
-    static async UpdatePassword(updatePasswordProps : UpdatePasswordProps) : Promise<void>
+    static async UpdatePassword(props : UpdatePasswordProps) : Promise<void>
     {
         throw new Error("Method not implemented.");
     }
 
     /** Grava log de modificação de usuário. Retorna o ID do log gerado. */
-    static async UpdateLog(createLogProps : CreateLogProps) : Promise<number>
+    static async UpdateLog(props : CreateLogProps) : Promise<number>
     {
-        const { userId, oldUser, newUser, isAdmChange, modifiedBy } = createLogProps
+        const { userId, oldUser, newUser, isAdmChange, modifiedBy } = props
 
         type UserLog = {
             [ key : string ] : string[] | number[] | boolean[] | Date[] | null
@@ -339,7 +339,7 @@ export default abstract class UsersService
 
         let query = `INSERT INTO users_logs ("user_id", "change", "adm_change", "modified_by") VALUES (${ userId }, '${ StringifyJSON(userLog) }', '${ isAdmChange }', '${ modifiedBy }') RETURNING id`
 
-        return await createLogProps.Db.PostgresDb.query(query)
+        return await props.Db.PostgresDb.query(query)
             .then(result => {
                 return Number.parseInt(FindValue(result.rows[0], ["id"]))
             })

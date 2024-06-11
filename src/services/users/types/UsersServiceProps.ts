@@ -5,7 +5,7 @@ import UserAuth from "../../../classes/entities/user/UserAuth"
 import { DbProp } from "../../base/types/BaseServiceProps"
 
 export type CreateProps = {
-    user : User,
+    user : User
 } & DbProp
 
 export type UpdateProps = {
@@ -15,19 +15,19 @@ export type UpdateProps = {
 } & DbProp
 
 export type InactivateProps = {
-    userId : number,
+    userId : number
 } & DbProp
 
 export type GetProps = {
-    userId : number,
+    userId : number
 } & DbProp
 
 export type GetPhotoProps = {
-    userId : number,
+    userId : number
 } & DbProp
 
 export type RegistryPhotoProps = {
-    userId : number,
+    userId : number
 } & DbProp
 
 export type ListProps = {
@@ -39,20 +39,20 @@ export type AdvancedListProps = {
 } & DbProp
 
 export type DailyInfoProps = {
-    userId : number,
+    userId : number
 } & DbProp
 
 export type GetLogsProps = {
-    userId : number,
+    userId : number
 } & DbProp
 
 export type UpdatePasswordProps = {
-    userId : number,
-    newPassword : string,
+    userId : number
+    newPassword : string
 } & DbProp
 
 export type DeleteProps = {
-    userId : number,
+    userId : number
 } & DbProp
 
 export type CreateLogProps = {

@@ -19,7 +19,7 @@ type ApproveEmailProps = {
 } & DbProp
 
 type SendEmailApprovalProps = {
-    isCreation : boolean,
+    isCreation : boolean
     user : User
 } & DbProp
 
