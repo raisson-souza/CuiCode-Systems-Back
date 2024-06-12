@@ -15,7 +15,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 {
     AppServiceAction = "AppService Usuários"
 
-    async CreateUser() // att doc
+    async CreateUser()
     {
         try
         {
