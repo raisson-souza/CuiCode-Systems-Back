@@ -6,29 +6,30 @@ abstract class Exception
 {
     private static async SaveLog(errorMessage : string, action : string)
     {
-        const date = GetCompleteDate()
-        const dirPath = `./src/logs/${ date.year }/${ date.month }/${ date.day }/`
+        // TODO: REAJUSTAR (retornar ao original)
+        // const date = GetCompleteDate()
+        // const dirPath = `./src/logs/${ date.year }/${ date.month }/${ date.day }/`
 
-        try
-        {
-            fs.lstat(dirPath)
-        }
-        catch
-        {
-            fs.mkdir(dirPath, { recursive: true })
-        }
+        // try
+        // {
+        //     fs.lstat(dirPath)
+        // }
+        // catch
+        // {
+        //     fs.mkdir(dirPath, { recursive: true })
+        // }
 
-        const log = `${ date.completeDate } | ${ action } | ${ errorMessage } \n`
+        // const log = `${ date.completeDate } | ${ action } | ${ errorMessage } \n`
 
-        try
-        {
-            fs.writeFile(
-                `${ dirPath }/error_log.txt`,
-                log,
-                { flag: 'a' }
-            )
-        }
-        catch { }
+        // try
+        // {
+        //     fs.writeFile(
+        //         `${ dirPath }/error_log.txt`,
+        //         log,
+        //         { flag: 'a' }
+        //     )
+        // }
+        // catch { }
     }
 
     static Error(
