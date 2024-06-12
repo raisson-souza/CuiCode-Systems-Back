@@ -1,24 +1,34 @@
 import fs from 'fs/promises'
 
-import FormatZeros from '../../functions/formatting/FormatZeros'
-import GetDate from '../../functions/GetDate'
+import GetCompleteDate from '../../functions/date/GetCompleteDate'
 
 abstract class Exception
 {
     private static async SaveLog(errorMessage : string, action : string)
     {
-        const date = GetDate()
-        const fileName = `./src/logs/${ TodayDate() }_error_log.txt`
-        const log = `${ date } | ${ action } | ${ errorMessage } \n`
+        const date = GetCompleteDate()
+        const dirPath = `./src/logs/${ date.year }/${ date.month }/${ date.day }/`
 
         try
         {
-            await fs.writeFile(fileName, log, { flag: 'a' })
+            fs.lstat(dirPath)
         }
-        catch (ex)
+        catch
         {
-            console.log(ex)
+            fs.mkdir(dirPath, { recursive: true })
         }
+
+        const log = `${ date.completeDate } | ${ action } | ${ errorMessage } \n`
+
+        try
+        {
+            fs.writeFile(
+                `${ dirPath }/error_log.txt`,
+                log,
+                { flag: 'a' }
+            )
+        }
+        catch { }
     }
 
     static Error(
@@ -31,16 +41,6 @@ abstract class Exception
     }
 
     static UnexpectedError(msg : string, action : string) { this.SaveLog(msg, action) }
-}
-
-function TodayDate()
-{
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = (date.getMonth() + 1)
-    const day = date.getDate()
-
-    return `${ FormatZeros(day, 2) }-${ FormatZeros(month, 2) }-${ year }`
 }
 
 export default Exception
