@@ -4,16 +4,7 @@
 > GET
 - Necessita autenticação.
 
-URL = /user?UserId={ ID DE USUÁRIO }  
-URL = /user?UserId={ ID DE USUÁRIO }&SystemQueryLevel={ NÚMERO }
-
-- Captura todos os dados do usuário:
-    - Sistema em query 1;
-    - Usuário ADMIN ou ROOT;
-    - Usuário autenticado igual ao id procurado.
-- Captura dados não sensíveis:
-    - Sistema em query 2;
-    - Qualquer usuário.
+URL = /user?id={ ID DE USUÁRIO }  
 
 **RETORNA:**
 ```json

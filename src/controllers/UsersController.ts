@@ -10,6 +10,9 @@ export default function UsersController(controllerProps : ControllerProps)
     const { app } = controllerProps
 
     app.route("/user")
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new UsersAppService(req, res).GetUser()
+        })
         .post(OriginAuthMiddleware, async (req, res) => {
             await new UsersAppService(req, res).CreateUser()
         })

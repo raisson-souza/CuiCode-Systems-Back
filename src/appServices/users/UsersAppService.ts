@@ -6,9 +6,12 @@ import UsersService from "../../services/users/UsersService"
 
 import IUsersAppService from "./IUsersAppService"
 
+import { UpdateUserDTO } from "./base/types/UsersAppServiceProps"
+
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
-import { UpdateUserDTO } from "./base/types/UsersAppServiceProps"
+
+import IsNil from "../../functions/logic/IsNil"
 import ToBool from "../../functions/formatting/ToBool"
 
 export default class UsersAppService extends AppServiceBase implements IUsersAppService
@@ -119,9 +122,45 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         throw new Error("Method not implemented.");
     }
 
-    GetUser()
+    async GetUser()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } / Captura de usuário`
+        try
+        {
+            const userId = Number.parseInt(this.REQ.query.id as string)
+
+            if (IsNil(userId))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["id"],
+                    log: ACTION
+                })
+            }
+
+            await this.Db.ConnectPostgres()
+
+            const user = await UsersService.Get({
+                Db: this.Db,
+                userId: userId
+            })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: user,
+                status: HttpStatusEnum.OK,
+                log: ACTION
+            })
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                log: ACTION
+            })
+        }
     }
 
     GetUserPhoto()
