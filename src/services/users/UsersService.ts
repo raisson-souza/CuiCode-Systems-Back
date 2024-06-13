@@ -14,6 +14,7 @@ import ToSqlDate from "../../functions/SQL/ToSqlDate"
 import AnySearch from "../../interfaces/AnySearch"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
+import UsersVisualizationEnum from "../../enums/modules/UsersVisualizationEnum"
 
 import {
     AdvancedListProps,
@@ -233,14 +234,44 @@ export default abstract class UsersService
     }
 
     /** Captura um usuário. */
-    static async Get(props : GetProps) : Promise<User>
+    static async Get({
+        Db,
+        userId,
+        visualizationEnum = UsersVisualizationEnum.All
+    } : GetProps) : Promise<User>
     {
-        if (IsNil(props.userId))
+        if (IsNil(userId))
             throw new Error("Id de usuário não informado.")
 
-        const query = `SELECT * FROM users WHERE id = ${ props.userId }`
-        
-        return await props.Db.PostgresDb.query(query)
+        let query = "SELECT u.id, u.created, u.permission_level, u.username, u.active,"
+
+        switch (visualizationEnum)
+        {
+            case UsersVisualizationEnum.All:
+                query += " u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
+                break
+            case UsersVisualizationEnum.AllNoPhoto:
+                query += " u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex FROM users u"
+                break
+            case UsersVisualizationEnum.Resume:
+                query += " u.birthdate, u.email, u.modified, u.name, u.phone, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
+                break
+            case UsersVisualizationEnum.ResumeNoPhoto:
+                query += "  u.birthdate, u.email, u.modified, u.name, u.phone, u.sex FROM users u"
+                break
+            case UsersVisualizationEnum.Queote:
+                query += " u.modified, u.name, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
+                break
+            case UsersVisualizationEnum.QueoteNoPhoto:
+                query += " u.modified, u.name, u.sex FROM users u"
+                break
+            default:
+                query += " FROM users u"
+        }
+
+        query += ` WHERE u.id = ${ userId }`
+
+        return await Db.PostgresDb.query(query)
             .then(result => {
                 if (result.rowCount === 0)
                     throw new Error("Nenhum usuário encontrado.")

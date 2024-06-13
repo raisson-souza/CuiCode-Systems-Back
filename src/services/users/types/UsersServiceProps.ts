@@ -2,6 +2,8 @@ import { UpdateUserDTO } from "../../../appServices/users/base/types/UsersAppSer
 import User from "../../../classes/entities/user/User"
 import UserAuth from "../../../classes/entities/user/UserAuth"
 
+import UsersVisualizationEnum from "../../../enums/modules/UsersVisualizationEnum"
+
 import { DbProp } from "../../base/types/BaseServiceProps"
 
 export type CreateProps = {
@@ -20,6 +22,7 @@ export type InactivateProps = {
 
 export type GetProps = {
     userId : number
+    visualizationEnum? : UsersVisualizationEnum
 } & DbProp
 
 export type GetPhotoProps = {

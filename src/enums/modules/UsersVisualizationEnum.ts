@@ -1,34 +1,34 @@
 enum UsersVisualizationEnum
 {
     /**
-     * Captura todas as informações de um usuário (sem foto).
+     * Captura todas as informações de um usuário com foto.
      */
-    Absolute = 1,
+    All = 1,
 
     /**
-     * Captura foto e informações gerais.
+     * Captura todas as informações de um usuário sem foto.
      */
-    Presentation = 2,
+    AllNoPhoto = 2,
 
     /**
-     * Captura informações gerais.
+     * Captura informações gerais com foto.
      */
-    List = 3,
+    Resume = 3,
 
     /**
-     * Captura informações básicas.
+     * Captura informações gerais sem foto.
      */
-    Resume = 4,
+    ResumeNoPhoto = 4,
 
     /**
-     * Captura foto e chave de identificação.
+     * Captura chave de identificação com foto.
      */
     Queote = 5,
 
     /**
-     * Captura chave de identificação.
+     * Captura chave de identificação sem foto.
      */
-    QueoteWithoutPhoto = 6,
+    QueoteNoPhoto = 6,
 }
 
 export default UsersVisualizationEnum
