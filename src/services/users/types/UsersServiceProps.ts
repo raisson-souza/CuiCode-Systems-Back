@@ -2,6 +2,7 @@ import { UpdateUserDTO } from "../../../appServices/users/base/types/UsersAppSer
 import User from "../../../classes/entities/user/User"
 import UserAuth from "../../../classes/entities/user/UserAuth"
 
+import UsersFilterEnum from "../../../enums/modules/UsersFilterEnum"
 import UsersVisualizationEnum from "../../../enums/modules/UsersVisualizationEnum"
 
 import { DbProp } from "../../base/types/BaseServiceProps"
@@ -34,7 +35,9 @@ export type RegistryPhotoProps = {
 } & DbProp
 
 export type ListProps = {
-
+    filterEnum? : UsersFilterEnum
+    visualizationEnum? : UsersVisualizationEnum
+    pagination? : Pagination
 } & DbProp
 
 export type AdvancedListProps = {
@@ -65,3 +68,15 @@ export type CreateLogProps = {
     modifiedBy : number
     isAdmChange : boolean
 } & DbProp
+
+export type ListReturn = {
+    data : User[]
+    pagination : Pagination
+}
+
+// PRIVATE TYPES
+
+type Pagination = {
+    limit : number 
+    records? : number
+}

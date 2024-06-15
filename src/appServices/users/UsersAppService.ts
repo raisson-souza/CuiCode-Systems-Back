@@ -13,6 +13,8 @@ import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 
 import IsNil from "../../functions/logic/IsNil"
 import ToBool from "../../functions/formatting/ToBool"
+import UsersFilterEnumParser from "../../functions/enums/UsersFilterEnumParser"
+import UsersVisualizationEnumParser from "../../functions/enums/UsersVisualizationEnumParser"
 
 export default class UsersAppService extends AppServiceBase implements IUsersAppService
 {
@@ -138,6 +140,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 })
             }
 
+            await this.AuthenticateUserRequestor()
+
             await this.Db.ConnectPostgres()
 
             const user = await UsersService.Get({
@@ -173,14 +177,54 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         throw new Error("Method not implemented.");
     }
 
-    ListUsers()
+    async ListUsers()
     {
-        throw new Error("Method not implemented.");
-    }
+        const ACTION = `${ this.AppServiceAction } / Listagem de usuários`
+        try
+        {
+            const visualizationEnum = UsersVisualizationEnumParser(Number.parseInt(this.REQ.query["visualization"] as string))
+            const filterEnum = UsersFilterEnumParser(Number.parseInt(this.REQ.query["filter"] as string))
+            const limit = Number.parseInt(this.REQ.query["limit"] as string)
 
-    AdvancedUsersList()
-    {
-        throw new Error("Method not implemented.");
+            if (IsNil(visualizationEnum) || IsNil(filterEnum) || IsNil(limit))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["visualization", "filter", "limit"],
+                    log: ACTION
+                })
+            }
+
+            this.AuthenticateSystemRequestor()
+
+            await this.Db.ConnectPostgres()
+
+            const dataPagination = await UsersService.List({
+                Db: this.Db,
+                filterEnum: filterEnum,
+                visualizationEnum: visualizationEnum,
+                pagination: {
+                    limit: limit
+                }
+            })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: dataPagination,
+                status: HttpStatusEnum.OK,
+                dataPropToCount: "data",
+                log: ACTION
+            })
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+                log: ACTION
+            })
+        }
     }
 
     DailyInfo()

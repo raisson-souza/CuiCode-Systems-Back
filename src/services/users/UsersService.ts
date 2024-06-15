@@ -14,10 +14,10 @@ import ToSqlDate from "../../functions/SQL/ToSqlDate"
 import AnySearch from "../../interfaces/AnySearch"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
+import UsersFilterEnum from "../../enums/modules/UsersFilterEnum"
 import UsersVisualizationEnum from "../../enums/modules/UsersVisualizationEnum"
 
 import {
-    AdvancedListProps,
     CreateLogProps,
     CreateProps,
     DailyInfoProps,
@@ -26,6 +26,7 @@ import {
     GetProps,
     InactivateProps,
     ListProps,
+    ListReturn,
     RegistryPhotoProps,
     UpdatePasswordProps,
     UpdateProps,
@@ -245,7 +246,7 @@ export default abstract class UsersService
 
         let query = "SELECT u.id, u.created, u.permission_level, u.username, u.active,"
 
-        switch (visualizationEnum)
+        switch (visualizationEnum) // TODO: TROCAR SWITCH POR this.buildVisualizationQuery(visualizationEnum)
         {
             case UsersVisualizationEnum.All:
                 query += " u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
@@ -294,15 +295,93 @@ export default abstract class UsersService
     }
 
     /** Lista usuários. */
-    static async List(props : ListProps) : Promise<User[]>
+    static async List({
+        Db,
+        filterEnum = UsersFilterEnum.NoFilter,
+        visualizationEnum = UsersVisualizationEnum.All,
+        pagination = {
+            limit: 20
+        }
+    } : ListProps) : Promise<ListReturn>
     {
-        throw new Error("Method not implemented.");
-    }
+        let query = `SELECT u.id, u.created, u.permission_level, u.username, u.deleted, u.active, ${ this.buildVisualizationQuery(visualizationEnum) } WHERE`
 
-    /** Lista usuários de forma avançada. */
-    static async AdvancedList(props : AdvancedListProps) : Promise<User[]>
-    {
-        throw new Error("Method not implemented.");
+        switch (filterEnum)
+        {
+            case UsersFilterEnum.NoFilter:
+                query = query.replace(' WHERE', '')
+                break
+            case UsersFilterEnum.AllActive:
+                query += " u.active IS TRUE"
+                break
+            case UsersFilterEnum.AllDeleted:
+                query += " u.deleted IS TRUE"
+                break
+            case UsersFilterEnum.AllInactive:
+                query += " u.active IS FALSE"
+                break
+            case UsersFilterEnum.AllEmailApproved:
+                query += " u.email_approved IS TRUE"
+                break
+            case UsersFilterEnum.AllEmailUnnaproved:
+                query += " u.email_approved IS FALSE"
+                break
+            case UsersFilterEnum.AllMonthBirthdays:
+                query += " extract(MONTH FROM u.birthdate) = extract(MONTH FROM CURRENT_DATE)"
+                break
+            case UsersFilterEnum.AllAdms:
+                query += " permission_level IN (3, 4)"
+                break
+            case UsersFilterEnum.AllMembers:
+                query += " permission_level = 2"
+                break
+            case UsersFilterEnum.AllWithPhoto:
+                if (
+                    visualizationEnum === UsersVisualizationEnum.All ||
+                    visualizationEnum === UsersVisualizationEnum.Resume ||
+                    visualizationEnum === UsersVisualizationEnum.Queote
+                )
+                    query += " up.photo_base_64 IS NOT NULL"
+                break
+            case UsersFilterEnum.AllWithoutPhoto:
+                if (
+                    visualizationEnum === UsersVisualizationEnum.All ||
+                    visualizationEnum === UsersVisualizationEnum.Resume ||
+                    visualizationEnum === UsersVisualizationEnum.Queote
+                )
+                    query += " up.photo_base_64 IS NULL"
+                break
+            case UsersFilterEnum.AllWomen:
+                query += " sex = 2"
+                break
+            case UsersFilterEnum.AllMen:
+                query += " sex = 2"
+                break
+            default:
+                query += ""
+        }
+
+        query += ` LIMIT ${ pagination.limit }`
+
+        return await Db.PostgresDb.query(query)
+            .then(result => {
+                const dataPagination : ListReturn = {
+                    data: [],
+                    pagination: {
+                        records: result.rowCount,
+                        limit: pagination.limit
+                    }
+                }
+
+                result.rows.map(row => {
+                    dataPagination.data.push(new User(row))
+                })
+
+                return dataPagination
+            })
+            .catch(ex => {
+                throw new Error(ex.message)
+            })
     }
 
     /** Captura informações diárias de um usuário. */
@@ -377,5 +456,27 @@ export default abstract class UsersService
             .catch(ex => {
                 throw new Error(ex.message)
             })
+    }
+
+    /** Contrutor de query com filtro de visualização (aproveitamento de código para Get e List). */
+    private static buildVisualizationQuery(visualizationEnum : UsersVisualizationEnum = UsersVisualizationEnum.All) : string
+    {
+        switch (visualizationEnum)
+        {
+            case UsersVisualizationEnum.All:
+                return "u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
+            case UsersVisualizationEnum.AllNoPhoto:
+                return "u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex FROM users u"
+            case UsersVisualizationEnum.Resume:
+                return "u.birthdate, u.email, u.modified, u.name, u.phone, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
+            case UsersVisualizationEnum.ResumeNoPhoto:
+                return " u.birthdate, u.email, u.modified, u.name, u.phone, u.sex FROM users u"
+            case UsersVisualizationEnum.Queote:
+                return "u.modified, u.name, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
+            case UsersVisualizationEnum.QueoteNoPhoto:
+                return "u.modified, u.name, u.sex FROM users u"
+            default:
+                return "FROM users u"
+        }
     }
 }

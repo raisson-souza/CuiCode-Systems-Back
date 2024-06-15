@@ -15,8 +15,6 @@ export default interface IUsersAppService
     RegistryUserPhoto() : void
     /** Listagem de usuários. */
     ListUsers() : void
-    /** Listagem de usuários avançada. */
-    AdvancedUsersList() : void
     /** Captura de informações diárias do usuário. */
     DailyInfo() : void
     /** Captura dos logs do usuário. */

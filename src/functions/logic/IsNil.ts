@@ -12,6 +12,9 @@ function IsNil(param : any) : boolean
             return true
     }
 
+    if (Number.isNaN(param))
+        return true
+
     return false
 }
 

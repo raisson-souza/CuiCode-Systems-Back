@@ -1,8 +1,8 @@
 ## NOME DO ENDPOINT
 > METHOD | METHOD  
-> Necessita autenticação. [ remover caso não ]
+> Necessita autenticação. [ SISTEMA / USUARIO ] [ remover caso não ]
 
-*URL =* /
+*URL = /*
 
 **REQUEST**
 ```json

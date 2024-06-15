@@ -1,6 +1,11 @@
 enum UsersFilterEnum
 {
     /**
+     * Nenhum filtro
+     */
+    NoFilter = 0,
+
+    /**
      * Usuário ativos.
      */
     AllActive = 1,

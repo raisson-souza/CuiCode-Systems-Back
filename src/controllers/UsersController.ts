@@ -19,4 +19,9 @@ export default function UsersController(controllerProps : ControllerProps)
         .put(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
             await new UsersAppService(req, res).UpdateUser()
         })
+
+    app.route("/users")
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new UsersAppService(req, res).ListUsers()
+        })
 }

@@ -80,26 +80,19 @@ BODY =
 
 ## LIST
 > GET
-- Necessita autenticação.
+> Necessita autenticação (sistema).
 
-URL = /users?RequiredInfo=["{ PROPRIEDADE DE USUÁRIO }", { ... }]
+*URL = /users?visualization=[ UsersVisualizationEnum ]&filter=[ UsersFilterEnum ]&limit=[ number ]*
 
-- É necessário que as propriedades estejam no formato SQL.
-
-**RETORNA:**
+**RESPONSE**
 ```json
-[
-    {
-        "id": 19,
-        "username": "@Fulano",
-        "email": "fulano@gmail.com"
-    },
-    {
-        "id": 20,
-        "username": "@Ciclano",
-        "email": "ciclano@gmail.com"
+{
+    "data": User[],
+    "pagination": {
+        "records": 0,
+        "limit": 20
     }
-]
+}
 ```
 
 ## APROVAÇÃO DE EMAIL
@@ -182,70 +175,6 @@ BODY =
     "photo": { BASE 64 }
 }
 ```
-
-## LISTAGEM AVANÇADA DE USUÁRIOS
-> GET
-- Necessita autenticação.
-
-URL = /users/list?FilterType={ INT }&VisualizationType={ INT }
-
-**FilterType**  
-Usuário ativos.
-AllActive = 1
-
-Usuários deletados.
-AllDeleted = 2
-
-Usuários inativos.
-AllInactive = 3
-
-Usuários com email aprovado.
-AllEmailApproved = 4
-
-Usuários com email não aprovado.
-AllEmailUnnaproved = 5
-
-Usuários aniversariantes deste mês.
-AllMonthBirthdays = 6
-
-Usuários Administradores.
-AllAdms = 7
-
-Usuários Membros.
-AllMembers = 8
-
-Usuários com foto.
-AllWithPhoto = 9
-
-Usuários sem foto.
-AllWithoutPhoto = 10
-
-Usuários mulheres.
-AllWomen = 11
-
-Usuários homens.
-AllMen = 12
-
-**VisualizationType**  
-Captura todas as informações de um usuário (sem foto).
-Absolute = 1
-
-Captura foto e informações gerais.
-Presentation = 2
-
-Captura informações gerais.
-List = 3
-
-Captura informações básicas.
-Resume = 4
-
-Captura foto e chave de identificação.
-Queote = 5
-
-Captura chave de identificação.
-QueoteWithoutPhoto = 6
-
-**Retorna** uma lista de usuários.
 
 ## EDIÇÃO DE SENHA DE USUÁRIO
 > PUT
