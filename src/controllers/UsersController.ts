@@ -28,4 +28,15 @@ export default function UsersController(controllerProps : ControllerProps)
     app.get("/user/:id/logs", OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
         await new UsersAppService(req, res).GetUserLogs()
     })
+
+    app.route("/user/:id/photo")
+        .get(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new UsersAppService(req, res).GetUserPhoto()
+        })
+        .post(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new UsersAppService(req, res).RegistryUserPhoto()
+        })
+        .put(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+            await new UsersAppService(req, res).RegistryUserPhoto()
+        })
 }

@@ -32,6 +32,7 @@ export type GetPhotoProps = {
 
 export type RegistryPhotoProps = {
     userId : number
+    photo : string
 } & DbProp
 
 export type ListProps = {

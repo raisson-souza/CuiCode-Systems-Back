@@ -142,7 +142,7 @@ URL = /user/{ ID DE USUÁRIO }/logs?initialDate={ DATA }&finalDate={ DATA }
 
 ## GET DE FOTO DE USUÁRIO
 > GET
-- Necessita autenticação.
+- Necessita autenticação (Usuário).
 
 URL = /user/{ ID DE USUÁRIO }/photo
 
@@ -150,7 +150,7 @@ URL = /user/{ ID DE USUÁRIO }/photo
 
 ## CADASTRO DE FOTO DE USUÁRIO
 > POST | PUT
-- Necessita autenticação.
+- Necessita autenticação (Usuário).
 
 URL = /user/{ ID DE USUÁRIO }/photo
 
@@ -160,6 +160,8 @@ BODY =
     "photo": { BASE 64 }
 }
 ```
+
+**Retorna** um base 64 da foto do usuário.
 
 ## EDIÇÃO DE SENHA DE USUÁRIO
 > PUT

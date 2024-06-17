@@ -258,15 +258,38 @@ export default abstract class UsersService
     }
 
     /** Captura a foto de um usuário. */
-    static async GetPhoto(props : GetPhotoProps) : Promise<string>
+    static async GetPhoto(props : GetPhotoProps) : Promise<string | null>
     {
-        throw new Error("Method not implemented.");
+        const query = `SELECT photo_base_64 FROM users_photos WHERE user_id = ${ props.userId }`
+
+        return await props.Db.PostgresDb.query(query)
+            .then(result => {
+                return !IsNil(result.rows[0])
+                    ? result.rows[0]["photo_base_64"]
+                    : null
+            })
+            .catch(ex => {
+                throw new Error(ex.message)
+            })
     }
 
     /** Registra a foto de um usuário. */
-    static async RegistryPhoto(props : RegistryPhotoProps) : Promise<string>
+    static async RegistryPhoto(props : RegistryPhotoProps) : Promise<void>
     {
-        throw new Error("Method not implemented.");
+        let query = ""
+
+        const dbPhoto = await this.GetPhoto({
+            Db: props.Db,
+            userId: props.userId
+        })
+
+        if (!IsNil(dbPhoto))
+            query = `UPDATE users_photos SET photo_base_64 = '${ props.photo }', modified = now() WHERE "user_id" = '${ props.userId }'`
+        else
+            query = `INSERT INTO users_photos (user_id, photo_base_64) VALUES (${ props.userId }, '${ props.photo }')`
+
+        await props.Db.PostgresDb.query(query)
+            .catch(ex => { throw new Error(ex.message) })
     }
 
     /** Lista usuários. */

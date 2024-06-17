@@ -196,21 +196,32 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
     async GetUserPhoto()
     {
-        const ACTION = `${ this.AppServiceAction } /`
+        const ACTION = `${ this.AppServiceAction } / Captura de foto de usuário`
         try
         {
+            const userId = Number.parseInt(this.REQ.params.id as string)
+
+            if (IsNil(userId))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["id"],
+                    log: ACTION
+                })
+            }
+
             await this.Db.ConnectPostgres()
 
-            // await this.AuthenticateUserRequestor()
-            // this.AuthenticateSystemRequestor()
+            await this.AuthenticateUserRequestor()
 
-            // this.ValidateUserRequestor({
-            //     userIdToOperate: 1,
-            // })
+            const photo = await UsersService.GetPhoto({
+                Db: this.Db,
+                userId: userId
+            })
 
             ResponseMessage.Send({
                 expressResponse: this.RES,
-                data: null,
+                data: photo,
                 log: ACTION,
                 status: HttpStatusEnum.OK
             })
@@ -230,21 +241,37 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
     async RegistryUserPhoto()
     {
-        const ACTION = `${ this.AppServiceAction } /`
+        const ACTION = `${ this.AppServiceAction } / Cadastro de foto de usuário`
         try
         {
+            const userId = Number.parseInt(this.REQ.params.id as string)
+            const photo = this.REQ.body["photo"]
+
+            if (IsNil(userId) || IsNil(photo))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["id", "photo"],
+                    log: ACTION
+                })
+            }
+
             await this.Db.ConnectPostgres()
 
-            // await this.AuthenticateUserRequestor()
-            // this.AuthenticateSystemRequestor()
+            await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({
+                userIdToOperate: userId,
+            })
 
-            // this.ValidateUserRequestor({
-            //     userIdToOperate: 1,
-            // })
+            await UsersService.RegistryPhoto({
+                Db: this.Db,
+                photo: photo,
+                userId: userId
+            })
 
             ResponseMessage.Send({
                 expressResponse: this.RES,
-                data: null,
+                data: photo,
                 log: ACTION,
                 status: HttpStatusEnum.OK
             })
