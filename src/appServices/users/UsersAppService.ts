@@ -165,9 +165,9 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 })
             }
 
-            await this.AuthenticateUserRequestor()
-
             await this.Db.ConnectPostgres()
+
+            await this.AuthenticateUserRequestor()
 
             const user = await UsersService.Get({
                 Db: this.Db,

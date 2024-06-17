@@ -245,33 +245,7 @@ export default abstract class UsersService
         if (IsNil(userId))
             throw new Error("Id de usuário não informado.")
 
-        let query = "SELECT u.id, u.created, u.permission_level, u.username, u.deleted, u.active,"
-
-        switch (visualizationEnum) // TODO: TROCAR SWITCH POR this.buildVisualizationQuery(visualizationEnum)
-        {
-            case UsersVisualizationEnum.All:
-                query += " u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
-                break
-            case UsersVisualizationEnum.AllNoPhoto:
-                query += " u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex FROM users u"
-                break
-            case UsersVisualizationEnum.Resume:
-                query += " u.birthdate, u.email, u.modified, u.name, u.phone, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
-                break
-            case UsersVisualizationEnum.ResumeNoPhoto:
-                query += "  u.birthdate, u.email, u.modified, u.name, u.phone, u.sex FROM users u"
-                break
-            case UsersVisualizationEnum.Queote:
-                query += " u.modified, u.name, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
-                break
-            case UsersVisualizationEnum.QueoteNoPhoto:
-                query += " u.modified, u.name, u.sex FROM users u"
-                break
-            default:
-                query += " FROM users u"
-        }
-
-        query += ` WHERE u.id = ${ userId }`
+        const query = `SELECT u.id, u.created, u.permission_level, u.username, u.deleted, u.active, ${ this.buildVisualizationQuery(visualizationEnum) } WHERE u.id = ${ userId }`
 
         return await Db.PostgresDb.query(query)
             .then(result => {
