@@ -41,9 +41,9 @@ export default interface IAppService
 }
 
 type ValidateUserRequestorProps = {
-    level : PermissionLevelEnum,
-    userIdToOperate : number | null,
-    allowDifferentUserAuthAndUserToOperate : boolean
+    level? : PermissionLevelEnum
+    userIdToOperate? : number
+    allowDifferentUserAuthAndUserToOperate? : boolean
 }
 
 export type { ValidateUserRequestorProps }
