@@ -336,7 +336,7 @@ export default abstract class UsersService
                 query += ""
         }
 
-        query += ` LIMIT ${ pagination.limit }`
+        query += ` ORDER BY u.id DESC LIMIT ${ pagination.limit }`
 
         return await Db.PostgresDb.query(query)
             .then(result => {
