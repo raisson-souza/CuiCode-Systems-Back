@@ -114,9 +114,9 @@ BODY =
 
 ## LOG DE USUÁRIO
 > GET
-- Necessita autenticação.
+- Necessita autenticação (Usuário).
 
-URL = /user/logs?userId={ ID DE USUÁRIO }&initialDate={ DATA }&finalDate={ DATA }
+URL = /user/{ ID DE USUÁRIO }/logs?initialDate={ DATA }&finalDate={ DATA }
 
 - Formato de data: 2024-01-01 00:00:00.000
 - initialDate e finalDate são opcionais.
@@ -127,29 +127,14 @@ URL = /user/logs?userId={ ID DE USUÁRIO }&initialDate={ DATA }&finalDate={ DATA
 ```json
 [
     {
-        "id": 100,
-        "change": {
-            "password": [
-                "0192023a7bbd73250516f069df18b500",
-                "e7d80ffeefa212b7c5c55700e4f7193e"
-            ],
-            "password_hint": [
-                "dica 01",
-                "dica 02"
-            ]
-        },
-        "date": "2024-02-15T14:20:50.791Z",
-        "adm_change": false
-    },
-    {
-        "id": 101,
+        "id": 1,
         "change": {
             "name": [
                 "Fulano Silva",
                 "Fulano Silveira"
             ]
         },
-        "date": "2024-02-15T14:24:44.181Z",
+        "date": "2024-01-01T12:00:00.000Z",
         "adm_change": true
     }
 ]

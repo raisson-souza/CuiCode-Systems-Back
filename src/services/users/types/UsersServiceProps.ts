@@ -50,7 +50,20 @@ export type DailyInfoProps = {
 
 export type GetLogsProps = {
     userId : number
+    initialDate? : Date
+    finalDate? : Date
 } & DbProp
+
+export type GetLogsReturn = {
+    id : number
+    change : {
+        [key : string] : string[]
+    }
+    date : string
+    adm_change: boolean
+    modified_by : number
+    user_id : number
+}
 
 export type UpdatePasswordProps = {
     userId : number

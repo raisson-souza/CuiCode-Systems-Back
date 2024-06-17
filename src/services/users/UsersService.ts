@@ -22,6 +22,7 @@ import {
     CreateProps,
     DailyInfoProps,
     GetLogsProps,
+    GetLogsReturn,
     GetPhotoProps,
     GetProps,
     InactivateProps,
@@ -244,7 +245,7 @@ export default abstract class UsersService
         if (IsNil(userId))
             throw new Error("Id de usuário não informado.")
 
-        let query = "SELECT u.id, u.created, u.permission_level, u.username, u.active,"
+        let query = "SELECT u.id, u.created, u.permission_level, u.username, u.deleted, u.active,"
 
         switch (visualizationEnum) // TODO: TROCAR SWITCH POR this.buildVisualizationQuery(visualizationEnum)
         {
@@ -391,9 +392,35 @@ export default abstract class UsersService
     }
 
     /** Captura os logs de um usuário. */
-    static async GetLogs(props : GetLogsProps) : Promise<void>
+    static async GetLogs(props : GetLogsProps) : Promise<GetLogsReturn[]>
     {
-        throw new Error("Method not implemented.");
+        const { userId, initialDate, finalDate } = props
+
+        let query = `SELECT * FROM users_logs WHERE user_id = ${ userId }`
+
+        if (!IsNil(initialDate) && !IsNil(finalDate))
+            query += ` AND "date" > '${ SqlFormatter.ToSqlDateComparison(initialDate!) }' AND "date" < '${ SqlFormatter.ToSqlDateComparison(finalDate!) }'`
+        else if (!IsNil(initialDate))
+            query += ` AND "date" > '${ SqlFormatter.ToSqlDateComparison(initialDate!) }'`
+        else if (!IsNil(finalDate))
+            query += ` AND "date" < '${ SqlFormatter.ToSqlDateComparison(finalDate!) }'`
+
+        query += " ORDER BY id DESC"
+
+        return await props.Db.PostgresDb.query(query)
+            .then(result => {
+                const logsQuery : GetLogsReturn[] = []
+
+                result.rows.map(log => {
+                    // TODO: a data puxada do banco é adianta em 3hrs devido ao express
+                    logsQuery.push(log)
+                })
+
+                return logsQuery
+            })
+            .catch(ex => {
+                throw new Error(ex.message)
+            })
     }
 
     /** Atualiza a senha de um usuário. */

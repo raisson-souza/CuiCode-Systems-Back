@@ -24,4 +24,8 @@ export default function UsersController(controllerProps : ControllerProps)
         .get(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
             await new UsersAppService(req, res).ListUsers()
         })
+
+    app.get("/user/:id/logs", OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new UsersAppService(req, res).GetUserLogs()
+    })
 }

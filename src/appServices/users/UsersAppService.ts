@@ -220,7 +220,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         {
             ResponseMessage.Send({
                 expressResponse: this.RES,
-                data: null,
+                data: (ex as Error).message,
                 status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
                 log: ACTION
             })
@@ -232,9 +232,57 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         throw new Error("Method not implemented.");
     }
 
-    GetUserLogs()
+    async GetUserLogs()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } / Logs de usuário`
+        try
+        {
+            const userId = Number.parseInt(this.REQ.params.id)
+            const initialDate = new Date(this.REQ.query.initialDate as string)
+            const finalDate = new Date(this.REQ.query.finalDate as string)
+
+            if (IsNil(userId))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["id"],
+                    log: ACTION
+                })
+            }
+
+            await this.Db.ConnectPostgres()
+
+            await this.AuthenticateUserRequestor()
+
+            this.ValidateUserRequestor({
+                userIdToOperate: userId,
+            })
+
+            const userLogs = await UsersService.GetLogs({
+                Db: this.Db,
+                userId: userId,
+                initialDate: !isNaN(initialDate.getTime()) ? initialDate : undefined,
+                finalDate: !isNaN(finalDate.getTime()) ? finalDate : undefined
+            })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: userLogs,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
     UpdatePassword()
