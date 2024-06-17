@@ -18,7 +18,7 @@ import UsersVisualizationEnumParser from "../../functions/enums/UsersVisualizati
 
 export default class UsersAppService extends AppServiceBase implements IUsersAppService
 {
-    AppServiceAction = "AppService Usuários"
+    AppServiceAction = "Usuários"
 
     async CreateUser()
     {
@@ -45,6 +45,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 log: this.AppServiceAction,
                 expressResponse: this.RES
             })
+
+            await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
@@ -54,10 +56,6 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 log: this.AppServiceAction,
                 expressResponse: this.RES
             })
-        }
-        finally
-        {
-            await this.Db.DisconnectPostgres()
         }
     }
 
@@ -103,6 +101,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 log: this.AppServiceAction,
                 expressResponse: this.RES
             })
+
+            await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
@@ -113,15 +113,40 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 expressResponse: this.RES
             })
         }
-        finally
-        {
-            await this.Db.DisconnectPostgres()
-        }
     }
 
-    InactivateUser()
+    async InactivateUser()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
     async GetUser()
@@ -155,6 +180,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 status: HttpStatusEnum.OK,
                 log: ACTION
             })
+
+            await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
@@ -167,14 +194,72 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         }
     }
 
-    GetUserPhoto()
+    async GetUserPhoto()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
-    RegistryUserPhoto()
+    async RegistryUserPhoto()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
     async ListUsers()
@@ -215,6 +300,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 dataPropToCount: "data",
                 log: ACTION
             })
+
+            await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
@@ -227,9 +314,38 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         }
     }
 
-    DailyInfo()
+    async DailyInfo()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
     async GetUserLogs()
@@ -285,33 +401,207 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         }
     }
 
-    UpdatePassword()
+    async UpdatePassword()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
-    AccountRecovery()
+    async AccountRecovery()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
-    ConfirmAccountRecovery()
+    async ConfirmAccountRecovery()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
-    VerifyEmail()
+    async VerifyEmail()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
-    ApproveUserEmail()
+    async ApproveUserEmail()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 
-    SendManualEmailApproval()
+    async SendManualEmailApproval()
     {
-        throw new Error("Method not implemented.");
+        const ACTION = `${ this.AppServiceAction } /`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            // await this.AuthenticateUserRequestor()
+            // this.AuthenticateSystemRequestor()
+
+            // this.ValidateUserRequestor({
+            //     userIdToOperate: 1,
+            // })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: null,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
     }
 }
