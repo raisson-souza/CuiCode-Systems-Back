@@ -93,10 +93,9 @@ export default abstract class AppServiceBase implements IAppService
     }
 
     ValidateUserRequestor({
+        userIdToOperate,
         level = PermissionLevelEnum.Member,
-        userIdToOperate = null,
         allowDifferentUserAuthAndUserToOperate = false
-
     } : ValidateUserRequestorProps)
     {
         UsersValidator.ValidateUserPermission(this.UserAuth!, level)
