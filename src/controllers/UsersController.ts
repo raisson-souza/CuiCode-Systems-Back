@@ -43,4 +43,8 @@ export default function UsersController(controllerProps : ControllerProps)
     app.get("/users/find_email", OriginAuthMiddleware, async (req, res) => {
         await new UsersAppService(req, res).FindEmail()
     })
+
+    app.get("/user/daily_info", OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new UsersAppService(req, res).DailyInfo()
+    })
 }

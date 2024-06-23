@@ -343,21 +343,25 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
     async DailyInfo()
     {
-        const ACTION = `${ this.AppServiceAction } /`
+        const ACTION = `${ this.AppServiceAction } / Informações Diárias do Usuário`
         try
         {
             await this.Db.ConnectPostgres()
 
-            // await this.AuthenticateUserRequestor()
-            // this.AuthenticateSystemRequestor()
+            await this.AuthenticateUserRequestor()
 
-            // this.ValidateUserRequestor({
-            //     userIdToOperate: 1,
-            // })
+            this.ValidateUserRequestor({
+                userIdToOperate: this.UserAuth!.Id,
+            })
+
+            const dailyInfo = await UsersService.DailyInfo({
+                Db: this.Db,
+                userId: this.UserAuth!.Id,
+            })
 
             ResponseMessage.Send({
                 expressResponse: this.RES,
-                data: null,
+                data: dailyInfo,
                 log: ACTION,
                 status: HttpStatusEnum.OK
             })

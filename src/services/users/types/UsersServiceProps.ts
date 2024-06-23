@@ -49,6 +49,17 @@ export type DailyInfoProps = {
     userId : number
 } & DbProp
 
+export type DailyInfoReturn = {
+    groups : any[]
+    solicitations : any[]
+    delayedSolicitations : any[]
+    chatsNumber : number
+    dreamsNumber : number
+    hestiaTasksThisWeekNumber : number
+    hestiaPendingTasksNumber : number
+    minervaOpenPlans : number
+}
+
 export type GetLogsProps = {
     userId : number
     initialDate? : Date

@@ -21,6 +21,7 @@ import {
     CreateLogProps,
     CreateProps,
     DailyInfoProps,
+    DailyInfoReturn,
     FindEmailProps,
     GetLogsProps,
     GetLogsReturn,
@@ -384,9 +385,68 @@ export default abstract class UsersService
     }
 
     /** Captura informações diárias de um usuário. */
-    static async DailyInfo(props : DailyInfoProps) : Promise<void>
+    static async DailyInfo(props : DailyInfoProps) : Promise<DailyInfoReturn>
     {
-        throw new Error("Method not implemented.");
+        const { userId } = props
+
+        // PRÉ IMPLEMENTAÇÃO DA BUSCA DE GRUPOS INCLUIDOS
+        const groups : any[] = []
+        // TRANSFORMAR EM DTO E PEGAR NAME E ID
+
+        // PRÉ IMPLEMENTAÇÃO DA BUSCA DE SOLICITAÇÕES ATENDIDAS
+        const solicitations : any[] = []
+        // TRANSFORMAR EM DTO E PEGAR NAME E ID
+
+        // PRÉ IMPLEMENTAÇÃO DA BUSCA DE SOLICITAÇÕES ATENDIDAS PELO GRUPO INCLUIDO
+        const solicitationsByGroup : any[] = []
+        // TRANSFORMAR EM DTO E PEGAR NAME E ID
+
+        solicitations.concat(solicitationsByGroup)
+
+        const myDelayedSolicitations = solicitations
+            .filter(solicitation => {
+                solicitation.final_date.getTime() < new Date().getTime()
+            })
+            .map(delayedSolicitation => { return delayedSolicitation })
+
+        // PRÉ IMPLEMENTAÇÃO DA BUSCA DE CHATS INCLUIDOS
+        const chats : any[] = []
+
+        const chatsQuantity = chats.length
+
+        // PRÉ IMPLEMENTAÇÃO DA BUSCA DE SONHOS
+        const morfeusDreams : any[] = []
+
+        const dreamsQuantity = morfeusDreams.length
+
+        // PRÉ IMPLEMENTAÇÃO DA BUSCA DE TASKS HESTIA
+        const hestiaTasks : any[] = []
+
+        const hestiaTasksThisWeekQuantity = hestiaTasks
+            .filter(() => {})
+            .map(task => { return task })
+            .length
+
+        const hestiaTasksPendingQuantity = hestiaTasks
+            .filter(() => {})
+            .map(task => { return task })
+            .length
+
+        // PRÉ IMPLEMENTAÇÃO DA BUSCA DE PLANOS MINERVA
+        const minervaPlans : any[] = []
+
+        const minervaOpenPlansQuantity = minervaPlans.length
+
+        return {
+            groups: groups,
+            solicitations: solicitations,
+            delayedSolicitations: myDelayedSolicitations,
+            chatsNumber: chatsQuantity,
+            dreamsNumber: dreamsQuantity,
+            hestiaTasksThisWeekNumber: hestiaTasksThisWeekQuantity,
+            hestiaPendingTasksNumber: hestiaTasksPendingQuantity,
+            minervaOpenPlans: minervaOpenPlansQuantity
+        }
     }
 
     /** Captura os logs de um usuário. */
