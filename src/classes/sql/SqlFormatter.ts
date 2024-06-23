@@ -1,5 +1,10 @@
-import FillZeros from "../../functions/formatting/FillZeros"
+import EmailSender from "../entities/email/EmailSender"
 import Label from "../entities/base/Label"
+
+import FillZeros from "../../functions/formatting/FillZeros"
+import ToString from "../../functions/formatting/ToString"
+
+import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
 
 type EntryToQueryProps = {
     value : any,
@@ -70,5 +75,25 @@ export default abstract class SqlFormatter
         const second = FillZeros(date.toLocaleString().split(" ")[1].split(":")[2])
         const milissecond = FillZeros(date.getMilliseconds(), 3)
         return `${ date.getFullYear() }-${ month }-${ day } ${ hour }:${ minute }:${ second }.${ milissecond }`
+    }
+
+    /** Recebe uma sequência de queries para o banco e acusa insegurança caso detectado SQL injection. */
+    static SqlInjectionVerifier(params : any[])
+    {
+        const regex1 = /";/
+        const regex2 = /--/
+        const regex3 = /OR\s*\d+\s*=\s*\d+/
+
+        params.forEach(param => {
+            if (
+                regex1.test(ToString(param)) ||
+                regex2.test(ToString(param)) ||
+                regex3.test(ToString(param))
+            )
+            {
+                EmailSender.Internal(EmailTitlesEnum.SYSTEM_RISK, `Risco de SQL injection detectado.\nQuery específica: ${ param }.\nTodas as queries: ${ params }`)
+                throw new Error("Injeção de SQL verificada, operação interrompida.")
+            }
+        })
     }
 }

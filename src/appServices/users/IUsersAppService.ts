@@ -21,14 +21,6 @@ export default interface IUsersAppService
     GetUserLogs() : void
     /** Atualização da senha do usuário. */
     UpdatePassword() : void
-
-    // ESCOPO CONTA DE USUÁRIO
-    /** Recuperação de conta de usuário. */
-    AccountRecovery() : void
-    /** Confirmação de recuperação de conta de usuário. */
-    ConfirmAccountRecovery() : void
-    /** Verificação de email de usuário. */
-    VerifyEmail() : void
-    /** Aprovação de email de usuário */
-    ApproveUserEmail() : void
+    /** Busca de email de usuário. */
+    FindEmail() : void
 }

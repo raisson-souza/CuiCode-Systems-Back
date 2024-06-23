@@ -98,19 +98,15 @@ BODY =
 ## APROVAÇÃO DE EMAIL
 > GET
 
-URL = /email/approval?userId={ ID DE USUÁRIO }&email={ EMAIL DE USUÁRIO }
+Url acessada externamente (ou internamente caso nova implementação)
+
+URL = /users/account/email/approve?userId={ ID DE USUÁRIO }&email={ EMAIL DE USUÁRIO }
 
 ## ENVIO MANUAL DE APROVAÇÃO DE EMAIL
 > POST
-- Necessita autenticação.
+- Necessita autenticação (usuário).
 
-URL = /email/approval/send  
-BODY =
-```
-{
-    "UserReqId": { ID DO USUÁRIO }
-}
-```
+URL = /users/account/email/send_approval
 
 ## LOG DE USUÁRIO
 > GET
@@ -179,10 +175,12 @@ BODY =
 
 ## RECUPERAÇÃO DE CONTA
 
-### VERIFICAÇÃO DE EMAIL
+### BUSCA DE EMAIL (esqueci minha senha)
 > GET
 
-URL = /user/account/recovery/verify_email?email={ EMAIL }
+URL = /users/find_email?email={ EMAIL }
+
+**RETORNA** Valor boleano quanto a existência do email.
 
 ### CONFIRMAÇÃO DE RECUPERAÇÃO DE CONTA
 > POST

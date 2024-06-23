@@ -39,4 +39,8 @@ export default function UsersController(controllerProps : ControllerProps)
         .put(OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
             await new UsersAppService(req, res).RegistryUserPhoto()
         })
+
+    app.get("/users/find_email", OriginAuthMiddleware, async (req, res) => {
+        await new UsersAppService(req, res).FindEmail()
+    })
 }

@@ -10,12 +10,9 @@ type ConfirmAccountRecoveryProps = {
 
 } & DbProp
 
-type VerifyEmailProps = {
-
-} & DbProp
-
 type ApproveEmailProps = {
-
+    userId : number
+    userEmail : string
 } & DbProp
 
 type SendEmailApprovalProps = {
@@ -26,7 +23,6 @@ type SendEmailApprovalProps = {
 export type {
     AccountRecoveryProps,
     ConfirmAccountRecoveryProps,
-    VerifyEmailProps,
     ApproveEmailProps,
     SendEmailApprovalProps,
 }

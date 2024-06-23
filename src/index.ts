@@ -6,6 +6,7 @@ import Env from "./config/Env"
 import AuthController from "./controllers/AuthController"
 import FeaturesController from "./controllers/FeaturesController"
 import SystemController from "./controllers/SystemController"
+import UsersAccountController from "./controllers/UsersAccountController"
 import UsersController from "./controllers/UsersController"
 
 import OriginAuthMiddleware from "./middlewares/OriginAuthMiddleware"
@@ -39,6 +40,10 @@ AuthController(app)
 FeaturesController(app)
 SystemController(app)
 UsersController({
+    app: app,
+    upload: upload
+})
+UsersAccountController({
     app: app,
     upload: upload
 })

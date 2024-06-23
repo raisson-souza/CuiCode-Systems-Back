@@ -530,91 +530,32 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         }
     }
 
-    async VerifyEmail()
+    async FindEmail()
     {
-        const ACTION = `${ this.AppServiceAction } /`
+        const ACTION = `${ this.AppServiceAction } / Busca de email de usuário`
         try
         {
+            const email = this.REQ.query["email"] as string
+
+            if (IsNil(email))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["email"],
+                    log: ACTION
+                })
+            }
+
             await this.Db.ConnectPostgres()
 
-            // await this.AuthenticateUserRequestor()
-            // this.AuthenticateSystemRequestor()
-
-            // this.ValidateUserRequestor({
-            //     userIdToOperate: 1,
-            // })
-
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: null,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            const foundEmail = await UsersService.FindEmail({
+                Db: this.Db,
+                email: email
             })
 
-            await this.Db.DisconnectPostgres()
-        }
-        catch (ex)
-        {
             ResponseMessage.Send({
                 expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
-            })
-        }
-    }
-
-    async ApproveUserEmail()
-    {
-        const ACTION = `${ this.AppServiceAction } /`
-        try
-        {
-            await this.Db.ConnectPostgres()
-
-            // await this.AuthenticateUserRequestor()
-            // this.AuthenticateSystemRequestor()
-
-            // this.ValidateUserRequestor({
-            //     userIdToOperate: 1,
-            // })
-
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: null,
-                log: ACTION,
-                status: HttpStatusEnum.OK
-            })
-
-            await this.Db.DisconnectPostgres()
-        }
-        catch (ex)
-        {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
-            })
-        }
-    }
-
-    async SendManualEmailApproval()
-    {
-        const ACTION = `${ this.AppServiceAction } /`
-        try
-        {
-            await this.Db.ConnectPostgres()
-
-            // await this.AuthenticateUserRequestor()
-            // this.AuthenticateSystemRequestor()
-
-            // this.ValidateUserRequestor({
-            //     userIdToOperate: 1,
-            // })
-
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: null,
+                data: foundEmail,
                 log: ACTION,
                 status: HttpStatusEnum.OK
             })

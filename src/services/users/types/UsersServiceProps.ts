@@ -88,6 +88,10 @@ export type ListReturn = {
     pagination : Pagination
 }
 
+export type FindEmailProps = {
+    email : string
+} & DbProp
+
 // PRIVATE TYPES
 
 type Pagination = {

@@ -21,6 +21,7 @@ import {
     CreateLogProps,
     CreateProps,
     DailyInfoProps,
+    FindEmailProps,
     GetLogsProps,
     GetLogsReturn,
     GetPhotoProps,
@@ -476,6 +477,22 @@ export default abstract class UsersService
         return await props.Db.PostgresDb.query(query)
             .then(result => {
                 return Number.parseInt(FindValue(result.rows[0], ["id"]))
+            })
+            .catch(ex => {
+                throw new Error(ex.message)
+            })
+    }
+
+    /** Busca o email de um usuário. */
+    static async FindEmail(props : FindEmailProps) : Promise<boolean>
+    {
+        SqlFormatter.SqlInjectionVerifier([props.email])
+
+        const query = `SELECT COUNT(*) FROM users WHERE "email" = '${ props.email }'`
+
+        return await props.Db.PostgresDb.query(query)
+            .then(result => {
+                return Number.parseInt(result.rows[0]["count"]) > 0
             })
             .catch(ex => {
                 throw new Error(ex.message)
