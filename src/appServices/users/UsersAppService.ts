@@ -10,6 +10,7 @@ import { UpdateUserDTO } from "./base/types/UsersAppServiceProps"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
+import UsersVisualizationEnum from "../../enums/modules/UsersVisualizationEnum"
 
 import IsNil from "../../functions/logic/IsNil"
 import ToBool from "../../functions/formatting/ToBool"
@@ -171,7 +172,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             const user = await UsersService.Get({
                 Db: this.Db,
-                userId: userId
+                userId: userId,
+                visualizationEnum: UsersVisualizationEnum.All
             })
 
             ResponseMessage.Send({

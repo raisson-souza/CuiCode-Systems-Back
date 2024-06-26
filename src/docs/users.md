@@ -160,16 +160,17 @@ BODY =
 **Retorna** um base 64 da foto do usuário.
 
 ## EDIÇÃO DE SENHA DE USUÁRIO
-> PUT
-- Necessita autenticação.
+> POST
+- Necessita autenticação. 
 
-URL = /user/{ ID DE USUÁRIO }/password
+URL = /users/account/password_update
 
 BODY =
-```
+```json
 {
-    "password": { NOVA SENHA },
-    "password_hint": { NOVA DICA DE SENHA }
+    "user_id": 1,
+    "password": "senha123",
+    "password_hint": "dica_da_senha"
 }
 ```
 

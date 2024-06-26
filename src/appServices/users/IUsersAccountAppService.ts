@@ -8,4 +8,6 @@ export default interface IUsersAccountAppService
     AccountRecovery() : void
     /** Confirmação de recuperação de conta de usuário. */
     ConfirmAccountRecovery() : void
+    /** Atualiza a senha do usuário. */
+    UpdatePassword() : void
 }

@@ -16,4 +16,8 @@ export default function UsersAccountController(controllerProps : ControllerProps
     app.post("/users/account/email/send_approval", OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
         await new UsersAccountAppService(req, res).SendEmailApproval()
     })
+
+    app.post('/users/account/password_update', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new UsersAccountAppService(req, res).UpdatePassword()
+    })
 }

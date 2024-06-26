@@ -3,7 +3,11 @@ import env from "../../config/Env"
 import EmailApproval from "../../classes/entities/email/EmailApproval"
 import EmailSender from "../../classes/entities/email/EmailSender"
 import SqlFormatter from "../../classes/sql/SqlFormatter"
+import User from "../../classes/entities/user/User"
+import UsersService from "./UsersService"
+import UsersValidator from "../../validators/UsersValidator"
 
+import EncryptInfo from "../../functions/security/EncryptPassword"
 import IsNil from "../../functions/logic/IsNil"
 import QueryDbRowByProperty from "../../functions/SQL/QueryDbRowByProperty"
 import ToBase64 from "../../functions/formatting/ToBase64"
@@ -15,6 +19,7 @@ import {
     ApproveEmailProps,
     ConfirmAccountRecoveryProps,
     SendEmailApprovalProps,
+    UpdatePasswordProps,
 } from "./types/UsersAccountServiceProps"
 
 export default class UsersAccountService
@@ -136,5 +141,37 @@ export default class UsersAccountService
 
                 return false
             })
+    }
+
+    /** Atualiza a senha e dica de senha de um usuário. */
+    static async UpdatePassword(props : UpdatePasswordProps) : Promise<void>
+    {
+        const { userId, password, passwordHint, modifiedBy, isAdmChange } = props
+
+        SqlFormatter.SqlInjectionVerifier([password, passwordHint])
+        UsersValidator.ValidatePassword(password)
+        UsersValidator.ValidatePasswordHint(password, passwordHint)
+
+        const oldUser = await UsersService.Get({
+            Db: props.Db,
+            userId: userId
+        })
+
+        const query = `UPDATE users SET password = '${ EncryptInfo(password) }', password_hint = '${ passwordHint }', modified = now(), modified_by = ${ modifiedBy } WHERE id = '${ userId }' RETURNING *`
+
+        const newUser = await props.Db.PostgresDb.query(query)
+            .then(result => {
+                return new User(result.rows[0])
+            })
+            .catch(ex => { throw new Error(ex.message) })
+
+        await UsersService.UpdateLog({
+            Db: props.Db,
+            isAdmChange: isAdmChange,
+            modifiedBy: modifiedBy,
+            oldUser: oldUser,
+            newUser: newUser,
+            userId: userId
+        })
     }
 }

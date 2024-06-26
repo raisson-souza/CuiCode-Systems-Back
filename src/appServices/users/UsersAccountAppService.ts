@@ -163,4 +163,60 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
             })
         }
     }
+
+    async UpdatePassword()
+    {
+        const ACTION = `${ this.AppServiceAction } / Atualização de Senha de Usuário`
+        try
+        {
+            await this.Db.ConnectPostgres()
+
+            await this.AuthenticateUserRequestor()
+
+            const userId = Number.parseInt(this.REQ.body["user_id"])
+
+            this.ValidateUserRequestor({
+                userIdToOperate: userId,
+            })
+
+            const password = this.REQ.body["password"]
+            const passwordHint = this.REQ.body["password_hint"]
+
+            if (IsNil(password) || IsNil(passwordHint))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["password", "password_hint"],
+                    log: ACTION
+                })
+            }
+
+            await UsersAccountService.UpdatePassword({
+                Db: this.Db,
+                isAdmChange: this.UserAuth!.Id != userId,
+                modifiedBy: this.UserAuth!.Id,
+                password: password,
+                passwordHint: passwordHint,
+                userId: userId
+            })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: "Senha e dica de senha atualizadas com sucesso.",
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
+
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
+    }
 }

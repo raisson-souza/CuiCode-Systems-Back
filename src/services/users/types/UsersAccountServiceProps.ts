@@ -20,9 +20,18 @@ type SendEmailApprovalProps = {
     user : User
 } & DbProp
 
+type UpdatePasswordProps = {
+    userId : number
+    password : string
+    passwordHint : string
+    modifiedBy : number
+    isAdmChange : boolean
+} & DbProp
+
 export type {
     AccountRecoveryProps,
     ConfirmAccountRecoveryProps,
     ApproveEmailProps,
     SendEmailApprovalProps,
+    UpdatePasswordProps
 }

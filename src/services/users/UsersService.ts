@@ -241,7 +241,7 @@ export default abstract class UsersService
     static async Get({
         Db,
         userId,
-        visualizationEnum = UsersVisualizationEnum.All
+        visualizationEnum = UsersVisualizationEnum.AllNoPhoto
     } : GetProps) : Promise<User>
     {
         if (IsNil(userId))
@@ -481,12 +481,6 @@ export default abstract class UsersService
             })
     }
 
-    /** Atualiza a senha de um usuário. */
-    static async UpdatePassword(props : UpdatePasswordProps) : Promise<void>
-    {
-        throw new Error("Method not implemented.");
-    }
-
     /** Grava log de modificação de usuário. Retorna o ID do log gerado. */
     static async UpdateLog(props : CreateLogProps) : Promise<number>
     {
@@ -530,6 +524,12 @@ export default abstract class UsersService
             username: oldUser.Username != newUser.Username
                 ? [oldUser.Username, newUser.Username]
                 : null,
+            password: oldUser.Password != newUser.Password
+                ? [oldUser.Password, newUser.Password]
+                : null,
+            password_hint: oldUser.PasswordHint != newUser.PasswordHint
+                ? [oldUser.PasswordHint, newUser.PasswordHint]
+                : null
         }
 
         let query = `INSERT INTO users_logs ("user_id", "change", "adm_change", "modified_by") VALUES (${ userId }, '${ StringifyJSON(userLog) }', '${ isAdmChange }', '${ modifiedBy }') RETURNING id`
@@ -565,9 +565,9 @@ export default abstract class UsersService
         switch (visualizationEnum)
         {
             case UsersVisualizationEnum.All:
-                return "u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
+                return "u.password, u.password_hint, u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
             case UsersVisualizationEnum.AllNoPhoto:
-                return "u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex FROM users u"
+                return "u.password, u.password_hint, u.birthdate, u.email, u.modified, u.modified_by, u.name, u.phone, u.recovery_email, u.sex FROM users u"
             case UsersVisualizationEnum.Resume:
                 return "u.birthdate, u.email, u.modified, u.name, u.phone, u.sex, up.photo_base_64 FROM users u LEFT JOIN users_photos up ON u.id = up.user_id"
             case UsersVisualizationEnum.ResumeNoPhoto:
