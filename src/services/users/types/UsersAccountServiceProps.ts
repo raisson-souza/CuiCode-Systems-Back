@@ -1,14 +1,7 @@
 import User from "../../../classes/entities/user/User"
+import UserAccountRestoration from "../../../classes/entities/user/UserAccountRestoration"
 
 import { DbProp } from "../../base/types/BaseServiceProps"
-
-type AccountRecoveryProps = {
-
-} & DbProp
-
-type ConfirmAccountRecoveryProps = {
-
-} & DbProp
 
 type ApproveEmailProps = {
     userId : number
@@ -28,10 +21,34 @@ type UpdatePasswordProps = {
     isAdmChange : boolean
 } & DbProp
 
+type AccountRecoveryProps = {
+    email : string
+} & DbProp
+
+type ConfirmAccountRecoveryProps = {
+    recoveryJwt : string
+    userNewPassword : string
+    userNewPasswordHint : string
+} & DbProp
+
+type VerifyAccountRecoveryProps = ConfirmAccountRecoveryProps
+
+type SendAccountRecoveryEmailProps = {
+    user : User
+    jwt : string
+}
+
+type MassAccountRecoveryExpireProps = {
+    accountRestorations : UserAccountRestoration[]
+} & DbProp
+
 export type {
     AccountRecoveryProps,
-    ConfirmAccountRecoveryProps,
     ApproveEmailProps,
+    ConfirmAccountRecoveryProps,
+    MassAccountRecoveryExpireProps,
+    SendAccountRecoveryEmailProps,
     SendEmailApprovalProps,
-    UpdatePasswordProps
+    UpdatePasswordProps,
+    VerifyAccountRecoveryProps,
 }

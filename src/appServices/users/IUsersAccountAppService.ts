@@ -4,10 +4,12 @@ export default interface IUsersAccountAppService
     ApproveEmail() : void
     /** Envia aprovação de email para email de usuário */
     SendEmailApproval() : void
-    /** Recuperação de conta de usuário. */
+    /** Inicio do processo de recuperação de conta de usuário. */
     AccountRecovery() : void
-    /** Confirmação de recuperação de conta de usuário. */
+    /** Confirmação do processo de recuperação de conta de usuário. */
     ConfirmAccountRecovery() : void
+    /** Verifica se solicitação de recuperação de conta existe. */
+    VerifyAccountRecovery() : void
     /** Atualiza a senha do usuário. */
     UpdatePassword() : void
 }

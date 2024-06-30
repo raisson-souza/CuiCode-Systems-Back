@@ -20,4 +20,16 @@ export default function UsersAccountController(controllerProps : ControllerProps
     app.post('/users/account/password_update', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
         await new UsersAccountAppService(req, res).UpdatePassword()
     })
+
+    app.post('/users/account/recovery', OriginAuthMiddleware, async (req, res) => {
+        await new UsersAccountAppService(req, res).AccountRecovery()
+    })
+
+    app.post('/users/account/recovery/confirm', OriginAuthMiddleware, async (req, res) => {
+        await new UsersAccountAppService(req, res).ConfirmAccountRecovery()
+    })
+
+    app.post('/users/account/recovery/verify', OriginAuthMiddleware, async (req, res) => {
+        await new UsersAccountAppService(req, res).VerifyAccountRecovery()
+    })
 }
