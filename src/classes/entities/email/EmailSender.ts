@@ -1,17 +1,21 @@
 import nodemailer from "nodemailer"
 
+import Env from "../../../config/Env"
+
 import CaseUndNull from "../../../functions/logic/CaseUndNull"
 
 import EmailTitles from "../../../enums/EmailTitlesEnum"
+
+const emailSenderConfig = Env.EmailSenderConfig()
 
 abstract class EmailSender
 {
     private static Transporter = nodemailer.createTransport(
         {
-            service: 'gmail',
+            service: emailSenderConfig.emailService,
             auth: {
-                user: 'raisson.testes@gmail.com',
-                pass: 'evne uzxd elkq tgyn'
+                user: emailSenderConfig.email,
+                pass: emailSenderConfig.password
             }
         }
     )
@@ -55,7 +59,7 @@ abstract class EmailSender
     {
         return {
             from: "CuiCodeSystems",
-            to: CaseUndNull(receiverEmail, "raisson.testes@gmail.com"),
+            to: CaseUndNull(receiverEmail, emailSenderConfig.receiverEmail),
             subject: `CuiCodeSystems - ${ title }`,
             text: CaseUndNull(emailBody, ""),
             html: ""

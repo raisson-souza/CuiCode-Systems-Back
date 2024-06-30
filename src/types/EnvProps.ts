@@ -1,4 +1,5 @@
 import { DatabaseConfigProps } from "./DatabaseConfigProps"
+import { EmailSenderConfigProps } from "./EmailSenderConfigProps"
 
 type AllowedOriginsProps = string[]
 
@@ -12,6 +13,7 @@ type EnvProps = {
     SystemJwt : () => string,
     PostManTestingException : () => boolean,
     DatabaseConfig : () => DatabaseConfigProps,
+    EmailSenderConfig : () => EmailSenderConfigProps
 }
 
 export type { EnvProps }

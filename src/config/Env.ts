@@ -77,6 +77,29 @@ const Env : EnvProps = {
             port,
         }
     },
+    EmailSenderConfig : () => {
+        const emailService = String(process.env["CUI_CODE_EMAILSENDER_EMAILSERVICE"])
+        const email = String(process.env["CUI_CODE_EMAILSENDER_EMAIL"])
+        const password = String(process.env["CUI_CODE_EMAILSENDER_PASSWORD"])
+        const receiverEmail = String(process.env["CUI_CODE_EMAILSENDER_RECEIVER"])
+
+        if (AreNil({
+            params: [
+                emailService,
+                email,
+                password,
+                receiverEmail
+            ],
+            allNil: false
+        })) throw new Error("Uma ou mais variáveis de ambiente do enviador de email configuradas incorretamente.")
+
+        return {
+            emailService,
+            email,
+            password,
+            receiverEmail
+        }
+    },
 }
 
 export default Env
