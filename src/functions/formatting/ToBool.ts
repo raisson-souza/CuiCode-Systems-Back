@@ -5,7 +5,7 @@ export default function ToBool(value : any) : boolean
         return true
     else if (value === false)
         return false
-    else if (value instanceof String)
+    else if (typeof value === 'string')
     {
         if (
             value === "true" ||

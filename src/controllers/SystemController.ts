@@ -1,28 +1,36 @@
 import { Express } from "express"
 
-import DatabaseService from "../services/system/DatabaseService"
+import DatabaseAppService from "../appServices/database/DatabaseAppService"
 import GetForm from "../services/system/GetForm"
-import GetStyleService from "../services/system/GetStyleService"
-import OkService from "../services/system/OkService"
+import SystemAppService from "../appServices/system/SystemAppService"
 
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
+import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
 
 function SystemController(app : Express)
 {
-    app.route('/database')
-        .get(OriginAuthMiddleware, async (req, res) => {
-            await new DatabaseService(req, res).Operation()
-        })
-        .post(OriginAuthMiddleware, async (req, res) => {
-            await new DatabaseService(req, res).Operation()
-        })
-
-    app.get('/ok', OriginAuthMiddleware, async (req, res) => {
-        await new OkService(req, res).Operation()
+    app.post('/system/database', RequestorAuthMiddleware, OriginAuthMiddleware, async (req, res) => {
+        await new DatabaseAppService(req, res).FoundCuiCodeSystemsDatabase()
     })
 
-    app.get('/get_style', OriginAuthMiddleware, async (req, res) => {
-        await new GetStyleService(req, res).Operation()
+    app.get('/system/ok', OriginAuthMiddleware, async (req, res) => {
+        await new SystemAppService(req, res).OkSystem()
+    })
+
+    app.get('/system/get_style', OriginAuthMiddleware, async (req, res) => {
+        await new SystemAppService(req, res).SystemStyle()
+    })
+
+    app.get('/system/credentials', RequestorAuthMiddleware, OriginAuthMiddleware, async (req, res) => {
+        await new SystemAppService(req, res).GetCredentials()
+    })
+
+    app.post('/system/deactivate_module', RequestorAuthMiddleware, OriginAuthMiddleware, async (req, res) => {
+        await new SystemAppService(req, res).DeactivateModule()
+    })
+
+    app.post('/system/maintence', RequestorAuthMiddleware, OriginAuthMiddleware, async (req, res) => {
+        await new SystemAppService(req, res).SystemUnderMaintence()
     })
 
     app.get('/get_form/:form', OriginAuthMiddleware, (req, res) => {

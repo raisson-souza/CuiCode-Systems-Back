@@ -20,7 +20,7 @@ const Env : EnvProps = {
         return _
     },
     Port: () => {
-        const _ = Number.parseInt(String(process.env["CUI_CODE_PORT"]))
+        const _ = String(process.env["CUI_CODE_PORT"])
         if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_PORT não configurada.")
         return _
     },
