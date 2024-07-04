@@ -1,0 +1,20 @@
+app.post('/teste2', upload.fields([{name: 'teste', maxCount: 1}, {name: 'teste2', maxCount: 1}]), (req, res) => {
+    res.send('b')
+}) // acha especificamente esses files
+
+app.post('/teste3', upload.any(), (req, res) => {
+    res.send('c')
+}) // acha qualquer um
+
+app.post('/teste4', upload.array('teste', 2), (req, res) => {
+    res.send('d')
+}) // acha especificamente
+
+await fs.rm("file_path", { force: true })
+    .then(() => { return })
+    .catch(ex => { throw new Error((ex as Error).message) })
+
+await fs.rename(
+    ``,
+    ``
+)

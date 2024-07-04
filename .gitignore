@@ -1,13 +1,14 @@
 # Compiled JavaScript files
 dist/
 
-# TypeScript v1 declaration files
-typings/
-
 # Node.js dependency directory
 node_modules/
 
-*.txt
-
+# Arquivos de upload da lib MULTER [DEPRECATED]
 uploads/
+
+# Credenciais
 .env
+
+# Logs do servidor em txt [DEPRECATED]
+src/logs/

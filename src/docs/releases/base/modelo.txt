@@ -1,0 +1,8 @@
+Alfa
+Beta
+Release Candidate
+Release
+
+Major (1.x.x)
+Minor (x.1.x)
+Patch (x.x.1)

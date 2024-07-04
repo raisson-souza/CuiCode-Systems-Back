@@ -1,0 +1,75 @@
+{
+    "Endpoint": "",
+    "Method": "",
+    "Fields": [
+        {
+            "FieldId": "", // id do campo (igual ao backend)
+            "Name": "", // Nome do campo (amigável)
+            "Type": "", // tipo de input
+            "PlaceHolder": "", // exemplo de valor
+            "MaxLen": 0,
+            "Nullable": false,
+            "NeedsSecondConfirmation": false,
+            "Options": [{Id: 0, Description: ""}],
+            "DefaultOptionId": "", // valor padrão das opções (nulavel)
+        }
+    ]
+}
+
+exemplo:
+
+"Fields": [
+    {
+        "FieldId": "Email",
+        "Name": "Email",
+        "PlaceHolder": "teste@gmail",
+        "Type": "email",
+        "MaxLen": 999,
+        "Nullable": true,
+    },
+    {
+        "FieldId": "Username",
+        "Name": "Nome de Usuário",
+        "PlaceHolder": "@fulano",
+        "Type": "text",
+        "MaxLen": 10,
+        "Nullable": true,
+    },
+    {
+        "FieldId": "Password",
+        "Name": "Senha",
+        "Type": "password",
+        "MaxLen": 999,
+        "Nullable": true,
+    },
+    {
+        "FieldId": "Gender",
+        "Name": "Sexo",
+        "Type": "select",
+        "PlaceHolder": "sexo da pessoa",
+        "Nullable": true,
+        "Options": [{Id: 'male', Description: "Homem"}, {Id: 'female', Description: "Mulher"}],
+    },
+    {
+        "FieldId": "Number",
+        "Name": "Numero Sortudo",
+        "Type": "radio",
+        "PlaceHolder": "numero da sorte",
+        "Nullable": true,
+        "Options": [{Id: 1, Description: "Um"}, {Id: 2, Description: "Dois"}],
+    },
+    {
+        "FieldId": "Humano",
+        "Name": "Ser Humano",
+        "Type": "switch",
+        "PlaceHolder": "É uma pessoa",
+        "Nullable": true,
+    },
+    {
+        "FieldId": "Tipo",
+        "Name": "Tipo da pessoa",
+        "Type": "checkbox",
+        "PlaceHolder": "tipo",
+        "Nullable": true,
+    }
+]
