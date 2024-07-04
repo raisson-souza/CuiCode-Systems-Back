@@ -5,9 +5,9 @@ import UsersAccountAppService from "../appServices/users/UsersAccountAppService"
 
 import { ControllerProps } from "./base/types/ControllerProps"
 
-export default function UsersAccountController(controllerProps : ControllerProps)
+export default function UsersAccountController(props : ControllerProps)
 {
-    const { app } = controllerProps
+    const { app } = props
 
     app.get("/users/account/email/approve", async (req, res) => {
         await new UsersAccountAppService(req, res).ApproveEmail()

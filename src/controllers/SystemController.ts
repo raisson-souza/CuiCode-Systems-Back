@@ -1,5 +1,3 @@
-import { Express } from "express"
-
 import DatabaseAppService from "../appServices/database/DatabaseAppService"
 import GetForm from "../services/system/GetForm"
 import SystemAppService from "../appServices/system/SystemAppService"
@@ -7,8 +5,12 @@ import SystemAppService from "../appServices/system/SystemAppService"
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
 import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
 
-function SystemController(app : Express)
+import { ControllerProps } from "./base/types/ControllerProps"
+
+function SystemController(props : ControllerProps)
 {
+    const { app } = props
+
     app.post('/system/database', RequestorAuthMiddleware, OriginAuthMiddleware, async (req, res) => {
         await new DatabaseAppService(req, res).FoundCuiCodeSystemsDatabase()
     })

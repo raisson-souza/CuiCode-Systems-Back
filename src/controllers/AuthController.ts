@@ -1,5 +1,3 @@
-import { Express } from "express"
-
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
 import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
 
@@ -7,8 +5,12 @@ import LoginService from "../services/auth/LoginService"
 import UserAuthorizedModulesService from "../services/auth/UserAuthorizedModules"
 import ValidateJwtService from "../services/auth/ValidateJwtService"
 
-function AuthController(app : Express)
+import { ControllerProps } from "./base/types/ControllerProps"
+
+function AuthController(props : ControllerProps)
 {
+    const { app } = props
+
     app.post('/login', OriginAuthMiddleware, async (req, res) => {
         await new LoginService(req, res).Operation()
     })
