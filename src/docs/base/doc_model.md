@@ -15,25 +15,3 @@
 {
 }
 ```
-
-# EXEMPLO
-
-## OPERAÇÃO X
-> POST | PUT  
-> Necessita autenticação.
-
-*URL =* /x
-
-**REQUEST**
-```json
-{
-    "Teste": 0
-}
-```
-
-**RESPONSE**
-```json
-{
-    "Teste": 1
-}
-```
