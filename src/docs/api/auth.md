@@ -3,45 +3,60 @@
 ## LOGIN
 > POST
 
-URL = /login  
-BODY =
-```
+*URL = /auth/login*
+
+**REQUEST**
+```json
 {
-    "email": "{ EMAIL }",
-    "password": "{ SENHA }"
+    "email": "fulano@gmail.com",
+    "password": "12345"
 }
 ```
 
-**RETORNA:**
+**RESPONSE**
 ```json
-"token": string
-"user": User
+{
+    "user": { },
+    "token": "eyIkpXV9.eyJOjE3MjA0OTI5Mjh9.CE3Lfd78"
+}
 ```
 
 ## VALIDADOR DE JWT
-> POST
+> POST  
+> Necessita autenticação. [ USUARIO ]
 
-URL = /validate_jwt?jwt={ JWT }
+*URL = /auth/refresh_token?token=eyIkpXV9.eyJOjE3MjA0OTI5Mjh9.CE3Lfd78*
 
-**RETORNA:**
+**RESPONSE**
 ```json
-"ok": boolean
-"user": User | null
+{
+    "user": { },
+    "newToken": "eyIkpXV9.eyJOjE3MjA0OTI5Mjh9.CE3Lfd78"
+}
 ```
 
 ## MÓDULOS DISPONÍVEIS AO USUÁRIO
-> GET
-- Necessita autenticação
+> GET  
+> Necessita autenticação. [ USUARIO ]
 
-URL = /user_authorized_modules
+*URL = /auth/user_authorized_modules*
 
-**RETORNA:**
+**RESPONSE**
 ```json
-"authorizedModules": [
+[
     {
         "moduleEnum": 0,
-        "moduleUrl": "/URL",
-        "usedModule": true
+        "moduleUrl": "/module/a",
+        "usedModule": true,
+        "moduleName": "Módulo A",
+        "activeModule": true
+    },
+    {
+        "moduleEnum": 1,
+        "moduleUrl": "/module/b",
+        "usedModule": false,
+        "moduleName": "Módulo B",
+        "activeModule": false
     }
 ]
 ```

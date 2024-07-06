@@ -36,17 +36,16 @@ app.get('/', (_, res) => {
 // OBS: Validar problemas em rotas externas tipo aprovação de email (pode ser necessário criar uma controler apenas para options).
 app.options("*", OriginAuthMiddleware)
 
-AuthController(app)
-FeaturesController(app)
-SystemController(app)
-UsersController({
+const controllerProps = {
     app: app,
     upload: upload
-})
-UsersAccountController({
-    app: app,
-    upload: upload
-})
+}
+
+AuthController(controllerProps)
+FeaturesController(controllerProps)
+SystemController(controllerProps)
+UsersController(controllerProps)
+UsersAccountController(controllerProps)
 
 const PORT = Env.Port()
 

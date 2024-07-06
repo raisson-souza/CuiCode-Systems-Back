@@ -1,9 +1,7 @@
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
 import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
 
-import LoginService from "../services/auth/LoginService"
-import UserAuthorizedModulesService from "../services/auth/UserAuthorizedModules"
-import ValidateJwtService from "../services/auth/ValidateJwtService"
+import AuthAppService from "../appServices/auth/AuthAppService"
 
 import { ControllerProps } from "./base/types/ControllerProps"
 
@@ -11,16 +9,16 @@ function AuthController(props : ControllerProps)
 {
     const { app } = props
 
-    app.post('/login', OriginAuthMiddleware, async (req, res) => {
-        await new LoginService(req, res).Operation()
+    app.post('/auth/login', OriginAuthMiddleware, async (req, res) => {
+        await new AuthAppService(req, res).Login()
     })
 
-    app.get('/validate_jwt', OriginAuthMiddleware, async (req, res) => {
-        await new ValidateJwtService(req, res).Operation()
+    app.get('/auth/refresh_token', OriginAuthMiddleware, async (req, res) => {
+        await new AuthAppService(req, res).RefreshToken()
     })
 
-    app.get('/user_authorized_modules', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
-        await new UserAuthorizedModulesService(req, res).Operation()
+    app.get('/auth/user_authorized_modules', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+        await new AuthAppService(req, res).UserAuthorizedModules()
     })
 }
 
