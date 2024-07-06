@@ -1,5 +1,4 @@
 import DatabaseAppService from "../appServices/database/DatabaseAppService"
-import GetForm from "../services/system/GetForm"
 import SystemAppService from "../appServices/system/SystemAppService"
 
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
@@ -35,8 +34,8 @@ function SystemController(props : ControllerProps)
         await new SystemAppService(req, res).SystemUnderMaintence()
     })
 
-    app.get('/get_form/:form', OriginAuthMiddleware, (req, res) => {
-        new GetForm(req, res).Operation()
+    app.get('/system/get_form/:form', OriginAuthMiddleware, async (req, res) => {
+        await new SystemAppService(req, res).GetForm()
     })
 }
 

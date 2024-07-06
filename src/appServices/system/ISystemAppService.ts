@@ -10,4 +10,6 @@ export default interface ISystemAppService
     GetCredentials() : void
     /** Coloca o sistema em manutenção. */
     SystemUnderMaintence() : void
+    /** Captura um formulário. */
+    GetForm() : void
 }

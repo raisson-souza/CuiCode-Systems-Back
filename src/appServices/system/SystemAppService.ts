@@ -1,4 +1,5 @@
 import AppServiceBase from "../base/AppServiceBase"
+import FormService from "../../services/system/FormService"
 import ResponseMessage from "../../classes/system/ResponseMessage"
 import SystemService from "../../services/system/SystemService"
 
@@ -212,6 +213,46 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
             })
     
             await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: (ex as Error).message,
+                log: ACTION,
+                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            })
+        }
+    }
+
+    async GetForm()
+    {
+        const ACTION = `${ this.AppServiceAction } / Captura Formulário`
+        try
+        {
+            this.AuthenticateSystemRequestor()
+
+            const formName = this.REQ.params["form"]
+
+            if (IsNil(formName))
+            {
+                ResponseMessage.SendNullField({
+                    expressResponse: this.RES,
+                    fields: ["form"],
+                    log: ACTION
+                })
+            }
+
+            const form = FormService.Get({
+                formName: formName
+            })
+
+            ResponseMessage.Send({
+                expressResponse: this.RES,
+                data: form,
+                log: ACTION,
+                status: HttpStatusEnum.OK
+            })
         }
         catch (ex)
         {

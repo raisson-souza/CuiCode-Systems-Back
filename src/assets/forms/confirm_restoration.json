@@ -1,0 +1,9 @@
+[
+    {
+        "FieldId": "Email",
+        "Name": "Seu Email",
+        "Type": "email",
+        "PlaceHolder": "fulano@email.com",
+        "MaxLen": 999
+    }
+]
