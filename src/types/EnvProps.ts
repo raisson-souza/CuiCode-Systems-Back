@@ -10,8 +10,8 @@ type EnvProps = {
     Port : () => string,
     JwtSecret : () => string,
     AllowedOrigins : () => AllowedOriginsProps,
-    SystemJwt : () => string,
-    PostManTestingException : () => boolean,
+    SystemJwtSecret : () => string,
+    IsDevelopment : () => boolean,
     DatabaseConfig : () => DatabaseConfigProps,
     EmailSenderConfig : () => EmailSenderConfigProps
 }

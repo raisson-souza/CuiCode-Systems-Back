@@ -41,12 +41,12 @@ const Env : EnvProps = {
         })
         return allowedOrigins
     },
-    SystemJwt: () => {
-        const _ = String(process.env["CUI_CODE_SYS_KEY"])
-        if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_SYS_KEY não configurada.")
+    SystemJwtSecret: () => {
+        const _ = String(process.env["CUI_CODE_SYS_JWT_SECRET"])
+        if (IsNil(_)) throw new Error("Variável de ambiente CUI_CODE_SYS_JWT_SECRET não configurada.")
         return _
     },
-    PostManTestingException: () => {
+    IsDevelopment: () => {
         const _env = Env.Env()
         return _env === "testing"
     },

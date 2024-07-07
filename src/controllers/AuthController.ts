@@ -1,5 +1,5 @@
 import OriginAuthMiddleware from "../middlewares/OriginAuthMiddleware"
-import RequestorAuthMiddleware from "../middlewares/RequestorAuthMiddleware"
+import UserRequestorAuthMiddleware from "../middlewares/requestors/UserRequestorAuthMiddleware"
 
 import AuthAppService from "../appServices/auth/AuthAppService"
 
@@ -13,11 +13,11 @@ function AuthController(props : ControllerProps)
         await new AuthAppService(req, res).Login()
     })
 
-    app.get('/auth/refresh_token', OriginAuthMiddleware, async (req, res) => {
+    app.get('/auth/refresh_token', OriginAuthMiddleware, UserRequestorAuthMiddleware, async (req, res) => {
         await new AuthAppService(req, res).RefreshToken()
     })
 
-    app.get('/auth/user_authorized_modules', OriginAuthMiddleware, RequestorAuthMiddleware, async (req, res) => {
+    app.get('/auth/user_authorized_modules', OriginAuthMiddleware, UserRequestorAuthMiddleware, async (req, res) => {
         await new AuthAppService(req, res).UserAuthorizedModules()
     })
 }

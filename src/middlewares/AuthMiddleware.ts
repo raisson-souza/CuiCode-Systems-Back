@@ -14,7 +14,7 @@ import IsUndNull from "../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../enums/system/HttpStatusEnum"
 
-// AUTHMIDDLEWARE NÃO SERÁ MAIS USADO!
+/** DEPRECATED! */
 async function AuthMiddleware
 (
     req : Request,

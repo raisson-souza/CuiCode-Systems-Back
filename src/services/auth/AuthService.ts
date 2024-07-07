@@ -48,6 +48,11 @@ export default abstract class AuthService
     }
 
     /** Cria token do sistema. */
-    static CreateSystemToken()
-    { }
+    static CreateSystemToken() : string
+    {
+        return sign(
+            { "SystemKey": Env.SystemJwtSecret() },
+            Env.JwtSecret()
+        )
+    }
 }

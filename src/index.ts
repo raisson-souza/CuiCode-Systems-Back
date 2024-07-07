@@ -4,6 +4,7 @@ import multer from 'multer'
 import Env from "./config/Env"
 
 import AuthController from "./controllers/AuthController"
+import AuthService from "./services/auth/AuthService"
 import FeaturesController from "./controllers/FeaturesController"
 import SystemController from "./controllers/SystemController"
 import UsersAccountController from "./controllers/UsersAccountController"
@@ -51,6 +52,7 @@ const PORT = Env.Port()
 
 app.listen(PORT, () => {
     console.log(`CuiCodeSystems SGPISG ouvindo na porta ${ PORT }.`);
+    console.log(`System JWT: ${ AuthService.CreateSystemToken() }`)
 })
 
 Test()

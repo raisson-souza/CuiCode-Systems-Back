@@ -18,7 +18,7 @@ abstract class ServerService extends Service
 
         const encryptedKey = EncryptInfo(key)
 
-        if (encryptedKey != env.SystemJwt()) {
+        if (encryptedKey != env.SystemJwtSecret()) {
             ResponseMessage.UnauthorizedSystem({
                 expressResponse: this.RES,
                 log: this.Action

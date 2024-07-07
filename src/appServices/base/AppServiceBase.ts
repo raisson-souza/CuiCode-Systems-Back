@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-import env from "../../config/Env"
+import Env from "../../config/Env"
 
 import DB from "../../classes/db/DB"
 import ResponseMessage from "../../classes/system/ResponseMessage"
@@ -82,7 +82,7 @@ export default abstract class AppServiceBase implements IAppService
 
         const encryptedKey = EncryptInfo(key)
 
-        if (encryptedKey != env.SystemJwt()) {
+        if (encryptedKey != EncryptInfo(Env.SystemJwtSecret())) {
             ResponseMessage.UnauthorizedSystem({
                 expressResponse: this.RES,
                 log: this.AppServiceAction

@@ -4,20 +4,19 @@ import {
     Response,
 } from "express"
 import { verify } from "jsonwebtoken"
+import Env from "../../config/Env"
 
-import env from "../config/Env"
+import Exception from "../../classes/custom/Exception"
+import ResponseMessage from "../../classes/system/ResponseMessage"
 
-import Exception from "../classes/custom/Exception"
-import ResponseMessage from "../classes/system/ResponseMessage"
+import IsUndNull from "../../functions/logic/IsUndNull"
 
-import IsUndNull from "../functions/logic/IsUndNull"
+import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
-import HttpStatusEnum from "../enums/system/HttpStatusEnum"
+const ACTION = "Middleware de Requeridor Usuário"
 
-const ACTION = "RequestorAuthMiddleware"
-
-/** DEPRECATED! */
-async function RequestorAuthMiddleware
+/** Middleware para o parse e gravação da autenticação do requeridor usuário. */
+export default async function UserRequestorAuthMiddleware
 (
     req : Request,
     res : Response,
@@ -38,17 +37,17 @@ async function RequestorAuthMiddleware
 
         const token = ParseJwt(authorization!)
 
-        // Para a credencial do sistema é necessário enviar crua do front
         const {
             userAuthId,
-            systemKey
-        } = DecodeJwt(token, res)
+        } = DecodeJwt({
+            res: res,
+            token: token
+        })
 
-        PrintAuthInReq(
-            req,
-            userAuthId,
-            systemKey
-        )
+        PrintAuthInReq({
+            req: req,
+            userId: userAuthId
+        })
 
         next()
     }
@@ -56,7 +55,7 @@ async function RequestorAuthMiddleware
     {
         ResponseMessage.Send({
             status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            data: `Erro na autenticação do requeridor: ${ (ex as Error).message }`,
+            data: (ex as Error).message,
             log: ACTION,
             expressResponse: res
         })
@@ -75,24 +74,26 @@ function ParseJwt(jwt : string)
     return jwt
 }
 
+type DecodeJwtProps = {
+    token : string
+    res : Response
+}
+
 /**
  * Extrai os dados de autenticação do JWT.
  */
-function DecodeJwt
-(
-    jwt : string,
-    res : Response
-)
+function DecodeJwt(props : DecodeJwtProps)
 {
+    const { res, token } = props
+
     const decoded = verify(
-        jwt,
-        env.JwtSecret()
+        token,
+        Env.JwtSecret()
     ) as any
 
     const userAuthId = decoded["UserAuthId"] as string
-    const systemKey = decoded["SystemKey"] as string
 
-    if (IsUndNull(userAuthId) && IsUndNull(systemKey)) {
+    if (IsUndNull(userAuthId)) {
         ResponseMessage.NoAuthFoundInToken({
             expressResponse: res,
             log: ACTION
@@ -100,31 +101,24 @@ function DecodeJwt
     }
 
     return {
-        "userAuthId": userAuthId,
-        "systemKey": systemKey,
+        userAuthId,
     }
+}
+
+type PrintAuthInReqProps = {
+    req : Request,
+    userId : string,
 }
 
 /**
  * Grava o valor das credenciais na requisição.
  */
-function PrintAuthInReq
-(
-    req : Request,
-    userId : string,
-    systemKey : string
-)
+function PrintAuthInReq(props : PrintAuthInReqProps)
 {
-    if (req.method == "GET")
-    {
-        req.query["UserAuthId"] = userId
-        req.query["SystemKey"] = systemKey
-    }
-    else
-    {
-        req.body["UserAuthId"] = userId
-        req.body["SystemKey"] = systemKey
-    }
-}
+    const { req, userId } = props
 
-export default RequestorAuthMiddleware
+    if (req.method == "GET")
+        req.query["UserAuthId"] = userId
+    else
+        req.body["UserAuthId"] = userId
+}

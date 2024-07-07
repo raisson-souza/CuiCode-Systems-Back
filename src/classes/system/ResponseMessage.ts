@@ -1,6 +1,9 @@
-import { Response } from "express"
-
-import { BadFieldsResponseProps, GenericHttpResponseProps, GlobalSendProps, ResponseMessage as ResponseMessageType } from "../../types/ResponseMessage"
+import {
+    BadFieldsResponseProps,
+    GenericHttpResponseProps,
+    GlobalSendProps,
+    ResponseMessage as ResponseMessageType
+} from "../../types/ResponseMessage"
 
 import Exception from "../custom/Exception"
 import Send from "./Send"
@@ -243,7 +246,7 @@ abstract class ResponseMessage
         log
     } : GenericHttpResponseProps)
     {
-        const response = "Usuário não autenticado."
+        const response = "Sistema não autenticado."
 
         this.Send({
             status: HttpStatusEnum.UNAUTHORIZED,

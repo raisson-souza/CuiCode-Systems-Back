@@ -236,7 +236,7 @@ export default abstract class SystemService
         if (isAdmRoot)
         {
             credentials.JwtSecret = Env.JwtSecret()
-            credentials.SystemJwt = Env.SystemJwt()
+            credentials.SystemJwt = Env.SystemJwtSecret()
             credentials.DatabaseConfig = Env.DatabaseConfig()
             credentials.EmailSenderConfig = Env.EmailSenderConfig()
         }
