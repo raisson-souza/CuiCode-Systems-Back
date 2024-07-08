@@ -296,6 +296,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         const ACTION = `${ this.AppServiceAction } / Listagem de usuários`
         try
         {
+            this.AuthenticateSystemRequestor()
+
             const visualizationEnum = UsersVisualizationEnumParser(Number.parseInt(this.REQ.query["visualization"] as string))
             const filterEnum = UsersFilterEnumParser(Number.parseInt(this.REQ.query["filter"] as string))
             const limit = Number.parseInt(this.REQ.query["limit"] as string)
@@ -308,8 +310,6 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                     log: ACTION
                 })
             }
-
-            this.AuthenticateSystemRequestor()
 
             await this.Db.ConnectPostgres()
 
@@ -473,6 +473,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         const ACTION = `${ this.AppServiceAction } / Busca de email de usuário`
         try
         {
+            this.AuthenticateSystemRequestor()
+
             const email = this.REQ.query["email"] as string
 
             if (IsNil(email))

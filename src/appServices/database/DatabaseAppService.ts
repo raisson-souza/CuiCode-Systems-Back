@@ -16,13 +16,9 @@ export default class DatabaseAppService extends AppServiceBase implements IDatab
         const ACTION = `${ this.AppServiceAction } / Criação da Base de Dados`
         try
         {
+            this.AuthenticateSystemRequestor()
+
             await this.Db.ConnectPostgres()
-
-            await this.AuthenticateUserRequestor()
-
-            this.ValidateUserRequestor({
-                level: PermissionLevelEnum.Root
-            })
 
             await DatabaseService.FoundCuiCodeSystemsDatabase({
                 Db: this.Db

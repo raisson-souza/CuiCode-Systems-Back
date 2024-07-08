@@ -76,6 +76,8 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
 
             await this.Db.ConnectPostgres()
 
+            await this.AuthenticateUserRequestor()
+
             const refreshToken = await AuthService.ValidateJwt({
                 Db: this.Db,
                 token: token

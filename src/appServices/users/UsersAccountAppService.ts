@@ -158,6 +158,7 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         const ACTION = `${ this.AppServiceAction } / Solicitação de Recuperação de Conta`
         try
         {
+            this.AuthenticateSystemRequestor()
             await this.Db.ConnectPostgres()
 
             const email = this.REQ.query["email"] as string
@@ -201,6 +202,8 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         const ACTION = `${ this.AppServiceAction } / Confirmação de Recuperação de Conta`
         try
         {
+            this.AuthenticateSystemRequestor()
+
             await this.Db.ConnectPostgres()
 
             const userNewPassword = this.REQ.body["new_password"] //att doc
@@ -252,6 +255,8 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         const ACTION = `${ this.AppServiceAction } / Verificação de Solicitação de Recuperação de Conta`
         try
         {
+            this.AuthenticateSystemRequestor()
+
             await this.Db.ConnectPostgres()
 
             const jwt = this.REQ.query["jwt"] as string

@@ -21,6 +21,8 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         const ACTION = `${ this.AppServiceAction } / Estabilidade do Sistema`
         try
         {
+            this.AuthenticateSystemRequestor()
+
             await this.Db.ConnectPostgres()
 
             const parameters = await SystemService.GetParameters({
@@ -62,6 +64,8 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         const ACTION = `${ this.AppServiceAction } / Estilo atual do Sistema`
         try
         {
+            this.AuthenticateSystemRequestor()
+
             await this.Db.ConnectPostgres()
 
             const systemStyles = await SystemService.GetSystemsStyles({
