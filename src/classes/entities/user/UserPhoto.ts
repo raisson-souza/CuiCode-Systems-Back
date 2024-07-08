@@ -1,12 +1,9 @@
-import { Client } from "pg"
-
 import EntityBasic from "../base/EntityBasic"
 import User from "./User"
 
 import FindValue from "../../../functions/logic/FindValue"
-import IsUndNull from "../../../functions/logic/IsUndNull"
 
-class UserPhoto extends EntityBasic
+export default class UserPhoto extends EntityBasic
 {
     PhotoBase64 : string
     Created : Date
@@ -40,5 +37,3 @@ class UserPhoto extends EntityBasic
         }
     }
 }
-
-export default UserPhoto

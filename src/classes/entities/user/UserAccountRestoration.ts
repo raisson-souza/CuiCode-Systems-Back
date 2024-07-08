@@ -1,4 +1,3 @@
-import { Client } from "pg"
 import { sign, verify } from "jsonwebtoken"
 
 import env from "../../../config/Env"
@@ -10,7 +9,7 @@ import FindValue from "../../../functions/logic/FindValue"
 import IsJwtExpired from "../../../functions/math/IsTimeExpired"
 import IsUndNull from "../../../functions/logic/IsUndNull"
 
-class UserAccountRestoration extends EntityBasic
+export default class UserAccountRestoration extends EntityBasic
 {
     Completed : Boolean
     Created : Date
@@ -114,5 +113,3 @@ class UserAccountRestoration extends EntityBasic
         )
     }
 }
-
-export default UserAccountRestoration

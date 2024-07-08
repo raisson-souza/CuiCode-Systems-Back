@@ -6,8 +6,8 @@ import User from "../classes/entities/user/User"
 import IsUndNull from "../functions/logic/IsUndNull"
 
 import PermissionLevelEnum from "../enums/PermissionLevelEnum"
+
 import { UserUpdateValidatorProps } from "./types/UsersValidatorProps"
-import IsNil from "../functions/logic/IsNil"
 
 export default abstract class UsersValidator
 {

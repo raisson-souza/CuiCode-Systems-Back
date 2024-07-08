@@ -1,6 +1,4 @@
-import AnySearch from "./AnySearch"
-
-interface IEntityBasic
+export default interface IEntityBasic
 {
     Id : number
 
@@ -8,5 +6,3 @@ interface IEntityBasic
 
     ConvertToSqlObject() : any
 }
-
-export default IEntityBasic

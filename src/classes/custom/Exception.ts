@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 
 import GetCompleteDate from '../../functions/date/GetCompleteDate'
 
-abstract class Exception
+export default abstract class Exception
 {
     private static async SaveLog(errorMessage : string, action : string)
     {
@@ -43,5 +43,3 @@ abstract class Exception
 
     static UnexpectedError(msg : string, action : string) { this.SaveLog(msg, action) }
 }
-
-export default Exception
