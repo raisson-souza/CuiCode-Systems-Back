@@ -104,16 +104,15 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
             await this.AuthenticateUserRequestor()
             this.ValidateUserRequestor({})
 
-            const userId = Number.parseInt(this.REQ.body["user_id"])
+            const userId = Number.parseInt(this.GetReqBodyValue("user_id") ?? "")
+            const password = this.GetReqBodyValue("password")
+            const passwordHint = this.GetReqBodyValue("password_hint")
 
-            const password = this.REQ.body["password"]
-            const passwordHint = this.REQ.body["password_hint"]
-
-            if (IsNil(password) || IsNil(passwordHint))
+            if (IsNil(userId) || IsNil(password) || IsNil(passwordHint))
             {
                 ResponseMessage.SendNullField({
                     expressResponse: this.RES,
-                    fields: ["password", "password_hint"],
+                    fields: ["user_id", "password", "password_hint"],
                     log: ACTION
                 })
             }
@@ -122,8 +121,8 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                 Db: this.Db,
                 isAdmChange: this.UserAuth!.Id != userId,
                 modifiedBy: this.UserAuth!.Id,
-                password: password,
-                passwordHint: passwordHint,
+                password: password!,
+                passwordHint: passwordHint!,
                 userId: userId
             })
 
@@ -200,8 +199,8 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
 
             await this.Db.ConnectPostgres()
 
-            const userNewPassword = this.REQ.body["new_password"] //att doc
-            const userNewPasswordHint = this.REQ.body["new_password_hint"]
+            const userNewPassword = this.GetReqBodyValue("new_password")
+            const userNewPasswordHint = this.GetReqBodyValue("new_password_hint")
             const jwt = this.REQ.query["jwt"] as string
 
             if (IsNil(userNewPassword) || IsNil(userNewPasswordHint) || IsNil(jwt))
@@ -215,8 +214,8 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
 
             await UsersAccountService.ConfirmAccountRecovery({
                 Db: this.Db,
-                userNewPassword: userNewPassword,
-                userNewPasswordHint: userNewPasswordHint,
+                userNewPassword: userNewPassword!,
+                userNewPasswordHint: userNewPasswordHint!,
                 recoveryJwt: jwt
             })
 

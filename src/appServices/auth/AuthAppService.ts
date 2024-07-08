@@ -18,8 +18,8 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
         const ACTION = `${ this.AppServiceAction } / Login`
         try
         {
-            const email = this.REQ.body["email"]
-            const password = this.REQ.body["password"]
+            const email = this.GetReqBodyValue("email")
+            const password = this.GetReqBodyValue("password")
 
             if (IsNil(email) || IsNil(password))
             {
@@ -34,8 +34,8 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
 
             const login = await UserAuthService.Login({
                 Db: this.Db,
-                userEmail: email,
-                userPassword: password
+                userEmail: email!,
+                userPassword: password!
             })
 
             ResponseMessage.Send({

@@ -65,18 +65,18 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         try
         {
             const userDto : UpdateUserDTO = {
-                Id: Number.parseInt(this.REQ.body["Id"]),
-                Active: ToBool(this.REQ.body["Active"]),
-                Deleted: ToBool(this.REQ.body["Deleted"]),
-                BirthDate: this.REQ.body["BirthDate"],
-                Email: this.REQ.body["Email"],
-                Name: this.REQ.body["Name"],
-                PermissionLevel: Number.parseInt(this.REQ.body["PermissionLevel"]),
-                Phone: this.REQ.body["Phone"],
-                PhotoBase64: this.REQ.body["PhotoBase64"],
-                RecoveryEmail: this.REQ.body["RecoveryEmail"],
-                Sex: Number.parseInt(this.REQ.body["Sex"]),
-                Username: this.REQ.body["Username"],
+                Id: Number.parseInt(this.GetReqBodyValue("Id") ?? ""),
+                Active: ToBool(this.GetReqBodyValue("Active")),
+                Deleted: ToBool(this.GetReqBodyValue("Deleted")),
+                BirthDate: this.GetReqBodyValue("BirthDate") ?? "",
+                Email: this.GetReqBodyValue("Email") ?? "",
+                Name: this.GetReqBodyValue("Name") ?? "",
+                PermissionLevel: Number.parseInt(this.GetReqBodyValue("PermissionLevel") ?? ""),
+                Phone: this.GetReqBodyValue("Phone") ?? "",
+                PhotoBase64: this.GetReqBodyValue("PhotoBase64") ?? "",
+                RecoveryEmail: this.GetReqBodyValue("RecoveryEmail") ?? "",
+                Sex: Number.parseInt(this.GetReqBodyValue("Sex") ?? ""),
+                Username: this.GetReqBodyValue("Username") ?? "",
             }
 
             await this.Db.ConnectPostgres()
@@ -203,7 +203,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         const ACTION = `${ this.AppServiceAction } / Captura de foto de usuário`
         try
         {
-            const userId = Number.parseInt(this.REQ.params.id as string)
+            const userId = Number.parseInt(this.GetReqParamValue("id") ?? "")
 
             if (IsNil(userId))
             {
@@ -249,8 +249,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         const ACTION = `${ this.AppServiceAction } / Cadastro de foto de usuário`
         try
         {
-            const userId = Number.parseInt(this.REQ.params.id as string)
-            const photo = this.REQ.body["photo"]
+            const userId = Number.parseInt(this.GetReqParamValue("id") ?? "")
+            const photo = this.GetReqBodyValue("photo")
 
             if (IsNil(userId) || IsNil(photo))
             {
@@ -270,7 +270,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             await UsersService.RegistryPhoto({
                 Db: this.Db,
-                photo: photo,
+                photo: photo!,
                 userId: userId
             })
 
@@ -386,7 +386,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         const ACTION = `${ this.AppServiceAction } / Logs de usuário`
         try
         {
-            const userId = Number.parseInt(this.REQ.params.id)
+            const userId = Number.parseInt(this.GetReqParamValue("id") ?? "")
             const initialDate = new Date(this.REQ.query.initialDate as string)
             const finalDate = new Date(this.REQ.query.finalDate as string)
 

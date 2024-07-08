@@ -153,7 +153,7 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         const ACTION = `${ this.AppServiceAction } / Sistema em Manutenção`
         try
         {
-            const systemUnderMaintence = ToBool(this.REQ.body["maintence"] as string)
+            const systemUnderMaintence = ToBool(this.GetReqBodyValue("maintence"))
 
             if (IsNil(systemUnderMaintence))
             {
@@ -237,7 +237,7 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         {
             this.AuthenticateSystemRequestor()
 
-            const formName = this.REQ.params["form"]
+            const formName = this.GetReqParamValue("form")
 
             if (IsNil(formName))
             {
@@ -249,7 +249,7 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
             }
 
             const form = FormService.Get({
-                formName: formName
+                formName: formName!
             })
 
             ResponseMessage.Send({

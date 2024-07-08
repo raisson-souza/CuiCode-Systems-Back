@@ -24,9 +24,6 @@ export default interface IAppService
     /** Autentica o requeridor. Caso usuário valida o nível, caso sistema, passa.  */
     ValidateUserRequestor(validateUserRequestorProps : ValidateUserRequestorProps) : void
 
-    /** Captura um valor específico da Query da requisição */
-    GetReqQueryValue(key : string) : string | null
-
     /** Captura um valor específico do Body da requisição */
     GetReqBodyValue(key : string) : string | null
 

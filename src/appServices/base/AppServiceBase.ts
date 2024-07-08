@@ -120,19 +120,6 @@ export default abstract class AppServiceBase implements IAppService
         }
     }
 
-    GetReqQueryValue(key : string) : string | null {
-        const value = this.REQ.query[key]
-
-        if (IsNil(value))
-            return null
-        else if (typeof value === 'object')
-            return (value as string[]).join('-')
-        else if (typeof value === 'string')
-            return value as string
-        else
-            return null
-    }
-
     GetReqBodyValue(key : string): string | null {
         const value = this.REQ.body[key]
 
