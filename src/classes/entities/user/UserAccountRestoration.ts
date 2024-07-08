@@ -5,15 +5,12 @@ import env from "../../../config/Env"
 
 import EntityBasic from "../base/EntityBasic"
 import User from "./User"
-import UserBase from "../../bases/UserBase"
-
-import IEntityWithForeignKey from "../../../interfaces/IEntityWithForeignKey"
 
 import FindValue from "../../../functions/logic/FindValue"
 import IsJwtExpired from "../../../functions/math/IsTimeExpired"
 import IsUndNull from "../../../functions/logic/IsUndNull"
 
-class UserAccountRestoration extends EntityBasic implements IEntityWithForeignKey
+class UserAccountRestoration extends EntityBasic
 {
     Completed : Boolean
     Created : Date
@@ -115,12 +112,6 @@ class UserAccountRestoration extends EntityBasic implements IEntityWithForeignKe
             env.JwtSecret(),
             { expiresIn: "30m" }
         )
-    }
-
-    async GetForeignKey(db : Client)
-    {
-        if (!IsUndNull(this.UserId))
-            this.User = await UserBase.Get(db, this.UserId)
     }
 }
 

@@ -11,7 +11,6 @@ import UsersValidator from "../../validators/UsersValidator"
 import EncryptInfo from "../../functions/security/EncryptPassword"
 import IsJwtExpired from "../../functions/math/IsTimeExpired"
 import IsNil from "../../functions/logic/IsNil"
-import QueryDbRowByProperty from "../../functions/SQL/QueryDbRowByProperty"
 import ToBase64 from "../../functions/formatting/ToBase64"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
@@ -81,13 +80,13 @@ export default class UsersAccountService
 
         if (isCreation || IsNil(user.Id))
         {
-            user.Id = await QueryDbRowByProperty(
-                props.Db.PostgresDb,
-                "users",
-                "username",
-                user.Username,
-                "id"
-            )
+            const query = `SELECT id FROM users WHERE username = '${ user.Username }'`
+            
+            await props.Db.PostgresDb.query(query)
+                .then(result => {
+                    user.Id = result.rows[0]["id"]
+                })
+                .catch(ex => { throw new Error(ex.message) })
         }
 
         const createEmailApprovalQuery =

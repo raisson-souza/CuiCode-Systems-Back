@@ -2,14 +2,11 @@ import { Client } from "pg"
 
 import EntityBasic from "../base/EntityBasic"
 import User from "./User"
-import UserBase from "../../bases/UserBase"
-
-import IEntityWithForeignKey from "../../../interfaces/IEntityWithForeignKey"
 
 import FindValue from "../../../functions/logic/FindValue"
 import IsUndNull from "../../../functions/logic/IsUndNull"
 
-class UserPhoto extends EntityBasic implements IEntityWithForeignKey
+class UserPhoto extends EntityBasic
 {
     PhotoBase64 : string
     Created : Date
@@ -41,14 +38,6 @@ class UserPhoto extends EntityBasic implements IEntityWithForeignKey
             "user_id": this.UserId,
             "user": this.User
         }
-    }
-
-    async GetForeignKey(db : Client)
-    {
-        const user = await UserBase.Get(db, this.UserId)
-
-        if (!IsUndNull(user))
-            this.User = user!
     }
 }
 

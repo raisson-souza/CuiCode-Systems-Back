@@ -1,6 +1,5 @@
 import AnySearch from "../../../interfaces/AnySearch"
 
-import { EntityLog } from "../base/EntityLog"
 import EntityBasic from "../base/EntityBasic"
 
 import FindValue from "../../../functions/logic/FindValue"
@@ -11,7 +10,7 @@ class Log extends EntityBasic
     EntityReferenceNameSql : string
 
     AdmChange : boolean
-    Change : EntityLog[] | string
+    Change : string
     Date : Date
     EntityReferenceId : number
     ModifiedBy : number
