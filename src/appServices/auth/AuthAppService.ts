@@ -77,6 +77,7 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({})
 
             const refreshToken = await AuthService.ValidateJwt({
                 Db: this.Db,
@@ -110,6 +111,7 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
         {
             await this.Db.ConnectPostgres()
             await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({})
 
             const authorizedModules = await UserAuthService.UserAuthorizedModules({
                 Db: this.Db,

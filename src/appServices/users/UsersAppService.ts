@@ -82,6 +82,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({})
 
             this.ValidateUserRequestor({
                 allowDifferentUserAuthAndUserToOperate: true,
@@ -169,6 +170,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({})
 
             const user = await UsersService.Get({
                 Db: this.Db,
@@ -215,6 +217,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({})
 
             const photo = await UsersService.GetPhoto({
                 Db: this.Db,
@@ -351,10 +354,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
-
-            this.ValidateUserRequestor({
-                userIdToOperate: this.UserAuth!.Id,
-            })
+            this.ValidateUserRequestor({})
 
             const dailyInfo = await UsersService.DailyInfo({
                 Db: this.Db,
@@ -402,10 +402,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
-
-            this.ValidateUserRequestor({
-                userIdToOperate: userId,
-            })
+            this.ValidateUserRequestor({})
 
             const userLogs = await UsersService.GetLogs({
                 Db: this.Db,

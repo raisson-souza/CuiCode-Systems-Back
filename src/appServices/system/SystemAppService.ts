@@ -103,6 +103,10 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         try
         {
             await this.Db.ConnectPostgres()
+            await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({
+                level: PermissionLevelEnum.Adm
+            })
 
             const activateModule = this.REQ.query["active"] as string
             const moduleNumber = this.REQ.query["module"] as string
@@ -115,9 +119,6 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
                     log: ACTION,
                 })
             }
-            
-            await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
 
             await SystemService.DeactivateModule({
                 Db: this.Db,
@@ -167,7 +168,7 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
 
             await this.AuthenticateUserRequestor()
             this.ValidateUserRequestor({
-                level: PermissionLevelEnum.Root
+                level: PermissionLevelEnum.Adm
             })
 
             await SystemService.SystemUnderMaintence({

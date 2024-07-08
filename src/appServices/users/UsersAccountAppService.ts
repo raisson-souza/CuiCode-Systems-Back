@@ -66,10 +66,7 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
-
-            this.ValidateUserRequestor({
-                userIdToOperate: this.UserAuth!.Id
-            })
+            this.ValidateUserRequestor({})
 
             await UsersAccountService.SendEmailApproval({
                 Db: this.Db,
@@ -105,12 +102,9 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
             await this.Db.ConnectPostgres()
 
             await this.AuthenticateUserRequestor()
+            this.ValidateUserRequestor({})
 
             const userId = Number.parseInt(this.REQ.body["user_id"])
-
-            this.ValidateUserRequestor({
-                userIdToOperate: userId,
-            })
 
             const password = this.REQ.body["password"]
             const passwordHint = this.REQ.body["password_hint"]
