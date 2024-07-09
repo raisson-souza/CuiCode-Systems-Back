@@ -1,4 +1,5 @@
 import EmailSender from "../../classes/entities/email/EmailSender"
+import ModulesService from "../system/ModulesService"
 import SqlFormatter from "../../classes/sql/SqlFormatter"
 import User from "../../classes/entities/user/User"
 import UsersAccountService from "./UsersAccountService"
@@ -14,6 +15,7 @@ import ToSqlDate from "../../functions/SQL/ToSqlDate"
 import AnySearch from "../../interfaces/AnySearch"
 
 import EmailTitlesEnum from "../../enums/EmailTitlesEnum"
+import ModulesEnum from "../../enums/ModulesEnum"
 import UsersFilterEnum from "../../enums/modules/UsersFilterEnum"
 import UsersVisualizationEnum from "../../enums/modules/UsersVisualizationEnum"
 
@@ -31,7 +33,6 @@ import {
     ListProps,
     ListReturn,
     RegistryPhotoProps,
-    UpdatePasswordProps,
     UpdateProps,
 } from "./types/UsersServiceProps"
 
@@ -389,19 +390,41 @@ export default abstract class UsersService
     {
         const { userId } = props
 
+        const modules = await ModulesService.List({
+            Db: props.Db
+        })
+
+        /** GRUPOS */
         // PRÉ IMPLEMENTAÇÃO DA BUSCA DE GRUPOS INCLUIDOS
-        const groups : any[] = []
+        let groups : any[] = []
+
+        if (modules.filter(module => { return module.ModuleEnum === ModulesEnum.Groups && !module.Active }))
+            groups = []
+        else
+        {
+            // ...
+        }
         // TRANSFORMAR EM DTO E PEGAR NAME E ID
 
+        /** SOLICITAÇÕES */
         // PRÉ IMPLEMENTAÇÃO DA BUSCA DE SOLICITAÇÕES ATENDIDAS
-        const solicitations : any[] = []
+        let solicitations : any[] = []
         // TRANSFORMAR EM DTO E PEGAR NAME E ID
 
         // PRÉ IMPLEMENTAÇÃO DA BUSCA DE SOLICITAÇÕES ATENDIDAS PELO GRUPO INCLUIDO
-        const solicitationsByGroup : any[] = []
+        let solicitationsByGroup : any[] = []
         // TRANSFORMAR EM DTO E PEGAR NAME E ID
 
-        solicitations.concat(solicitationsByGroup)
+        if (modules.filter(module => { return module.ModuleEnum === ModulesEnum.Solicitations && !module.Active }))
+        {
+            solicitations = []
+            solicitationsByGroup = []
+        }
+        else
+        {
+            // ...
+            solicitations.concat(solicitationsByGroup)
+        }
 
         const myDelayedSolicitations = solicitations
             .filter(solicitation => {
@@ -409,31 +432,62 @@ export default abstract class UsersService
             })
             .map(delayedSolicitation => { return delayedSolicitation })
 
+        /** CHATS */
         // PRÉ IMPLEMENTAÇÃO DA BUSCA DE CHATS INCLUIDOS
-        const chats : any[] = []
+        let chats : any[] = []
+
+        if (modules.filter(module => { return module.ModuleEnum === ModulesEnum.Groups && !module.Active }))
+            chats = []
+        else
+        {
+            // ...
+        }
 
         const chatsQuantity = chats.length
 
+        /** MORFEUS */
         // PRÉ IMPLEMENTAÇÃO DA BUSCA DE SONHOS
-        const morfeusDreams : any[] = []
+        let morfeusDreams : any[] = []
+
+        if (modules.filter(module => { return module.ModuleEnum === ModulesEnum.Morfeus && !module.Active }))
+            morfeusDreams = []
+        else
+        {
+            // ...
+        }
 
         const dreamsQuantity = morfeusDreams.length
 
+        /** HESTIA */
         // PRÉ IMPLEMENTAÇÃO DA BUSCA DE TASKS HESTIA
-        const hestiaTasks : any[] = []
+        let hestiaTasks : any[] = []
+
+        if (modules.filter(module => { return module.ModuleEnum === ModulesEnum.Hestia && !module.Active }))
+            hestiaTasks = []
+        else
+        {
+            // ...
+        }
 
         const hestiaTasksThisWeekQuantity = hestiaTasks
             .filter(() => {})
             .map(task => { return task })
             .length
-
         const hestiaTasksPendingQuantity = hestiaTasks
             .filter(() => {})
             .map(task => { return task })
             .length
 
+        /** MINERVA */
         // PRÉ IMPLEMENTAÇÃO DA BUSCA DE PLANOS MINERVA
-        const minervaPlans : any[] = []
+        let minervaPlans : any[] = []
+
+        if (modules.filter(module => { return module.ModuleEnum === ModulesEnum.Hestia && !module.Active }))
+            minervaPlans = []
+        else
+        {
+            // ...
+        }
 
         const minervaOpenPlansQuantity = minervaPlans.length
 

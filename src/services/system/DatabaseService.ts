@@ -12,6 +12,7 @@ export default abstract class DatabaseService
         const foundDatabase = async () => {
             await Promise.all([
                 await this.CreateParameters({ Db: props.Db }),
+                await this.CreateModules({ Db: props.Db }),
                 await this.CreateSystemStyles({ Db: props.Db }),
                 await this.CreateUsers({ Db: props.Db }),
                 await this.CreateMorfeus({ Db: props.Db }),
@@ -53,6 +54,31 @@ export default abstract class DatabaseService
             );
 
             INSERT INTO "parameters" (id) VALUES (1);
+        `)
+        .then(() => { })
+        .catch(ex => { throw new Error(ex.message) })
+    }
+
+    /** Cria o gerenciamento dos módulos */
+    private static async CreateModules(props : FoundCuiCodeSystemsDatabaseProps)
+    {
+        await props.Db.PostgresDb.query(`
+            CREATE TABLE IF NOT EXISTS "modules"(
+                "id" SERIAL,
+                "module" VARCHAR(30) NOT NULL UNIQUE,
+                "active" BOOLEAN NOT NULL DEFAULT TRUE,
+                PRIMARY KEY (id)
+            );
+            
+            INSERT INTO "modules" (id, module) VALUES
+            (2, 'board'),
+            (3, 'morfeus'),
+            (4, 'chats'),
+            (5, 'solicitations'),
+            (7, 'cron'),
+            (8, 'hestia'),
+            (9, 'minerva'),
+            (10, 'donation');
         `)
         .then(() => { })
         .catch(ex => { throw new Error(ex.message) })

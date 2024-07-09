@@ -1,5 +1,6 @@
 import Env from "../../config/Env"
 
+import ModulesService from "./ModulesService"
 import Parameters from "../../classes/entities/system/Parameters"
 import SystemStyle from "../../classes/entities/system/SystemStyle"
 
@@ -190,31 +191,51 @@ export default abstract class SystemService
     {
         const { active, module } = props
 
+        const parseModuleName = () => {
+            switch (module)
+            {
+                case ModulesEnum.Board: return "board"
+                case ModulesEnum.Morfeus: return "morfeus"
+                case ModulesEnum.Chats: return "chats"
+                case ModulesEnum.Solicitations: return "solicitations"
+                case ModulesEnum.Cron: return "cron"
+                case ModulesEnum.Hestia: return "hestia"
+                case ModulesEnum.Minerva: return "minerva"
+                case ModulesEnum.Donation: return "donation"
+                default: throw new Error("Módulo desconhecido")
+            }
+        }
+
         switch (module) {
             // Estes módulos não podem ser desativados.
             case ModulesEnum.Users:
             case ModulesEnum.Groups:
             case ModulesEnum.Operational:
-            case ModulesEnum.Board:
-            case ModulesEnum.Donation:
             case ModulesEnum.CuiPoints:
                 throw new Error("Este módulo não pode ser desativado.")
-            case ModulesEnum.Morfeus:
-            case ModulesEnum.Chats:
-            case ModulesEnum.Solicitations:
+            case ModulesEnum.Anansi:
+            case ModulesEnum.Zeus:
             case ModulesEnum.Cron:
             case ModulesEnum.Hestia:
             case ModulesEnum.Minerva:
-            case ModulesEnum.Anansi:
-            case ModulesEnum.Zeus:
+            case ModulesEnum.Donation:
+            case ModulesEnum.Chats:
+                throw new Error("Módulo ainda não desenvolvido.")
+            case ModulesEnum.Board:
+            case ModulesEnum.Morfeus:
+            case ModulesEnum.Solicitations:
                 if (active)
                 {
-                    // TODO: SQL de ativação
+                    await ModulesService.ActivateModule({
+                        Db: props.Db,
+                        moduleName: parseModuleName()
+                    })
                     return
                 }
-
-                // TODO: SQL de desativação
-                return
+                await ModulesService.DeactivateModule({
+                    Db: props.Db,
+                    moduleName: parseModuleName()
+                })
             default:
                 return
         }
