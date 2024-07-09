@@ -566,8 +566,8 @@ export default abstract class UsersService
             phone: oldUser.Phone != newUser.Phone
                 ? [oldUser.Phone, newUser.Phone]
                 : null,
-            photo_base_64: oldUser.PhotoBase64 != newUser.PhotoBase64
-                ? [oldUser.PhotoBase64, newUser.PhotoBase64]
+            photo_base_64: oldUser.Photo != newUser.Photo
+                ? [oldUser.Photo, newUser.Photo]
                 : null,
             recovery_email: oldUser.RecoveryEmail != newUser.RecoveryEmail
                 ? [oldUser.RecoveryEmail, newUser.RecoveryEmail]

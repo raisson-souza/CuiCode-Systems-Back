@@ -39,7 +39,7 @@ export default abstract class UserAuthService
         })
 
         if (!IsNil(userPhoto))
-            userDb.PhotoBase64 = userPhoto!
+            userDb.Photo = userPhoto!
 
         const token = AuthService.CreateLoginToken({
             userAuthId: userDb.Id

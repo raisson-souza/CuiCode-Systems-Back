@@ -21,7 +21,7 @@ export default class User extends EntityRegistry
     PasswordHint: string
     PermissionLevel: Label | null
     Phone: string
-    PhotoBase64 : string
+    Photo : string
     RecoveryEmail: string
     Sex: Label | null
     Username: string
@@ -43,7 +43,7 @@ export default class User extends EntityRegistry
         this.PasswordHint = FindValue(body, ["PasswordHint", "password_hint"])
         this.PermissionLevel = this.ConvertEnum(FindValue(body, ["PermissionLevel", "permission_level"]), PermissionLevelEnum, "PermissionLevel")
         this.Phone = FindValue(body, ["Phone", "phone"])
-        this.PhotoBase64 = FindValue(body, ["PhotoBase64", "photo_base_64"])
+        this.Photo = FindValue(body, ["PhotoBase64", "photo_base_64", "Photo", "photo"])
         this.RecoveryEmail = FindValue(body, ["RecoveryEmail", "recovery_email"])
         this.Sex = this.ConvertEnum(FindValue(body, ["Sex", "sex"]), SexEnum, "Sex")
         this.Username = FindValue(body, ["Username", "username"])
@@ -93,7 +93,6 @@ export default class User extends EntityRegistry
             "password": this.Password,
             "permission_level": this.PermissionLevel,
             "phone": this.Phone,
-            "photo_base_64" : this.PhotoBase64,
             "recovery_email": this.RecoveryEmail,
             "sex": this.Sex,
             "username": this.Username,
