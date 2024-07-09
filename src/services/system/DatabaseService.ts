@@ -226,6 +226,18 @@ export default abstract class DatabaseService
                 PRIMARY KEY (id),
                 FOREIGN KEY (user_id) REFERENCES "users" (id)
             );
+
+            CREATE TABLE IF NOT EXISTS "users_account_restorations"(
+                "id" SERIAL,
+                "jwt" VARCHAR NOT NULL,
+                "user_id" INT NOT NULL,
+                "user_email" VARCHAR(100),
+                "created" TIMESTAMP NOT NULL DEFAULT now(),
+                "completed" BOOL NOT NULL DEFAULT false,
+                "expired" BOOL NOT NULL DEFAULT false,
+                PRIMARY KEY (id),
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            );
         `)
         .then(() => { })
         .catch(ex => { throw new Error(ex.message) })
