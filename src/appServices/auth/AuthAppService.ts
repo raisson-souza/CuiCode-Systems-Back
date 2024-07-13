@@ -3,8 +3,6 @@ import AuthService from "../../services/auth/AuthService"
 import ResponseMessage from "../../classes/system/ResponseMessage"
 import UserAuthService from "../../services/auth/UserAuthService"
 
-import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
-
 import IsNil from "../../functions/logic/IsNil"
 
 import IAuthAppService from "./IAuthAppService"
@@ -23,10 +21,10 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
 
             if (IsNil(email) || IsNil(password))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["email", "password"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -38,22 +36,20 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
                 userPassword: password!
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: login,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: login,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -67,39 +63,36 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
 
             if (IsNil(token))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["token"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             const refreshToken = await AuthService.ValidateJwt({
                 Db: this.Db,
                 token: token
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: refreshToken,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: refreshToken,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -111,29 +104,27 @@ export default class AuthAppService extends AppServiceBase implements IAuthAppSe
         {
             await this.Db.ConnectPostgres()
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             const authorizedModules = await UserAuthService.UserAuthorizedModules({
                 Db: this.Db,
                 user: this.UserAuth!
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: authorizedModules,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: authorizedModules,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }

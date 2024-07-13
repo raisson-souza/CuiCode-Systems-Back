@@ -31,7 +31,7 @@ export default class DB implements IDB
 
     async ConnectSqlite() : Promise<void>
     {
-        this.SqliteDb = new Database('../../../db.sqlite3', (ex) => {
+        this.SqliteDb = new Database(__dirname.split("src")[0] + 'db.sqlite3', (ex) => {
             if (!IsNil(ex))
                 throw new Error(ex!.message);
         })

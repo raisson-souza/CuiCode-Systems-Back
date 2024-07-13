@@ -1,5 +1,5 @@
-import Env from "../../config/Env"
 import DB from "../../classes/db/DB"
+import Env from "../../config/Env"
 
 /**
  * Função para testes unitários do backend.
@@ -14,11 +14,15 @@ async function Test() : Promise<void>
 
         // Conexão de teste para o banco
         const Db = new DB()
-        Db.ConnectPostgres()
-        // TODO: implementar conexão do sqlite e firebase para testes
+        await Db.ConnectPostgres()
+        await Db.ConnectSqlite()
 
         // TESTES UNITÁRIOS...
         //
+
+        // Fechamento da conexão
+        await Db.DisconnectPostgres()
+        await Db.DisconnectSqlite()
     }
     catch (ex)
     {

@@ -7,12 +7,9 @@ import { verify } from "jsonwebtoken"
 
 import env from "../config/Env"
 
-import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import IsUndNull from "../functions/logic/IsUndNull"
-
-import HttpStatusEnum from "../enums/system/HttpStatusEnum"
 
 const ACTION = "RequestorAuthMiddleware"
 
@@ -30,9 +27,9 @@ async function RequestorAuthMiddleware
         const { authorization } = req.headers
 
         if (IsUndNull(authorization)) {
-            ResponseMessage.UnauthorizedUser({
+            await ResponseMessage.UnauthorizedUser({
                 expressResponse: res,
-                log: ACTION
+                responseLog: ACTION
             })
         }
 
@@ -42,7 +39,7 @@ async function RequestorAuthMiddleware
         const {
             userAuthId,
             systemKey
-        } = DecodeJwt(token, res)
+        } = await DecodeJwt(token, res)
 
         PrintAuthInReq(
             req,
@@ -54,13 +51,11 @@ async function RequestorAuthMiddleware
     }
     catch (ex)
     {
-        ResponseMessage.Send({
-            status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            data: `Erro na autenticação do requeridor: ${ (ex as Error).message }`,
-            log: ACTION,
+        await ResponseMessage.InternalServerError({
+            responseData: (ex as Error).message,
+            responseLog: ACTION,
             expressResponse: res
         })
-        Exception.UnexpectedError((ex as Error).message, ACTION)
     }
 }
 
@@ -78,7 +73,7 @@ function ParseJwt(jwt : string)
 /**
  * Extrai os dados de autenticação do JWT.
  */
-function DecodeJwt
+async function DecodeJwt
 (
     jwt : string,
     res : Response
@@ -93,9 +88,9 @@ function DecodeJwt
     const systemKey = decoded["SystemKey"] as string
 
     if (IsUndNull(userAuthId) && IsUndNull(systemKey)) {
-        ResponseMessage.NoAuthFoundInToken({
+        await ResponseMessage.NoAuthFoundInToken({
             expressResponse: res,
-            log: ACTION
+            responseLog: ACTION
         })
     }
 

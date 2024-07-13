@@ -5,7 +5,6 @@ import {
 } from "express"
 import env from "../config/Env"
 
-import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import IsUndNull from "../functions/logic/IsUndNull"
@@ -40,10 +39,10 @@ export default async function OriginAuthMiddleware
         {
             if (!env.IsDevelopment())
             {
-                ResponseMessage.Send({
-                    status: HttpStatusEnum.UNAUTHORIZED,
-                    data: "Origem de requisição não autorizada.",
-                    log: ACTION,
+                await ResponseMessage.Send({
+                    responseStatus: HttpStatusEnum.UNAUTHORIZED,
+                    responseData: "Origem de requisição não autorizada.",
+                    responseLog: ACTION,
                     expressResponse: res
                 })
                 throw new Error("Origem de requisição não autorizada.")
@@ -58,12 +57,10 @@ export default async function OriginAuthMiddleware
     }
     catch (ex)
     {
-        ResponseMessage.Send({
-            status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            data: (ex as Error).message,
-            log: ACTION,
+        await ResponseMessage.InternalServerError({
+            responseData: (ex as Error).message,
+            responseLog: ACTION,
             expressResponse: res
         })
-        Exception.UnexpectedError((ex as Error).message, ACTION)
     }
 }

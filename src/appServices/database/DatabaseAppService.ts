@@ -4,9 +4,6 @@ import ResponseMessage from "../../classes/system/ResponseMessage"
 
 import IDatabaseAppService from "./IDatabaseAppService"
 
-import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
-import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
-
 export default class DatabaseAppService extends AppServiceBase implements IDatabaseAppService
 {
     AppServiceAction = "Base de Dados"
@@ -16,30 +13,33 @@ export default class DatabaseAppService extends AppServiceBase implements IDatab
         const ACTION = `${ this.AppServiceAction } / Criação da Base de Dados`
         try
         {
-            this.AuthenticateSystemRequestor()
-
+            await this.AuthenticateSystemRequestor()
             await this.Db.ConnectPostgres()
+            await this.Db.ConnectSqlite()
 
             await DatabaseService.FoundCuiCodeSystemsDatabase({
                 Db: this.Db
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: null,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await DatabaseService.CreateErrorLogDatabase({
+                Db: this.Db
+            })
+
+            await ResponseMessage.Success({
+                responseData: null,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
+            await this.Db.DisconnectSqlite()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }

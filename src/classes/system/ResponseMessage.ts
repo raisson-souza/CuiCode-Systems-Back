@@ -1,97 +1,114 @@
 import {
     BadFieldsResponseProps,
+    BuildFieldsInfoMessageProps,
+    DefaultResponseProps,
+    FinalResponseMessage,
+    FixTimeZoneProps,
     GenericHttpResponseProps,
-    GlobalSendProps,
-    ResponseMessage as ResponseMessageType
+    RenderDataLengthProps,
+    RenderSuccessProps,
+    SendProps,
 } from "../../types/ResponseMessage"
 
-import Exception from "../custom/Exception"
-import Send from "./Send"
-
 import FindValue from "../../functions/logic/FindValue"
+import IsNil from "../../functions/logic/IsNil"
 import IsUndNull from "../../functions/logic/IsUndNull"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 
+import Exception from "./Exception"
+
 abstract class ResponseMessage
 {
     /**
-     * Direciona a Response para o método de tratamento final em Send.
+     * Realiza o envio final da response.
      */
-    static Send
-    ({
-        status,
-        data,
-        log,
-        expressResponse,
-        dataPropToCount
-    } : GlobalSendProps)
+    static async Send(props : SendProps) : Promise<void>
     {
-        data = this.FixTimeZone(data) // DESENVOLVIMENTO PROVISÓRIO PARA TRATAMENTO DE ERRO NO FUSO HORÁRIO.
-        const success = this.RenderSuccess(status)
-        const length = this.RenderDataLength(success, data, dataPropToCount)
+        const {
+            responseLog,
+            responseStatus,
+            expressResponse,
+            responseDataPropToCount
+        } = props
+        let { responseData } = props
 
-        const response : ResponseMessageType = {
-            success,
-            data,
-            length,
-            log
+        // Caso a response já tenha sido enviada, retorna
+        if (expressResponse.headersSent)
+            return
+
+        responseData = this.FixTimeZone({ // TODO: validar necessidade no caso do send.json
+            responseData: responseData
+        })
+
+        const success = this.RenderSuccess({
+            responseStatus: responseStatus
+        })
+
+        const length = this.RenderDataLength({
+            responseData: responseData,
+            responseSuccess: success,
+            responseDataPropToCount: responseDataPropToCount
+        })
+
+        // Montagem da response final
+        const finalResponse : FinalResponseMessage = {
+            data: responseData,
+            length: length,
+            success: success,
+            responseLog: responseLog
         }
 
-        switch (status)
-        {
-            case HttpStatusEnum.OK:
-                return Send.OK(expressResponse, response)
+        // Envio da response
+        expressResponse
+            .status(responseStatus)
+            .json(finalResponse)
 
-            case HttpStatusEnum.ACCEPTED:
-                return Send.ACCEPTED(expressResponse, response)
+        // Gravação do log da response no console
+        console.log(`${ success ? "OK" : "ERROR" } | ${ new Date().toString() } | STATUS ${ responseStatus } | ${ responseLog }`)
 
-            case HttpStatusEnum.CREATED:
-                return Send.CREATED(expressResponse, response)
-
-            case HttpStatusEnum.INVALID:
-                Send.INVALID(expressResponse, response)
-                return Exception.UnexpectedError(data, log)
-
-            case HttpStatusEnum.UNAUTHORIZED:
-                Send.UNAUTHORIZED(expressResponse, response)
-                return Exception.UnexpectedError(data, log)
-
-            case HttpStatusEnum.PROHIBITED:
-                Send.PROHIBITED(expressResponse, response)
-                return Exception.UnexpectedError(data, log)
-
-            case HttpStatusEnum.NOT_FOUND:
-                Send.NOT_FOUND(expressResponse, response)
-                return Exception.UnexpectedError(data, log)
-
-            case HttpStatusEnum.INTERNAL_SERVER_ERROR:
-                Send.INTERNAL_SERVER_ERROR(expressResponse, response)
-                return Exception.UnexpectedError(data, log)
-
-            case HttpStatusEnum.NOT_IMPLEMENTED:
-                Send.NOT_IMPLEMENTED(expressResponse, response)
-                return Exception.UnexpectedError(data, log)
-
-            case HttpStatusEnum.UNAVAIALBLE:
-                Send.UNAVAIALBLE(expressResponse, response)
-                return Exception.UnexpectedError(data, log)
-
-            default:
-                const nullResponse : ResponseMessageType = {
-                    success: false,
-                    data: null,
-                    length: 0,
-                    log
-                }
-                Send.INTERNAL_SERVER_ERROR(expressResponse, nullResponse)
-                return Exception.UnexpectedError(data, log)
-        }
+        // TODO: A desenvolver
+        // Gravação do erro no sqlite
+        await Exception.SaveErrorLog({
+            errorMessage: responseData,
+            errorLog: responseLog
+        })
     }
 
-    private static RenderSuccess(status : HttpStatusEnum) : boolean
+    /** Método para tratamento de erro no fuso horário (problema causado pelo send() do express). */
+    private static FixTimeZone(props : FixTimeZoneProps)
     {
-        switch (status)
+        const { responseData } = props
+        try
+        {
+            if (responseData instanceof Array)
+            {
+                responseData.forEach(obj => {
+                    if (obj instanceof Date)
+                        obj.setHours(obj.getHours() - 3)
+                })
+            }
+
+            if (responseData instanceof Date)
+                responseData.setHours(responseData.getHours() - 3)
+
+            if (typeof responseData === "object")
+            {
+                Object.entries(responseData).forEach(obj => {
+                    if (obj[1] instanceof Date)
+                        obj[1].setHours(obj[1].getHours() - 3)
+                })
+            }
+
+            return responseData
+        }
+        catch { return responseData }
+    }
+
+    /** Retorna se o sucesso é verdadeiro ou não baseado no status da response. */
+    private static RenderSuccess(props : RenderSuccessProps) : boolean
+    {
+        switch (props.responseStatus)
         {
             case HttpStatusEnum.OK:
             case HttpStatusEnum.ACCEPTED:
@@ -109,20 +126,16 @@ abstract class ResponseMessage
         }
     }
 
-    private static RenderDataLength
-    (
-        success : boolean,
-        data : any,
-        dataPropToCount? : string
-    ) : number
+    /** Retorna a quantidade de itens a serem retornados, caso especificado um caso especial para tal contagem. */
+    private static RenderDataLength(props : RenderDataLengthProps) : number
     {
-        if (!success) return 0
-
+        const { responseData, responseSuccess, responseDataPropToCount } = props
+        if (!responseSuccess) return 0
         try
         {
-            const parsedData = IsUndNull(dataPropToCount)
-                ? data
-                : FindValue(data, [dataPropToCount!])
+            const parsedData = IsUndNull(responseDataPropToCount)
+                ? responseData
+                : FindValue(responseData, [responseDataPropToCount!])
 
             if (parsedData instanceof Array)
                 return parsedData.length
@@ -132,242 +145,181 @@ abstract class ResponseMessage
 
             return 1
         }
-        catch
-        {
-            return 1
-        }
+        catch { return 1 }
     }
 
-    private static BuildFieldsInfoMessage
-    (
-        fields : string[],
-        singularMessage : string,
-        pluralMessage : string
-    )
+    /** Renderiza a mensagem de erro a ser montada sobre um ou mais campos de uma requisição irregulares. */
+    private static BuildFieldsInfoMessage(props : BuildFieldsInfoMessageProps)
     {
-        let response = fields.length === 1 ? "O campo " : "Os campos "
+        const { fieldsNames, singularMessage, pluralMessage } = props
 
-        fields.forEach((field, i) => {
-            response += `${ field }${ i === fields.length - 1 ? " " : ", " }`
+        let response = fieldsNames.length === 1 ? "O campo " : "Os campos "
+
+        fieldsNames.forEach((field, i) => {
+            response += `${ field }${ i === fieldsNames.length - 1 ? " " : ", " }`
         })
 
-        response += fields.length === 1 ? singularMessage : pluralMessage + "."
+        response += fieldsNames.length === 1 ? singularMessage : pluralMessage + "."
 
         return response
     }
 
-    static SendInvalidField
-    ({
-        fields,
-        log,
-        expressResponse
-    } : BadFieldsResponseProps)
+    /** Response para campo inválido. */
+    static async SendInvalidField(props : BadFieldsResponseProps)
     {
-        let response = this.BuildFieldsInfoMessage(fields, "está inválido", "estão inválidos")
-
-        this.Send({
-            status: HttpStatusEnum.INVALID,
-            data: response,
-            expressResponse: expressResponse,
-            log: log,
+        const { fields, responseLog, expressResponse } = props
+        let response = this.BuildFieldsInfoMessage({
+            fieldsNames: fields,
+            singularMessage: "está inválido",
+            pluralMessage: "estão inválidos"
         })
 
-        Exception.Error(
-            "Campo inválido.",
-            log
-        )
+        await this.Send({
+            responseStatus: HttpStatusEnum.INVALID,
+            responseData: response,
+            expressResponse: expressResponse,
+            responseLog: responseLog,
+        })
     }
 
-    static SendNullField
-    ({
-        fields,
-        log,
-        expressResponse
-    } : BadFieldsResponseProps)
+    /** Response para campo nulo. */
+    static async SendNullField(props : BadFieldsResponseProps)
     {
-        let response = this.BuildFieldsInfoMessage(fields, "não pode ser nulo", "não podem ser nulos")
-
-        this.Send({
-            status: HttpStatusEnum.INVALID,
-            data: response,
-            expressResponse: expressResponse,
-            log: log,
+        const { fields, responseLog, expressResponse } = props
+        let response = this.BuildFieldsInfoMessage({
+            fieldsNames: fields,
+            singularMessage: "não pode ser nulo",
+            pluralMessage: "não podem ser nulos"
         })
 
-        Exception.Error(
-            "Campo nulo.",
-            log
-        )
-    }
-
-    static NotImplementedRoute
-    ({
-        expressResponse,
-        log = "Operação não implementada."
-    } : GenericHttpResponseProps)
-    {
-        this.Send({
-            status: HttpStatusEnum.NOT_IMPLEMENTED,
-            data: log,
+        await this.Send({
+            responseStatus: HttpStatusEnum.INVALID,
+            responseData: response,
             expressResponse: expressResponse,
-            log: log,
+            responseLog: responseLog,
         })
-
-        Exception.Error(
-            "Rota não implementada.",
-            log
-        )
     }
 
-    static UnauthorizedUser
-    ({
-        expressResponse,
-        log
-    } : GenericHttpResponseProps)
+    /** Response para rota não implementada. */
+    static async NotImplementedRoute(props : GenericHttpResponseProps)
     {
+        let { expressResponse, responseLog } = props
+
+        if (IsNil(responseLog)) responseLog = "Operação não implementada."
+
+        await this.Send({
+            responseStatus: HttpStatusEnum.NOT_IMPLEMENTED,
+            responseData: responseLog,
+            expressResponse: expressResponse,
+            responseLog: responseLog!,
+        })
+    }
+
+    /** Response para usuário não autenticado. */
+    static async UnauthorizedUser(props : GenericHttpResponseProps)
+    {
+        const { expressResponse, responseLog } = props
         const response = "Usuário não autenticado."
 
-        this.Send({
-            status: HttpStatusEnum.UNAUTHORIZED,
-            data: response,
+        await this.Send({
+            responseStatus: HttpStatusEnum.UNAUTHORIZED,
+            responseData: response,
             expressResponse: expressResponse,
-            log: log!,
+            responseLog: responseLog!,
         })
-
-        Exception.Error(
-            response,
-            log!
-        )
     }
 
-    static UnauthorizedSystem
-    ({
-        expressResponse,
-        log
-    } : GenericHttpResponseProps)
+    /** Response para sistema não autenticado. */
+    static async UnauthorizedSystem(props : GenericHttpResponseProps)
     {
+        const { expressResponse, responseLog } = props
         const response = "Sistema não autenticado."
 
-        this.Send({
-            status: HttpStatusEnum.UNAUTHORIZED,
-            data: response,
+        await this.Send({
+            responseStatus: HttpStatusEnum.UNAUTHORIZED,
+            responseData: response,
             expressResponse: expressResponse,
-            log: log!,
+            responseLog: responseLog!,
         })
-
-        Exception.Error(
-            response,
-            log!
-        )
     }
 
-    static NoAuthFoundInToken
-    ({
-        expressResponse,
-        log
-    } : GenericHttpResponseProps)
+    /** Response para autenticação inválida no token. */
+    static async NoAuthFoundInToken(props : GenericHttpResponseProps)
     {
-        const response = "Nenhuma autenticação válida encontrada no token."
+        const { expressResponse, responseLog } = props
 
-        this.Send({
-            status: HttpStatusEnum.UNAUTHORIZED,
-            data: response,
+        await this.Send({
+            responseStatus: HttpStatusEnum.UNAUTHORIZED,
+            responseData: "Nenhuma autenticação válida encontrada no token.",
             expressResponse: expressResponse,
-            log: log!,
+            responseLog: responseLog!,
         })
-
-        Exception.Error(
-            response,
-            log!
-        )
     }
 
-    static ProhibitedOperation
-    ({
-        expressResponse,
-        log
-    } : GenericHttpResponseProps)
+    /** Response para operação proibida. */
+    static async ProhibitedOperation(props : GenericHttpResponseProps)
     {
-        this.Send({
-            status: HttpStatusEnum.PROHIBITED,
-            data: "Ação não disponível para usuário.",
-            expressResponse: expressResponse,
-            log: log!,
-        })
+        const { expressResponse, responseLog } = props
 
-        Exception.Error(
-            "Operação Proibida.",
-            log!
-        )
+        await this.Send({
+            responseStatus: HttpStatusEnum.PROHIBITED,
+            responseData: "Ação não disponível para usuário.",
+            expressResponse: expressResponse,
+            responseLog: responseLog!,
+        })
     }
 
-    static InvalidRequest
-    ({
-        expressResponse,
-        log
-    } : GenericHttpResponseProps)
+    /** Response para requisição inválida. */
+    static async InvalidRequest(props : GenericHttpResponseProps)
     {
-        this.Send({
-            status: HttpStatusEnum.INVALID,
-            data: "Corpo da requisição inválido.",
-            expressResponse: expressResponse,
-            log: log!,
-        })
+        const { expressResponse, responseLog } = props
 
-        Exception.Error(
-            "Request Inválida.",
-            log!
-        )
+        await this.Send({
+            responseStatus: HttpStatusEnum.INVALID,
+            responseData: "Corpo da requisição inválido.",
+            expressResponse: expressResponse,
+            responseLog: responseLog!,
+        })
     }
 
-    static NotFoundUser
-    ({
-        expressResponse,
-        log
-    } : GenericHttpResponseProps)
+    /** Response para usuário não encontrado. */
+    static async NotFoundUser(props : GenericHttpResponseProps)
     {
-        this.Send({
-            status: HttpStatusEnum.NOT_FOUND,
-            data: "Usuário não encontrado.",
-            expressResponse: expressResponse,
-            log: log!,
-        })
+        const { expressResponse, responseLog } = props
 
-        Exception.Error(
-            "Usuário não encontrado.",
-            log!
-        )
+        await this.Send({
+            responseStatus: HttpStatusEnum.NOT_FOUND,
+            responseData: "Usuário não encontrado.",
+            expressResponse: expressResponse,
+            responseLog: responseLog!,
+        })
     }
 
-    private static FixTimeZone(data : any) // DESENVOLVIMENTO PROVISÓRIO PARA TRATAMENTO DE ERRO NO FUSO HORÁRIO.
+    /** Response para erro interno do servidor. */
+    static async InternalServerError(props : DefaultResponseProps)
     {
-        try
-        {
-            if (data instanceof Array)
-            {
-                data.forEach(obj => {
-                    if (obj instanceof Date)
-                        obj.setHours(obj.getHours() - 3)
-                })
-            }
+        const { expressResponse, responseData, responseLog } = props
 
-            if (data instanceof Date)
-                data.setHours(data.getHours() - 3)
+        await this.Send({
+            responseStatus: HttpStatusEnum.INTERNAL_SERVER_ERROR,
+            responseData: responseData,
+            expressResponse: expressResponse,
+            responseLog: responseLog!
+        })
+    }
 
-            if (typeof data === "object")
-            {
-                Object.entries(data).forEach(obj => {
-                    if (obj[1] instanceof Date)
-                        obj[1].setHours(obj[1].getHours() - 3)
-                })
-            }
+    /** Response para sucesso. */
+    static async Success(props : DefaultResponseProps)
+    {
+        const { expressResponse, responseData, responseLog, responseDataPropToCount } = props
 
-            return data
-        }
-        catch
-        {
-            return data
-        }
+        await this.Send({
+            responseStatus: HttpStatusEnum.OK,
+            responseData: responseData,
+            expressResponse: expressResponse,
+            responseLog: responseLog!,
+            responseDataPropToCount: responseDataPropToCount
+        })
     }
 }
 

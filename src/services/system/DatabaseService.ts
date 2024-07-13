@@ -39,6 +39,28 @@ export default abstract class DatabaseService
         }
     }
 
+    /** Cria a base de dados dos logs de erro do sistema. */
+    static async CreateErrorLogDatabase(props : FoundCuiCodeSystemsDatabaseProps)
+    {
+        // await Promise.resolve(await ErrorService.List({ Db: props.Db }))
+        //     .then(() => {
+        //         console.log("SUCESSO")
+        //     })
+        //     .catch(async () => {
+        //         const query = `
+        //             CREATE TABLE "erros_logs" (
+        //                 "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+        //                 "data" DATE NOT NULL DEFAULT (CURRENT_TIMESTAMP),
+        //                 "message" TEXT NOT NULL
+        //             );
+        //         `
+        //         props.Db.SqliteDb.run(query, ex => {
+        //             if (!IsNil(ex))
+        //                 throw new Error(ex!.message)
+        //         })
+        //     })
+    }
+
     // CRIAÇÃO DA BASE DE DADOS ------------------------------------------
 
     /** Cria Parameters */

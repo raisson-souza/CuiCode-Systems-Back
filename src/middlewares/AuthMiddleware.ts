@@ -7,12 +7,9 @@ import { verify } from "jsonwebtoken"
 
 import env from "../config/Env"
 
-import Exception from "../classes/custom/Exception"
 import ResponseMessage from "../classes/system/ResponseMessage"
 
 import IsUndNull from "../functions/logic/IsUndNull"
-
-import HttpStatusEnum from "../enums/system/HttpStatusEnum"
 
 /** DEPRECATED! */
 async function AuthMiddleware
@@ -23,10 +20,11 @@ async function AuthMiddleware
 )
 : Promise<void>
 {
+    const ACTION = "AuthMiddleware"
     try
     {
         const cors = require("cors")({ origin: env.AllowedOrigins() })
-    
+
         if (
             (
                 req.header("Origin") ||
@@ -38,9 +36,9 @@ async function AuthMiddleware
             const { authorization } = req.headers
 
             if (IsUndNull(authorization)) {
-                ResponseMessage.UnauthorizedUser({
+                await ResponseMessage.UnauthorizedUser({
                     expressResponse: res,
-                    log: "AuthMiddleware"
+                    responseLog: ACTION
                 })
             }
 
@@ -71,13 +69,11 @@ async function AuthMiddleware
     }
     catch (ex)
     {
-        ResponseMessage.Send({
-            status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            data: `Erro na autenticação: ${ (ex as Error).message }`,
-            log: "AuthMiddleware",
+        await ResponseMessage.InternalServerError({
+            responseData: (ex as Error).message,
+            responseLog: ACTION,
             expressResponse: res
         })
-        Exception.UnexpectedError((ex as Error).message, "AuthMiddleware")
     }
 }
 

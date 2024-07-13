@@ -8,7 +8,6 @@ import IUsersAppService from "./IUsersAppService"
 
 import { UpdateUserDTO } from "./base/types/UsersAppServiceProps"
 
-import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
 import PermissionLevelEnum from "../../enums/PermissionLevelEnum"
 import UsersVisualizationEnum from "../../enums/modules/UsersVisualizationEnum"
 
@@ -23,6 +22,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
     async CreateUser()
     {
+        const ACTION = `${ this.AppServiceAction } / Criação de usuário`
         try
         {
             const user = new User(this.REQ.body)
@@ -40,10 +40,9 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 user: user
             })
 
-            ResponseMessage.Send({
-                status: HttpStatusEnum.CREATED,
-                data: `Usuário ${ user.GenerateUserKey() } criado com sucesso.`,
-                log: this.AppServiceAction,
+            await ResponseMessage.Success({
+                responseData: `Usuário ${ user.GenerateUserKey() } criado com sucesso.`,
+                responseLog: ACTION,
                 expressResponse: this.RES
             })
 
@@ -51,10 +50,9 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                data: (ex as Error).message,
-                log: this.AppServiceAction,
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
                 expressResponse: this.RES
             })
         }
@@ -62,6 +60,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
     async UpdateUser()
     {
+        const ACTION = `${ this.AppServiceAction } / Edição de usuário`
         try
         {
             const userDto : UpdateUserDTO = {
@@ -80,9 +79,8 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             }
 
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             this.ValidateUserRequestor({
                 allowDifferentUserAuthAndUserToOperate: true,
@@ -97,10 +95,9 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 authUser: this.UserAuth!,
             })
 
-            ResponseMessage.Send({
-                status: HttpStatusEnum.ACCEPTED,
-                data: `Usuário ${ newUser.GenerateUserKey() } editado com sucesso.`,
-                log: this.AppServiceAction,
+            await ResponseMessage.Success({
+                responseData: `Usuário ${ newUser.GenerateUserKey() } editado com sucesso.`,
+                responseLog: ACTION,
                 expressResponse: this.RES
             })
 
@@ -108,10 +105,9 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                data: (ex as Error).message,
-                log: this.AppServiceAction,
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
                 expressResponse: this.RES
             })
         }
@@ -131,22 +127,20 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             //     userIdToOperate: 1,
             // })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: null,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: null,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -160,17 +154,16 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             if (IsNil(userId))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["id"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             const user = await UsersService.Get({
                 Db: this.Db,
@@ -178,22 +171,20 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 visualizationEnum: UsersVisualizationEnum.All
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: user,
-                status: HttpStatusEnum.OK,
-                log: ACTION
+            await ResponseMessage.Success({
+                responseData: user,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                log: ACTION
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -207,39 +198,36 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             if (IsNil(userId))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["id"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             const photo = await UsersService.GetPhoto({
                 Db: this.Db,
                 userId: userId
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: photo,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: photo,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -254,17 +242,16 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             if (IsNil(userId) || IsNil(photo))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["id", "photo"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({
+            await this.ValidateUserRequestor({
                 userIdToOperate: userId,
             })
 
@@ -274,22 +261,20 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 userId: userId
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: photo,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: photo,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -299,7 +284,7 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         const ACTION = `${ this.AppServiceAction } / Listagem de usuários`
         try
         {
-            this.AuthenticateSystemRequestor()
+            await this.AuthenticateSystemRequestor()
 
             const visualizationEnum = UsersVisualizationEnumParser(Number.parseInt(this.REQ.query["visualization"] as string))
             const filterEnum = UsersFilterEnumParser(Number.parseInt(this.REQ.query["filter"] as string))
@@ -307,10 +292,10 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             if (IsNil(visualizationEnum) || IsNil(filterEnum) || IsNil(limit))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["visualization", "filter", "limit"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -325,23 +310,21 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 }
             })
 
-            ResponseMessage.Send({
+            await ResponseMessage.Success({
+                responseData: dataPagination,
+                responseLog: ACTION,
                 expressResponse: this.RES,
-                data: dataPagination,
-                status: HttpStatusEnum.OK,
-                dataPropToCount: "data",
-                log: ACTION
+                responseDataPropToCount: "responseData"
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-                log: ACTION
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -352,7 +335,6 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         try
         {
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
             this.ValidateUserRequestor({})
 
@@ -361,22 +343,20 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 userId: this.UserAuth!.Id,
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: dailyInfo,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: dailyInfo,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -392,17 +372,16 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
 
             if (IsNil(userId))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["id"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             const userLogs = await UsersService.GetLogs({
                 Db: this.Db,
@@ -411,22 +390,20 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 finalDate: !isNaN(finalDate.getTime()) ? finalDate : undefined
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: userLogs,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: userLogs,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -445,22 +422,20 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
             //     userIdToOperate: 1,
             // })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: null,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: null,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -470,16 +445,16 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
         const ACTION = `${ this.AppServiceAction } / Busca de email de usuário`
         try
         {
-            this.AuthenticateSystemRequestor()
+            await this.AuthenticateSystemRequestor()
 
             const email = this.REQ.query["email"] as string
 
             if (IsNil(email))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["email"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -490,22 +465,20 @@ export default class UsersAppService extends AppServiceBase implements IUsersApp
                 email: email
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: foundEmail,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: foundEmail,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }

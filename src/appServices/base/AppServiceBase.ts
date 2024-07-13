@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-
 import Env from "../../config/Env"
 
 import DB from "../../classes/db/DB"
@@ -8,11 +7,10 @@ import UserAuth from "../../classes/entities/user/UserAuth"
 import UsersService from "../../services/users/UsersService"
 import UsersValidator from "../../validators/UsersValidator"
 
-import IsNil from "../../functions/logic/IsNil"
-
 import IAppService, { ValidateUserRequestorProps } from "./IAppServiceBase"
 
 import EncryptInfo from "../../functions/security/EncryptPassword"
+import IsNil from "../../functions/logic/IsNil"
 import PermissionLevelToNumber from "../../functions/enums/PermissionLevelToNumber"
 
 import HttpStatusEnum from "../../enums/system/HttpStatusEnum"
@@ -44,10 +42,10 @@ export default abstract class AppServiceBase implements IAppService
 
         if (IsNil(userAuthId))
         {
-            ResponseMessage.Send({
-                status: HttpStatusEnum.NOT_FOUND,
-                data: "Usuário requeridor não encontrado.",
-                log: this.AppServiceAction,
+            await ResponseMessage.Send({
+                responseStatus: HttpStatusEnum.NOT_FOUND,
+                responseData: "Usuário requeridor não encontrado.",
+                responseLog: this.AppServiceAction,
                 expressResponse: this.RES
             })
         }
@@ -57,13 +55,13 @@ export default abstract class AppServiceBase implements IAppService
             userId: userAuthId
         })
         .then(user => { return new UserAuth(user, this.REQ.headers)})
-        .catch(ex => {
+        .catch(async (ex) => {
             if (ex.message === "Nenhum usuário encontrado.")
             {
-                ResponseMessage.Send({
-                    status: HttpStatusEnum.NOT_FOUND,
-                    data: "Usuário requeridor não encontrado.",
-                    log: this.AppServiceAction,
+                await ResponseMessage.Send({
+                    responseStatus: HttpStatusEnum.NOT_FOUND,
+                    responseData: "Usuário requeridor não encontrado.",
+                    responseLog: this.AppServiceAction,
                     expressResponse: this.RES
                 })
             }
@@ -76,23 +74,23 @@ export default abstract class AppServiceBase implements IAppService
         this.UserAuth = user
     }
 
-    AuthenticateSystemRequestor()
+    async AuthenticateSystemRequestor()
     {
         const key = this.GetJwtValues().SystemKey
 
         const encryptedKey = EncryptInfo(key)
 
         if (encryptedKey != EncryptInfo(Env.SystemJwtSecret())) {
-            ResponseMessage.UnauthorizedSystem({
+            await ResponseMessage.UnauthorizedSystem({
                 expressResponse: this.RES,
-                log: this.AppServiceAction
+                responseLog: this.AppServiceAction
             })
         }
 
         this.UserAuth = null
     }
 
-    ValidateUserRequestor({
+    async ValidateUserRequestor({
         userIdToOperate,
         level = PermissionLevelEnum.Member,
         allowDifferentUserAuthAndUserToOperate = false
@@ -111,9 +109,9 @@ export default abstract class AppServiceBase implements IAppService
                     this.UserAuth!.PermissionLevel!.Value! >= PermissionLevelToNumber(PermissionLevelEnum.Adm)
                 )
                     return
-                ResponseMessage.ProhibitedOperation({
+                    await ResponseMessage.ProhibitedOperation({
                     expressResponse: this.RES,
-                    log: this.AppServiceAction
+                    responseLog: this.AppServiceAction
                 })
             }
             this.SameUserOperation = true

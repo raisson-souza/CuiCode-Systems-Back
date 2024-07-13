@@ -26,7 +26,7 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                 ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["user_id", "email"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -38,22 +38,20 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                 userId: Number.parseInt(userId),
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: "Email aprovado com sucesso.",
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: "Email aprovado com sucesso.",
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -64,9 +62,8 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         try
         {
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             await UsersAccountService.SendEmailApproval({
                 Db: this.Db,
@@ -74,22 +71,20 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                 user: this.UserAuth!
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: "Solicitação de aprovação de email enviada com sucesso.",
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: "Solicitação de aprovação de email enviada com sucesso.",
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -100,9 +95,8 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         try
         {
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             const userId = Number.parseInt(this.GetReqBodyValue("user_id") ?? "")
             const password = this.GetReqBodyValue("password")
@@ -110,10 +104,10 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
 
             if (IsNil(userId) || IsNil(password) || IsNil(passwordHint))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["user_id", "password", "password_hint"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -126,22 +120,20 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                 userId: userId
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: "Senha e dica de senha atualizadas com sucesso.",
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: "Senha e dica de senha atualizadas com sucesso.",
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -151,17 +143,17 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         const ACTION = `${ this.AppServiceAction } / Solicitação de Recuperação de Conta`
         try
         {
-            this.AuthenticateSystemRequestor()
+            await this.AuthenticateSystemRequestor()
             await this.Db.ConnectPostgres()
 
             const email = this.REQ.query["email"] as string
 
             if (IsNil(email))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["email"],
-                    log: ACTION,
+                    responseLog: ACTION,
                 })
             }
 
@@ -170,22 +162,20 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                 email: email
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: `Solicitação de recuperação de conta criada com sucesso, verifique o email ${ email }`,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: `Solicitação de recuperação de conta criada com sucesso, verifique o email ${ email }`,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -195,8 +185,7 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         const ACTION = `${ this.AppServiceAction } / Confirmação de Recuperação de Conta`
         try
         {
-            this.AuthenticateSystemRequestor()
-
+            await this.AuthenticateSystemRequestor()
             await this.Db.ConnectPostgres()
 
             const userNewPassword = this.GetReqBodyValue("new_password")
@@ -205,10 +194,10 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
 
             if (IsNil(userNewPassword) || IsNil(userNewPasswordHint) || IsNil(jwt))
             {
-                ResponseMessage.SendInvalidField({
+                await ResponseMessage.SendInvalidField({
                     expressResponse: this.RES,
                     fields: ["userNewPassword", "userNewPasswordHint", "jwt"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -219,22 +208,20 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                 recoveryJwt: jwt
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: "Conta restaurada com sucesso.",
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: "Conta restaurada com sucesso.",
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -248,18 +235,17 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
         const ACTION = `${ this.AppServiceAction } / Verificação de Solicitação de Recuperação de Conta`
         try
         {
-            this.AuthenticateSystemRequestor()
-
+            await this.AuthenticateSystemRequestor()
             await this.Db.ConnectPostgres()
 
             const jwt = this.REQ.query["jwt"] as string
 
             if (IsNil(jwt))
             {
-                ResponseMessage.SendInvalidField({
+                await ResponseMessage.SendInvalidField({
                     expressResponse: this.RES,
                     fields: ["jwt"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -279,46 +265,46 @@ export default class UsersAccountAppService extends AppServiceBase implements IU
                     !activeUserAccountRestoration.Expired
                 )
                 {
-                    ResponseMessage.Send({
+                    await ResponseMessage.Send({
                         expressResponse: this.RES,
-                        data: { exists: true } as VerifyAccountRecoveryReturn,
-                        log: ACTION,
-                        status: HttpStatusEnum.OK
+                        responseData: { exists: true } as VerifyAccountRecoveryReturn,
+                        responseLog: ACTION,
+                        responseStatus: HttpStatusEnum.OK
                     })
                 }
                 else
                 {
-                    ResponseMessage.Send({
+                    await ResponseMessage.Send({
                         expressResponse: this.RES,
-                        data: {
+                        responseData: {
                             exists: true,
                             error: "Solicitação de recuperação de conta expirada, tente novamente."
                         } as VerifyAccountRecoveryReturn,
-                        log: ACTION,
-                        status: HttpStatusEnum.UNAVAIALBLE
+                        responseLog: ACTION,
+                        responseStatus: HttpStatusEnum.UNAVAIALBLE
                     })
                 }
             }
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: {
-                    exists: false,
-                    error: "Solicitação de recuperação de conta inexistente, verifique o token."
-                } as VerifyAccountRecoveryReturn,
-                log: ACTION,
-                status: HttpStatusEnum.NOT_FOUND
+            const data : VerifyAccountRecoveryReturn = {
+                exists: false,
+                error: "Solicitação de recuperação de conta inexistente, verifique o token."
+            }
+
+            await ResponseMessage.Success({
+                responseData: data,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }

@@ -6,7 +6,6 @@ import {
 import { verify } from "jsonwebtoken"
 import Env from "../../config/Env"
 
-import Exception from "../../classes/custom/Exception"
 import ResponseMessage from "../../classes/system/ResponseMessage"
 
 import IsUndNull from "../../functions/logic/IsUndNull"
@@ -29,17 +28,15 @@ export default async function UserRequestorAuthMiddleware
         const { authorization } = req.headers
 
         if (IsUndNull(authorization)) {
-            ResponseMessage.UnauthorizedUser({
+            await ResponseMessage.UnauthorizedUser({
                 expressResponse: res,
-                log: ACTION
+                responseLog: ACTION
             })
         }
 
         const token = ParseJwt(authorization!)
 
-        const {
-            userAuthId,
-        } = DecodeJwt({
+        const userAuthId = await DecodeJwt({
             res: res,
             token: token
         })
@@ -53,13 +50,11 @@ export default async function UserRequestorAuthMiddleware
     }
     catch (ex)
     {
-        ResponseMessage.Send({
-            status: HttpStatusEnum.INTERNAL_SERVER_ERROR,
-            data: (ex as Error).message,
-            log: ACTION,
+        await ResponseMessage.InternalServerError({
+            responseData: (ex as Error).message,
+            responseLog: ACTION,
             expressResponse: res
         })
-        Exception.UnexpectedError((ex as Error).message, ACTION)
     }
 }
 
@@ -82,26 +77,51 @@ type DecodeJwtProps = {
 /**
  * Extrai os dados de autenticação do JWT.
  */
-function DecodeJwt(props : DecodeJwtProps)
+async function DecodeJwt(props : DecodeJwtProps) : Promise<string>
 {
-    const { res, token } = props
-
-    const decoded = verify(
-        token,
-        Env.JwtSecret()
-    ) as any
-
-    const userAuthId = decoded["UserAuthId"] as string
-
-    if (IsUndNull(userAuthId)) {
-        ResponseMessage.NoAuthFoundInToken({
-            expressResponse: res,
-            log: ACTION
-        })
+    try
+    {
+        const { res, token } = props
+    
+        const decoded = verify(
+            token,
+            Env.JwtSecret()
+        ) as any
+    
+        const userAuthId = decoded["UserAuthId"] as string
+    
+        if (IsUndNull(userAuthId)) {
+            await ResponseMessage.NoAuthFoundInToken({
+                expressResponse: res,
+                responseLog: ACTION
+            })
+        }
+    
+        return userAuthId
     }
-
-    return {
-        userAuthId,
+    catch (ex)
+    {
+        switch ((ex as Error).message) {
+            case "jwt malformed":
+                await ResponseMessage.Send({
+                    responseData: "Autenticação JWT mal formatada.",
+                    responseLog: ACTION,
+                    responseStatus: HttpStatusEnum.INVALID,
+                    expressResponse: props.res
+                })
+                break
+            case "jwt expired":
+                await ResponseMessage.Send({
+                    responseData: "Autenticação JWT expirada.",
+                    responseLog: ACTION,
+                    responseStatus: HttpStatusEnum.UNAUTHORIZED,
+                    expressResponse: props.res
+                })
+                break
+            default:
+                break;
+        }
+        throw new Error((ex as Error).message)
     }
 }
 

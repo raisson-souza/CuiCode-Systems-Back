@@ -21,8 +21,7 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         const ACTION = `${ this.AppServiceAction } / Estabilidade do Sistema`
         try
         {
-            this.AuthenticateSystemRequestor()
-
+            await this.AuthenticateSystemRequestor()
             await this.Db.ConnectPostgres()
 
             const parameters = await SystemService.GetParameters({
@@ -31,30 +30,28 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
 
             if (parameters.SystemUnderMaintence)
             {
-                ResponseMessage.Send({
+                await ResponseMessage.Send({
                     expressResponse: this.RES,
-                    data: false,
-                    log: ACTION,
-                    status: HttpStatusEnum.UNAVAIALBLE
+                    responseData: false,
+                    responseLog: ACTION,
+                    responseStatus: HttpStatusEnum.UNAVAIALBLE
                 })
             }
         
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: true,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: true,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
     
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: false,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -64,9 +61,8 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         const ACTION = `${ this.AppServiceAction } / Estilo atual do Sistema`
         try
         {
-            this.AuthenticateSystemRequestor()
-
             await this.Db.ConnectPostgres()
+            await this.AuthenticateSystemRequestor()
 
             const systemStyles = await SystemService.GetSystemsStyles({
                 Db: this.Db
@@ -77,22 +73,20 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
                 systemStyles: systemStyles
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: actualSystemStyle.FrontEndConvertedStyle(),
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: actualSystemStyle.FrontEndConvertedStyle(),
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: SystemService.DefaultSystemStyle,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.InternalServerError({
+                responseData: SystemService.DefaultSystemStyle,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -104,7 +98,7 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         {
             await this.Db.ConnectPostgres()
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({
+            await this.ValidateUserRequestor({
                 level: PermissionLevelEnum.Adm
             })
 
@@ -113,10 +107,10 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
 
             if (IsNil(activateModule) || IsNil(moduleNumber))
             {
-                ResponseMessage.SendInvalidField({
+                await ResponseMessage.SendInvalidField({
                     expressResponse: this.RES,
                     fields: ["active", "module"],
-                    log: ACTION,
+                    responseLog: ACTION,
                 })
             }
 
@@ -128,22 +122,20 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
 
             const message = `Módulo ${ ToBool(activateModule) ? "ativado" : "desativado" } com sucesso.`
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: message,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
-    
+
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -160,14 +152,13 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
                 ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["maintence"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
             await this.Db.ConnectPostgres()
-
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({
+            await this.ValidateUserRequestor({
                 level: PermissionLevelEnum.Adm
             })
 
@@ -176,22 +167,20 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
                 maintence: systemUnderMaintence
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: null,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: null,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
 
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -202,30 +191,27 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         try
         {
             await this.Db.ConnectPostgres()
-    
             await this.AuthenticateUserRequestor()
-            this.ValidateUserRequestor({})
+            await this.ValidateUserRequestor({})
 
             const credentials = SystemService.GetCredentials({
                 isAdmRoot: this.UserAuth!.PermissionLevel!.Value === 4
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: credentials,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: credentials,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
     
             await this.Db.DisconnectPostgres()
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
@@ -235,16 +221,16 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
         const ACTION = `${ this.AppServiceAction } / Captura Formulário`
         try
         {
-            this.AuthenticateSystemRequestor()
+            await this.AuthenticateSystemRequestor()
 
             const formName = this.GetReqParamValue("form")
 
             if (IsNil(formName))
             {
-                ResponseMessage.SendNullField({
+                await ResponseMessage.SendNullField({
                     expressResponse: this.RES,
                     fields: ["form"],
-                    log: ACTION
+                    responseLog: ACTION
                 })
             }
 
@@ -252,20 +238,18 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
                 formName: formName!
             })
 
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: form,
-                log: ACTION,
-                status: HttpStatusEnum.OK
+            await ResponseMessage.Success({
+                responseData: form,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
         catch (ex)
         {
-            ResponseMessage.Send({
-                expressResponse: this.RES,
-                data: (ex as Error).message,
-                log: ACTION,
-                status: HttpStatusEnum.INTERNAL_SERVER_ERROR
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
             })
         }
     }
