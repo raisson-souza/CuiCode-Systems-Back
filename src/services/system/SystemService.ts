@@ -20,18 +20,17 @@ export default abstract class SystemService
     /** Estilo padrão do sistema (Padrão Backend). */
     static DefaultSystemStyle = new SystemStyle(
         {
-            "style_name": 'DEFAULT BACKEND',
-            "background_primary_color": "#adf2f4",
-            "background_secondary_color": "#bdf4f6",
-            "background_terciary_color": "#cdf7f8",
-            "primary_color": "#a2c4e6",
-            "secondary_color": "#1dd5db",
-            "terciary_color": "#8eeaed",
-            "header_color": "#eefcfc",
-            "footer_color": "#def9fa",
-            "modules_column_color": "#5be5e9",
-            "text_color": "black",
-            "logo": null,
+            "style_name": 'day default backend',
+            "primary_color": "#91CCFF",
+            "secondary_color": "#55B0FE",
+            "terciary_color": "#0089FF",
+            "background_primary_color": "#7A7A7A",
+            "background_secondary_color": "#B5B5B5",
+            "header_color": "#FFFFFF",
+            "modules_color": "#D5D5D5",
+            "text_color": "#000000",
+            "logo_color": "black",
+            "logo_type": "left",
         }
     )
 
@@ -107,10 +106,7 @@ export default abstract class SystemService
                 return (
                     systemStyle.IsSpecial &&
                     systemStyle.Active &&
-                    (
-                        day >= systemStyle.InitialDay &&
-                        day <= systemStyle.FinalDay
-                    )
+                    (systemStyle.InitialDay >= day && systemStyle.FinalDay <= day)
                 )
             })
         }
@@ -120,10 +116,7 @@ export default abstract class SystemService
                 return (
                     !systemStyle.IsSpecial &&
                     systemStyle.Active &&
-                    (
-                        day >= systemStyle.InitialDay &&
-                        day <= systemStyle.FinalDay
-                    )
+                    (systemStyle.InitialDay >= day && systemStyle.FinalDay <= day)
                 )
             })
         }

@@ -19,18 +19,17 @@
 **RESPONSE:**
 ```json
 {
-    "BackgroundPrimaryColor": "#332556",
-    "BackgroundSecondaryColor": "#261b40",
-    "BackgroundTerciaryColor": "#19122b",
-    "FooterColor": "#402e6b",
-    "HeaderColor": "#4c3781",
-    "Logo": null,
-    "ModulesColumnColor": "#0c0915",
-    "PrimaryColor": "#805dd7",
-    "SecondaryColor": "#7353c1",
-    "StyleName": "Noite",
-    "TerciaryColor": "#664aac",
-    "TextColor": "white"
+    "StyleName": "style name",
+    "PrimaryColor": "#91CCFF",
+    "SecondaryColor": "#55B0FE",
+    "TerciaryColor": "#0089FF",
+    "BackgroundPrimaryColor": "#7A7A7A",
+    "BackgroundSecondaryColor": "#B5B5B5",
+    "HeaderColor": "#FFFFFF",
+    "ModulesColumnColor": "#D5D5D5",
+    "TextColor": "#000000",
+    "LogoColor": "black",
+    "LogoType": "left",
 }
 ```
 
