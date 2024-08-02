@@ -37,11 +37,14 @@ type DetermineActualSystemStyleProps = {
     systemStyles : SystemStyle[]
 } & DbProp
 
+type GetLastRegisteredUserProps = SystemServiceProps
+
 export type {
     DeactivateModuleProps,
     DetermineActualSystemStyleProps,
     GetCredentialsProps,
     GetCredentialsReturn,
+    GetLastRegisteredUserProps,
     SystemServiceProps,
     SystemUnderMaintenceProps,
 }

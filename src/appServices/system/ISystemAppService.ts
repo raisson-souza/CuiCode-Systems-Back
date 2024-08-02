@@ -12,4 +12,6 @@ export default interface ISystemAppService
     SystemUnderMaintence() : void
     /** Captura um formulário. */
     GetForm() : void
+    /** Captura o último usuário registrado no sistema. */
+    GetLastRegisteredUser() : void
 }

@@ -38,6 +38,10 @@ function SystemController(props : ControllerProps)
     app.get('/system/get_form/:form', OriginAuthMiddleware, SystemRequestorAuthMiddleware, async (req, res) => {
         await new SystemAppService(req, res).GetForm()
     })
+
+    app.get('/system/last_registered_user', OriginAuthMiddleware, SystemRequestorAuthMiddleware, async (req, res) => {
+        await new SystemAppService(req, res).GetLastRegisteredUser()
+    })
 }
 
 export default SystemController

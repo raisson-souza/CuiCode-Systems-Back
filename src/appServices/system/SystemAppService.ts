@@ -253,4 +253,34 @@ export default class SystemAppService extends AppServiceBase implements ISystemA
             })
         }
     }
+
+    async GetLastRegisteredUser()
+    {
+        const ACTION = `${ this.AppServiceAction } / Último Usuário do Sistema`
+        try
+        {
+            await this.Db.ConnectPostgres()
+            this.AuthenticateSystemRequestor()
+
+            const user = await SystemService.GetLastRegisteredUser({
+                Db: this.Db
+            })
+
+            await ResponseMessage.Success({
+                responseData: user,
+                responseLog: ACTION,
+                expressResponse: this.RES
+            })
+    
+            await this.Db.DisconnectPostgres()
+        }
+        catch (ex)
+        {
+            await ResponseMessage.InternalServerError({
+                responseData: (ex as Error).message,
+                responseLog: ACTION,
+                expressResponse: this.RES
+            })
+        }
+    }
 }

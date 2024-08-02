@@ -99,3 +99,12 @@ FORMS DISPONÍVEIS.
 > Necessita autenticação. (Usuário)
 
 *URL = /system/maintence*
+
+## ÚLTIMO USUÁRIO
+> GET  
+> Necessita autenticação. (Sistema)
+
+*URL = /system/last_registered_user*
+
+**RESPONSE**
+Usuário

@@ -3,17 +3,21 @@ import Env from "../../config/Env"
 import ModulesService from "./ModulesService"
 import Parameters from "../../classes/entities/system/Parameters"
 import SystemStyle from "../../classes/entities/system/SystemStyle"
+import User from "../../classes/entities/user/User"
+import UsersService from "../users/UsersService"
 
 import {
     DeactivateModuleProps,
     DetermineActualSystemStyleProps,
     GetCredentialsProps,
     GetCredentialsReturn,
+    GetLastRegisteredUserProps,
     SystemServiceProps,
     SystemUnderMaintenceProps
 } from "./types/SystemServiceProps"
 
 import ModulesEnum from "../../enums/ModulesEnum"
+import UsersVisualizationEnum from "../../enums/modules/UsersVisualizationEnum"
 
 export default abstract class SystemService
 {
@@ -256,5 +260,23 @@ export default abstract class SystemService
         }
 
         return credentials
+    }
+
+    /** Captura o último usuário cadastrado no sistema. */
+    static async GetLastRegisteredUser(props : GetLastRegisteredUserProps) : Promise<User>
+    {
+        const query = "SELECT id FROM users ORDER BY id DESC LIMIT 1"
+
+        const userId = await props.Db.PostgresDb.query(query)
+            .then(result => {
+                return result.rows[0]["id"]
+            })
+            .catch(ex => { throw new Error(ex) })
+
+        return await UsersService.Get({
+            Db: props.Db,
+            userId: userId,
+            visualizationEnum: UsersVisualizationEnum.Resume
+        })
     }
 }
